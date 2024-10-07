@@ -1,10 +1,10 @@
-=== Plugin Name ===
+=== Auto Affiliate Links ===
 Contributors: thedark
 Donate link: https://autoaffiliatelinks.com/donations/
-Tags: affiliate, links, post, plugin, posts, url, keywords, text, content, automatic
+Tags: affiliate, posts, keywords, content, auto
 Requires at least: 3.5
-Tested up to: 6.5.5
-Stable tag: 6.4.5
+Tested up to: 6.6.2
+Stable tag: 6.4.6
 
 Automatically display affiliate links in your website content so you can make more money. You can specify the keywords and affiliate links you want to be added or you can let the plugin to automatically decide where to add links from available affiliate networks: Amazon, Clickbank, Ebay, Walmart, Shareasale, Commission Junction, Bestbuy or Envato Marketplace.
 
@@ -105,6 +105,9 @@ Microsoft Excel adds odd formatting to the file and making problems at import an
 If you can't find the options to do this, try LibreOffice, as it is a bit easier to find them there.
 
 == Changelog ==
+
+= 6.4.6 =
+* Tested it to work with WordPress 6.6.2
 
 = 6.4.5 =
 * Added ability to add links on rss feed
