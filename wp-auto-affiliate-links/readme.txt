@@ -4,7 +4,7 @@ Donate link: https://autoaffiliatelinks.com/donations/
 Tags: affiliate, posts, keywords, content, auto
 Requires at least: 3.5
 Tested up to: 6.6.2
-Stable tag: 6.4.6
+Stable tag: 6.4.7
 
 Automatically display affiliate links in your website content so you can make more money. You can specify the keywords and affiliate links you want to be added or you can let the plugin to automatically decide where to add links from available affiliate networks: Amazon, Clickbank, Ebay, Walmart, Shareasale, Commission Junction, Bestbuy or Envato Marketplace.
 
@@ -105,6 +105,9 @@ Microsoft Excel adds odd formatting to the file and making problems at import an
 If you can't find the options to do this, try LibreOffice, as it is a bit easier to find them there.
 
 == Changelog ==
+
+* 6.4.7 =
+* Added some extra checks on import feature
 
 = 6.4.6 =
 * Tested it to work with WordPress 6.6.2
