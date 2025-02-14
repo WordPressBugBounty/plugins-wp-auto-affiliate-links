@@ -381,13 +381,12 @@ function wpaal_add_affiliate_links($content) {
 		if($priority=='length') uasort($allkeys, 'aal_keyscmp');
 		
 
-	
 		
 		foreach($allkeys as $ident => $key) { { {  
 		
-		
-					$link = $alllinks[$ident];
 					
+					$link = $alllinks[$ident];
+
 					
 					$meta = json_decode($allmeta[$ident]);
 					$samelinkvalue = '';
@@ -424,7 +423,10 @@ function wpaal_add_affiliate_links($content) {
 							//if(isset($linkparse['host'])) 
 							//	 $linkhost = $linkparse['host'];		
 							//else $linkhost = '';	
+
 							$linkhost = aal_get_host_from_parse($link);
+							
+
 							
 							
 							//check if cloaking is activated and it is not internal linking

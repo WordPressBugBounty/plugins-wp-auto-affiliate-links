@@ -4,7 +4,7 @@ Plugin Name: Auto Affiliate Links
 Plugin URI: https://autoaffiliatelinks.com
 Description: Auto add affiliate links to your blog content
 Author: Lucian Apostol
-Version: 6.4.8.2
+Version: 6.4.9
 Author URI: https://autoaffiliatelinks.com
 */
 
@@ -245,7 +245,7 @@ function wpaal_create_menu() {
 	//without option check
 	//add subpages that are not displayed in main menu
 	foreach( $aalModules as $aalMod ) {
-		add_submenu_page( null, $aalMod->nicename, $aalMod->nicename, 'publish_pages', 'aal_module_'. $aalMod->shortname, $aalMod->hooks['content'] );		
+		add_submenu_page( 'aal_apimanagement', $aalMod->nicename, $aalMod->nicename, 'publish_pages', 'aal_module_'. $aalMod->shortname, $aalMod->hooks['content'] );		
 	}	
 	
 	
@@ -256,7 +256,7 @@ function wpaal_create_menu() {
 	add_submenu_page( 'aal_topmenu', 'Exclude Categories', 'Exclude Categories', 'publish_pages', 'aal_exclude_cats', 'wpaal_exclude_cats' );
 	add_submenu_page( 'aal_topmenu', 'Import/Export', 'Import/Export', 'activate_plugins', 'aal_import_export', 'wpaal_import_export' );
 	
-	add_submenu_page( null, 'Auto Affiliate Links - Check urls', 'Auto Affiliate Links - Check urls', 'publish_pages', 'aal_urlcheck', 'wpaal_urlcheck' );	
+	add_submenu_page( 'aal_general_settings', 'Auto Affiliate Links - Check urls', 'Auto Affiliate Links - Check urls', 'publish_pages', 'aal_urlcheck', 'wpaal_urlcheck' );	
 
 }
 
@@ -601,10 +601,30 @@ function wpaal_manage_affiliates() {
 	
 	
 	}
+		if(filter_has_var(INPUT_GET, 'aalorder')) {
+			$aalorder = strtolower(filter_input(INPUT_GET, 'aalorder', FILTER_SANITIZE_SPECIAL_CHARS)); // $_GET['aalorder'];
+		}
+		else {
+			$aalorder = '';
+		}
+
+		if(filter_has_var(INPUT_GET, 'aalsort')) {
+			$aalsort = strtolower(filter_input(INPUT_GET, 'aalsort', FILTER_SANITIZE_SPECIAL_CHARS));
+		}
+		else {
+			$aalsort = '';
+		}		
 		
-		$aalorder = strtolower(filter_input(INPUT_GET, 'aalorder', FILTER_SANITIZE_SPECIAL_CHARS)); // $_GET['aalorder'];
-		$aalsort = strtolower(filter_input(INPUT_GET, 'aalsort', FILTER_SANITIZE_SPECIAL_CHARS));
-		$aallinksperpage = strtolower(filter_input(INPUT_GET, 'lp', FILTER_SANITIZE_SPECIAL_CHARS));
+		if(filter_has_var(INPUT_GET, 'lp')) {
+			$aallinksperpage = strtolower(filter_input(INPUT_GET, 'lp', FILTER_SANITIZE_SPECIAL_CHARS));
+		}
+		else {
+			$aallinksperpage = '';
+		}		
+				
+		
+		
+		
 		$aallp = ''; 
 		if(isset($aallinksperpage) && $aallinksperpage && is_numeric($aallinksperpage) && $aallinksperpage>0 && $aallinksperpage<10000) $aallp = '&lp=' . $aallinksperpage;
 		

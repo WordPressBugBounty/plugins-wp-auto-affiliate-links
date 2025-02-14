@@ -27,9 +27,27 @@ class AalLink
 			$table_name = $wpdb->prefix . "automated_links";	
 			
 			//Order-sort
+		if(filter_has_var(INPUT_GET, 'aalorder')) {
 			$orderby = strtolower(filter_input(INPUT_GET, 'aalorder', FILTER_SANITIZE_SPECIAL_CHARS)); // $_GET['aalorder'];
-			$sortby = strtoupper(filter_input(INPUT_GET, 'aalsort', FILTER_SANITIZE_SPECIAL_CHARS)); // $_GET['aalsort'];
-		$aallinksperpage = strtolower(filter_input(INPUT_GET, 'lp', FILTER_SANITIZE_SPECIAL_CHARS));
+		}
+		else {
+			$orderby = '';
+		}
+
+		if(filter_has_var(INPUT_GET, 'aalsort')) {
+			$sortby = strtolower(filter_input(INPUT_GET, 'aalsort', FILTER_SANITIZE_SPECIAL_CHARS));
+		}
+		else {
+			$sortby = '';
+		}		
+		
+		if(filter_has_var(INPUT_GET, 'lp')) {
+			$aallinksperpage = strtolower(filter_input(INPUT_GET, 'lp', FILTER_SANITIZE_SPECIAL_CHARS));
+		}
+		else {
+			$aallinksperpage = '';
+		}		
+		
 		$aallp = ''; 
 		if(isset($aallinksperpage) && $aallinksperpage && is_numeric($aallinksperpage) && $aallinksperpage>0 && $aallinksperpage<10000) $aallp = '&lp=' . $aallinksperpage;			
 			
