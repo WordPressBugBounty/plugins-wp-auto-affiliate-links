@@ -4,7 +4,7 @@ Plugin Name: Auto Affiliate Links
 Plugin URI: https://autoaffiliatelinks.com
 Description: Auto add affiliate links to your blog content
 Author: Lucian Apostol
-Version: 6.4.9
+Version: 6.4.9.1
 Author URI: https://autoaffiliatelinks.com
 */
 
@@ -530,7 +530,8 @@ function wpaal_manage_affiliates() {
 		
 	if($apikey) {
 		
-		$validcheck = @file_get_contents('https://autoaffiliatelinks.com/api/apivalidate.php?apikey='. $apikey );
+		$validcheck = file_get_contents('https://autoaffiliatelinks.com/api/apivalidate.php?apikey='. urlencode($apikey) );
+		//echo $validcheck;
 		if($validcheck === FALSE) {
 			$valid = new StdClass();
 			$valid->status = 'failed';
@@ -541,9 +542,10 @@ function wpaal_manage_affiliates() {
 	
 	
 	if($valid->status == 'expired' && $apikey) { 
+	   
 		echo 'Your Auto Affiliate Links PRO subscription is expired. Please <a href="https://autoaffiliatelinks.com/auto-affiliate-links-payment-plans/">renew your subscription</a> or <a href="https://autoaffiliatelinks.com/auto-affiliate-links-payment-plans/">create a new API key</a> <br /><br />';
 		if(get_option('aal_apistatus')) {
-			update_option('aal_apiexpired','expired');
+			update_option('aal_apistatus','expired');
 		}
 		else {
 			add_option('aal_apistatus','expired','','yes');
@@ -554,7 +556,7 @@ function wpaal_manage_affiliates() {
 		delete_option('aal_apistatus');
 		if($valid->status == 'invalid' && $apikey) { 
 			echo 'The API key you entered is invalid. You have to <a href="https://autoaffiliatelinks.com">register on our website</a> to get a valid API key. <br /><br />';
-			if(get_option('aal_apiexpired')) {
+			if(get_option('aal_apistatus')) {
 				update_option('aal_apistatus','invalid');
 			}
 			else {
@@ -576,6 +578,21 @@ function wpaal_manage_affiliates() {
 		}
 		else {
 			add_option('aal_querylimit','overquota','','yes');
+		}
+		
+	}
+	else {
+		delete_option('aal_querylimit');
+	}
+	
+	
+		if(isset($valid->notes) && ($valid->notes = '' || $valid->notes == 'myproduct manual' || $valid->notes == 'myproduct yearly manual' )  ) {
+		echo 'We have changed our payment processor. Please go to <a href="https://autoaffiliatelinks.com/members-area/download-page/">our website</a> to update your subscription. <br /><br />';
+		if(get_option('aal_newpp')) {
+			update_option('aal_newpp','yes');
+		}
+		else {
+			add_option('aal_newpp','yes','','yes');
 		}
 		
 	}

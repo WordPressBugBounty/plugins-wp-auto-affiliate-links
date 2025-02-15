@@ -216,7 +216,7 @@ add_action('wpmu_new_blog', 'aal_setup_new_blog');
 
 function aal_admin_notice() {  
 	
-	$aal_notice_dismissed = get_option('aal_option_dismissed90'); 
+	$aal_notice_dismissed = get_option('aal_option_dismissed91'); 
 	if(!$aal_notice_dismissed && !get_option('aal_apikey'))
 	{  if(current_user_can('activate_plugins')) {
     ?>
@@ -259,6 +259,13 @@ function aal_admin_notice() {
 		echo '</p></div>';
 	}
 	
+	if(get_option('aal_newpp') == 'yes' && current_user_can('activate_plugins') && get_option('aal_apikey')) {
+		echo '<div id="aal_notice_div" class="updated"><p>';
+		_e( 'We have changed our payment processor. Please go to <a href="https://autoaffiliatelinks.com/members-area/download-page/">our website</a> to update your subscription.  ', 'wp-auto-affiliate-links' ); 
+      
+		echo '</p></div>';
+	}
+	
 }
 
 
@@ -267,8 +274,8 @@ function aalDismissNotice() {
 
 
 		
-		delete_option('aal_option_dismissed89');
-		add_option('aal_option_dismissed90',true);
+		delete_option('aal_option_dismissed90');
+		add_option('aal_option_dismissed91',true);
 	
 	
 }
