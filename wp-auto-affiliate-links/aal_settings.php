@@ -422,25 +422,25 @@ function wpaal_general_settings() {
                     <span class="aal_label">Link relation:</span> <input type="radio" name="aal_relation" value="nofollow" <?php echo $rsc1; ?> /> Nofollow <input type="radio" name="aal_relation" value="dofollow" <?php echo $rsc2 ;?>/> Dofollow <input type="radio" name="aal_relation" value="sponsored" <?php echo $rsc3 ;?>/> Sponsored<br /><br /><br />
                     
                     
-                    <span class="aal_label">Cloak links:</span> <input type="checkbox" name="aal_iscloacked" id="aal_iscloacked" value="true" <?php echo $isc;?> /> 
-							 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						  Cloark url (optionl): <input type="text" id="aal_cloakurl" name="aal_cloakurl" value="<?php echo $cloakurl; ?>" />  Use with caution. For this setting to come into effect, you need to visit Settings -> Permalinks and save the settings ( no need to change anything )       
+                    <span class="aal_label">Cloak links:</span> <input type="checkbox" name="aal_iscloacked" id="aal_iscloacked" value="true" <?php echo $isc;?> /> Check this box if you want to cloak your links. <br /><br />
+						 
+						  <span class="aal_label">Cloak url (optional):</span> <input type="text" id="aal_cloakurl" name="aal_cloakurl" value="<?php echo $cloakurl; ?>" />  Use with caution. For this setting to come into effect, you need to visit Settings -> Permalinks and save the settings ( no need to change anything )       
                     <br /><br />
                      					
                      					
                      					
-                  <span class="aal_label">Link class :</span> <input type="text" name="aal_cssclass" id="aal_cssclass" value="<?php echo $cssclass; ?>" /> <br /><br /> 
+                  <span class="aal_label">Link class :</span> <input type="text" name="aal_cssclass" id="aal_cssclass" value="<?php echo $cssclass; ?>" /> This class name will be added to generated links. Leave blank if you don't want to class to links. <br /><br /> 
                   
                   
                      <span class="aal_label">Affiliate links disclosure :</span> <input type="text" name="aal_disclosure" id="aal_disclosure" value="<?php echo $disclosure; ?>" />  This field can display HTML, so make sure it is formatted properly, because it can break the content if tags are not closed ( Leave blank if you don't want to display it )<br /><br /> 
 
                     <span class="aal_label">International Language Support:</span> <input type="checkbox" name="aal_langsupport" id="aal_langsupport" value="true" <?php echo $langsc;?> /> Check this box if international characters are not properly linked<br /><br />
                   
-							<span class="aal_label">International characters keyword suggestion:</span> <input type="checkbox" name="aal_sugint" id="aal_sugint" value="true" <?php echo $sugintsc;?> /> Check this box if suggested keywords does not contain international characters<br /><br />                  
+							<span class="aal_label">International characters keyword suggestion:</span> <input type="checkbox" name="aal_sugint" id="aal_sugint" value="true" <?php echo $sugintsc;?> /> Check this box if suggested keywords does not contain international characters<br /><br /><br />          
                   
-                    <span class="aal_label">Force special chars:</span> <input type="checkbox" name="aal_spoption" id="aal_spoption" value="true" <?php echo $spoc;?> /><br /><br />
+                    <span class="aal_label">Force special chars:</span> <input type="checkbox" name="aal_spoption" id="aal_spoption" value="true" <?php echo $spoc;?> /> Check this box if you want to add links on special chars in some languages<br /><br />
                     
-                    <span class="aal_label">Replace part of a word:</span> <input type="checkbox" name="aal_wordreplace" id="aal_wordreplace" value="true" <?php echo $wrse; ?> /><br /><br />
+                    <span class="aal_label">Replace part of a word:</span> <input type="checkbox" name="aal_wordreplace" id="aal_wordreplace" value="true" <?php echo $wrse; ?> /> Check this box if you want part of the words to be replaced if a match is found in this way. <br /><br />
                     
                     
                     <span class="aal_label">Link color:</span> <input type="text" name="aal_linkcolor" id="aal_linkcolor"  value="<?php echo $linkcolor; ?>" /><br /><br />
