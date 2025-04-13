@@ -266,6 +266,7 @@
 				
 					
 					awhtml += '</ul>';
+					awhtml += '<div class="aal_clear"></div>';
 					amazonWidget.innerHTML = awhtml;				
 					
 					//end amazon widget

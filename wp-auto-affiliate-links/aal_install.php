@@ -216,7 +216,7 @@ add_action('wpmu_new_blog', 'aal_setup_new_blog');
 
 function aal_admin_notice() {  
 	
-	$aal_notice_dismissed = get_option('aal_option_dismissed92'); 
+	$aal_notice_dismissed = get_option('aal_option_dismissed93'); 
 	if(!$aal_notice_dismissed && !get_option('aal_apikey'))
 	{  if(current_user_can('activate_plugins')) {
     ?>
@@ -227,10 +227,11 @@ function aal_admin_notice() {
 		 //  _e( 'Black Friday special offer for <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Auto Affiliate Links PRO</a>. 50% off for any plan. <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Learn more.</a>', 'wp-auto-affiliate-links' ); 
  	 
    	 
-    	_e( 'Thank you for using Auto Affiliate Links. Upgrade to <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Auto Affiliate Links PRO</a> to get access to advanced linking features. <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Learn more.</a>', 'wp-auto-affiliate-links' ); 
+    	_e( 'Thank you for using Auto Affiliate Links. Unlock powerful link customization options and detailed analytics by upgrading to <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Auto Affiliate Links PRO</a>. <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Learn more.</a>', 'wp-auto-affiliate-links' ); 
  
-  			//_e( 'Thank you for using Auto Affiliate Links. Upgrade to PRO to have links from Amazon, Clickbank, Shareasale, Walmart, Ebay, Best Buy, Envato, extracted and added automatically to your content.  Learn more about <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Auto Affiliate Links PRO</a>. ', 'wp-auto-affiliate-links' ); 
+  			//_e( 'Stop manually adding affiliate links! Upgrade to <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Auto Affiliate Links PRO</a> and automatically integrate links from Amazon, ClickBank, Walart, eBay, Shareasale, and many others. <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Learn more.</a>. ', 'wp-auto-affiliate-links' ); 
     	    	 
+
   
 		//  _e( 'Auto Affiliate Links PRO special offer: lifetime subscription, exclusive on <a href="https://appsumo.com/products/auto-affiliate-links/">AppSumo</a>. ', 'wp-auto-affiliate-links' ); 
     	   
@@ -274,8 +275,8 @@ function aalDismissNotice() {
 
 
 		
-		delete_option('aal_option_dismissed91');
-		add_option('aal_option_dismissed92',true);
+		delete_option('aal_option_dismissed92');
+		add_option('aal_option_dismissed93',true);
 	
 	
 }
