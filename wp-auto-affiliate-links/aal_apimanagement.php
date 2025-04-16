@@ -106,7 +106,7 @@ $apikey = get_option('aal_apikey');
                 	else { ?>                   	
               	
               		<br />
-              	<h3>Already have an API Key/Redemption code ?</h3><br /><br />
+              	<h3>Already have an API Key/Licence/Redemption code ?</h3><br /><br />
                 
                 <?php if(isset($errormsg)) echo '<br /><br />' .  $errormsg . '<br />'; ?>
                 
@@ -135,7 +135,7 @@ $apikey = get_option('aal_apikey');
 	?>
     
     
-	Enter your API key/code here: <input type="text" name="aal_apikey" value="<?php echo get_option('aal_apikey'); ?>" /> 
+	Enter your API key/Licence/Redemption code here: <input type="text" name="aal_apikey" value="<?php echo get_option('aal_apikey'); ?>" /> 
 	
 	<?php if($apikey) { ?>
 	<input type="submit" value="Remove this API Key" class="button button-primary" onclick="document.forms['aal_apikey_form'].elements['aal_apikey'].value = '';" />
@@ -151,7 +151,7 @@ $apikey = get_option('aal_apikey');
                 	}
                 	else { ?> 
 
-	<h3>Don't have an API Key/Redemption code ?	
+	<h3>Don't have an API Key/Licence/Redemption code ?	
 	<a href="https://autoaffiliatelinks.com/auto-affiliate-links-payment-plans/">Click here</a> to get your API key.
 	</h3>
 	
