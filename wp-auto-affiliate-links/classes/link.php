@@ -53,7 +53,7 @@ class AalLink
 			
 			
 			if($orderby != 'keywords' && $orderby != 'id' && $orderby != 'url') $orderby = '';
-			if($sortby != 'ASC' && $sortby != 'DESC') $sortby = '';
+			if($sortby != 'ASC' && $sortby != 'DESC' && $sortby != 'asc' && $sortby != 'desc') $sortby = '';
 			$ordersql = '';
 			if($orderby) {
 				if($orderby == 'url') $ordersql = " ORDER BY link"; 	
@@ -102,7 +102,6 @@ class AalLink
 		
 			
 			//end pagination
-			
 			
 			
 			
