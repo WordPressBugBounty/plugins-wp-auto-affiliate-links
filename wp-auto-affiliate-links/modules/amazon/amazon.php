@@ -77,9 +77,9 @@ function aal_amazon_ajax() {
 	$nrw = 0;
 	foreach($keywords as $keyword) {		
 	
+	
 			if($nrk>=$notimes) if(!$amazondisplaywidget || $nrk>2) break;
 			$searchstring = $keyword;
-		   
 			
 			//echo $searchstring;	
 			
@@ -171,10 +171,35 @@ function aal_amazon_ajax() {
 		        )
 		    );
 		$stream = stream_context_create ( $params );
-		
+
 		$fp = @fopen ( 'https://'.$host.$path, 'rb', false, $stream );
 		
 		if (! $fp) {
+
+		/*
+		    $error = error_get_last();
+		    echo "<strong>Failed to open stream:</strong><br>";
+		    if ($error !== null) {
+		        echo "Error type: " . $error['type'] . "<br>";
+		        echo "Error message: " . htmlspecialchars($error['message']) . "<br>";
+		        echo "Error file: " . $error['file'] . "<br>";
+		        echo "Error line: " . $error['line'] . "<br>";
+		    } else {
+		        echo "An unknown error occurred with fopen.<br>";
+		    }
+		    if (isset($http_response_header)) {
+		        echo "<br><strong>HTTP Response Headers (if available on failure):</strong><br><pre>";
+		        print_r($http_response_header);
+		        echo "</pre>";
+		
+		}
+		*/
+
+
+
+
+
+
 		   //throw new Exception ( "Exception Occured" );
 		   $nrk++; 
 		   sleep(2);

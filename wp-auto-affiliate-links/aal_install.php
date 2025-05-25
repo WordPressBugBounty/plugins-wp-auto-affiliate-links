@@ -262,7 +262,7 @@ function aal_admin_notice() {
 	
 	if(get_option('aal_newpp') == 'yes' && current_user_can('activate_plugins') && get_option('aal_apikey')) {
 		echo '<div id="aal_notice_div" class="updated"><p>';
-		_e( 'We have changed our payment processor. Please go to <a href="https://autoaffiliatelinks.com/members-area/download-page/">our website</a> to update your subscription.  ', 'wp-auto-affiliate-links' ); 
+		_e( 'Thank you for using Auto Affiliate Links PRO. We have changed our payment processor. Please go to <a href="https://autoaffiliatelinks.com/members-area/download-page/">our website</a> to update your subscription.  ', 'wp-auto-affiliate-links' ); 
       
 		echo '</p></div>';
 	}

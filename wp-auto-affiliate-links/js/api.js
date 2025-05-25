@@ -210,8 +210,9 @@
 			                url: "//autoaffiliatelinks.com/api/acache.php",
 			                data: { apikey: aalapidata.apikey, insertid: insertid, parray: parray, amazonwidget: awidgets },
 			                cache: false,
-			                //success: function(conf){
-			                //	}
+			                success: function(acacheres){
+			                		console.log(acacheres);
+			                	}
 		               });
 						}
 						
