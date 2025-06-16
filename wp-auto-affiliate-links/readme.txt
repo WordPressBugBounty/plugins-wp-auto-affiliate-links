@@ -3,8 +3,8 @@ Contributors: thedark
 Donate link: https://autoaffiliatelinks.com/donations/
 Tags: affiliate, posts, keywords, content, auto
 Requires at least: 3.5
-Tested up to: 6.8
-Stable tag: 6.4.9.8
+Tested up to: 6.8.1
+Stable tag: 6.4.9.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -107,6 +107,9 @@ Microsoft Excel adds odd formatting to the file and making problems at import an
 If you can't find the options to do this, try LibreOffice, as it is a bit easier to find them there.
 
 == Changelog ==
+
+= 6.4.9.9 =
+* Tested and updated to work with WordPress 6.8.1
 
 = 6.4.9.8 =
 * Fixed problems preventing links from Amazon to be displayed
