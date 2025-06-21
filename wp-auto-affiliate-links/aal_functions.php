@@ -6,125 +6,20 @@
 
 //Get keyoword sugestions for Add Afiliates Link Tab
 
-function aalGetSugestions($myrows){
+function aalGetSugestions(){
 	
-		$alllinks = array();
-		foreach($myrows as $row) { 
-			$keys = explode(',',$row->keywords);
-			foreach($keys as $key) {
-			
-				$alllinks[] = trim($key);	
-				
-			}
-		}
-		
-		//print_r($alllinks);
-    
-        //Search trough your post to generate reccomend most used keywords
-        $wholestring = '';
-        $searchposts  = get_posts(array('numberposts' => 15,  'post_type'  => array('post','page'), 'post_status'      => 'publish'));
-        foreach($searchposts as $spost) {
-        	if (strlen($spost->post_content) > 2000)
- 				  $spost->post_content = substr($spost->post_content, 0, 2000);
-                $wholestring .=  ' '. $spost->post_content;
-        }
 
-
-
-        $wholestring = strip_tags($wholestring);
-        //Remove text inside brackets
-        $wholestring = preg_replace("/\[[^)]+\]/","",$wholestring);
-        
-        $sugint = get_option('aal_sugint');
-		if($sugint=='true') { 
-				$wholestring = preg_replace("~[\\\\/\.\?\-\+\(\)\{\}\[\]\'\"\:\<\>\=\$\*\^\|;,&%#@\!`]~", " ", $wholestring );
-			} else {
-        	$wholestring = preg_replace("/[^A-Za-z0-9]/", " ", $wholestring );
-        }
-        
-        
-        
-        $wholestring = aal_removecommonwords($wholestring);
-			
-	       
-        
-       //$wholestring = sanitize_text_field($wholestring);
-        
-
-        //Replace common words
-			
-        
-        
-
-        //Turning the string into an array
-        $karray = explode(" ",strtolower($wholestring));
-        
-	   
-        
-        //remove numbers and short keys
-		foreach($karray as $id => $key) {
-			if(is_numeric($key) || strlen($key)<6) {	
-				unset($karray[$id]);
-			}
-		}
-		
-		$karray = array_values($karray);
-		
-
-        //Coountin how many times each keyword appear
-        $final=array(); $times=array();
-        foreach($karray as $kws) {
-
-                if(!in_array($kws,$final)) {
-                	 if(!in_array($kws,$alllinks)) { 
-                        $final[] = $kws;
-                        $times[]=1;
-                	}
-                }
-                else{
-                        foreach($final as $in => $test) {
-                                if($test==$kws) $times[$in]++;
-                        }
-                }
-
-        }	
-
-        //Sorting the array
-        $length = count($final);
-        $sw=1;
-        while($sw!=0) {
-                $sw=0;
-                for($i=0;$i<$length-1;$i++) {
-                        if($times[$i]<$times[$i+1]) {
-                                $aux = $final[$i];
-                                $final[$i] = $final[$i+1];
-                                $final[$i+1] = $aux;
-                                $aux = $times[$i];
-                                $times[$i] = $times[$i+1];
-                                $times[$i+1] = $aux;
-                                $sw=1;
-
-                        }
-                }
-        }
-		$extended = array_slice($final, 0, 100);
-        //Taking only the most used 20 keywords and displaying them
-        $final = array_slice($final, 0, 19);
-       /*  foreach($final as $fin) {
-                if($fin!='' && $fin!=' ' && $fin!= '   ') {
-                        echo '<a href="javascript:;" onclick="document.getElementById(\'aal_formkeywords\').value=\''. $fin .'\'">'. $fin .'</a>&nbsp;';
-                }
-
-        } */
         echo '   <a href="javascript:;" id="aal_moresug" >Show keyword suggestions >></a>
         <div id="aal_extended" style="padding: 20px;">';
         	
-         foreach($extended as $in => $fin) {
+       /*  foreach($extended as $in => $fin) {
                 if($fin!='' && $fin!=' ' && $fin!= '   ') {
                         echo '<div class="aal_sugbox">'. $fin .' ('. $times[$in] .') &nbsp;&nbsp;&nbsp;<span><a class="aal_sugkey" href="javascript:;"  title="'. $fin .'">Add >> </a></span></div>';
                 }
                 
              }       
+             
+        */
         	
         
         echo '

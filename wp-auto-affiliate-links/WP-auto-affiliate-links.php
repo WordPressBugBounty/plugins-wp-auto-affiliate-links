@@ -4,7 +4,7 @@ Plugin Name: Auto Affiliate Links
 Plugin URI: https://autoaffiliatelinks.com
 Description: Auto add affiliate links to your blog content
 Author: Lucian Apostol
-Version: 6.4.9.9
+Version: 6.5
 Author URI: https://autoaffiliatelinks.com
 */
 
@@ -25,7 +25,7 @@ function aal_load_js() {
 		wp_enqueue_script( "aal_js", plugin_dir_url( __FILE__ ) . 'js/js.js', array( 'jquery', 'wp-color-picker' ), false, true);
         $aal_plugin_url = plugin_dir_url(__FILE__);
         // make the ajaxurl var available to the above script
-		wp_localize_script( 'aal_js', 'ajax_script', array( 'ajaxurl' => admin_url( 'admin-ajax.php'),'aal_plugin_url' => $aal_plugin_url, 'aal_nonce' => wp_create_nonce('aal-ajax-nonce')  ) );	     
+		wp_localize_script( 'aal_js', 'ajax_script', array( 'ajaxurl' => admin_url( 'admin-ajax.php'),'aal_plugin_url' => $aal_plugin_url, 'aal_nonce' => wp_create_nonce('aal-ajax-nonce'), 'aal_kw_nonce' => wp_create_nonce('aal-ajax-kw-nonce') ) );	     
 		
 		
 }
@@ -208,6 +208,7 @@ add_action('admin_footer', 'aal_load_js');
 add_action('wp_ajax_aal_delete_link', 'aalDeleteLink');
 add_action('wp_ajax_aal_update_link', 'aalUpdateLink');
 add_action('wp_ajax_aal_add_link', 'aalAddLink');
+add_action('wp_ajax_aal_kw_suggestion', 'aalKWSuggestionAjax');
 add_action('wp_ajax_aal_change_options', 'aalChangeOptions');
 add_action('wp_ajax_aal_add_exclude_posts', 'aalAddExcludePost');
 add_action('wp_ajax_aal_update_exclude_posts', 'aalUpdateExcludePosts');
@@ -512,7 +513,7 @@ function wpaal_manage_affiliates() {
                 <input type="submit" class="button-primary" name="Save" value="Add Link" />&nbsp;&nbsp;&nbsp; 
                 
                 <br /><br />
-                <?php aalGetSugestions($myrows);?>
+                <?php aalGetSugestions();?>
             </form>
             
          </div>

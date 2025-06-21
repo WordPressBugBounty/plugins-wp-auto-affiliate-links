@@ -555,6 +555,40 @@ $(document).ready(function() {
 
 	$("#aal_moresug").click(function() {
  		$("#aal_extended").toggle();
+ 		
+ 			
+        
+            $.ajax({
+                    type: "POST",
+                    url: ajax_script.ajaxurl,
+                    data: {action: 'aal_kw_suggestion', aal_kw_nonce: ajax_script.aal_kw_nonce},
+                    cache: false,
+                    success: function(returned){
+                    		//console.log(returned);
+                    		$("#aal_extended").html(returned);
+                    		
+                    		
+	$(".aal_sugkey").click(function() { 
+ 		if($("#aal_formkeywords").val())  {
+ 				$("#aal_formkeywords").val($("#aal_formkeywords").val() + ", " + $(this).attr("title"));
+ 			}
+ 			else { 
+ 				$("#aal_formkeywords").val($(this).attr("title"));
+ 		}
+ 		$(window).scrollTop(0);
+		$("#aal_formkeywords").addClass( "yellowhighlight" );
+ 		$(this).hide();
+	});                    		
+                    		
+                    		
+                    		
+                    		
+                                        }
+                });
+		 		
+ 		
+ 		
+ 		
 	});
 
 });
