@@ -53,6 +53,16 @@ span.aal_urlbroken { color: #FF0000; font-weight: bold; }
 .aal_spinner { float: none; }
 .aal_edit_advanced { float: left; }
 
+.aal_loader_spinner {
+    background-image: url('../../../../wp-includes/images/spinner.gif');
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 32px;   
+    width: 32px;   
+    margin: 20px auto; 
+    visibility: visible;
+}
+
 
 
 /* Sorting indicator */

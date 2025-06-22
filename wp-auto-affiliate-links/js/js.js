@@ -556,6 +556,13 @@ $(document).ready(function() {
 	$("#aal_moresug").click(function() {
  		$("#aal_extended").toggle();
  		
+ 		
+         if ($("#aal_extended").is(":visible")) {
+            $("#aal_extended").html(''); 
+            $("#aal_extended").append('<div class="aal_loader_spinner"></div>'); 
+
+
+ 		
  			
         
             $.ajax({
@@ -565,6 +572,7 @@ $(document).ready(function() {
                     cache: false,
                     success: function(returned){
                     		//console.log(returned);
+                    		$("#aal_extended").find(".aal_loader_spinner").remove();
                     		$("#aal_extended").html(returned);
                     		
                     		
@@ -586,7 +594,7 @@ $(document).ready(function() {
                                         }
                 });
 		 		
- 		
+ 		}
  		
  		
 	});
