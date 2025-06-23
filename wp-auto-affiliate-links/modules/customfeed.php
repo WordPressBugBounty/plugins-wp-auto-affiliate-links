@@ -89,12 +89,15 @@ global $wpdb;
 					$link = '';
 					$keywords = '';
 					$stats = '';
-					if(array_key_exists(1, $data)) $link = sanitize_url(esc_url_raw(esc_sql('"' . $data[1] .'"')));
-					if(array_key_exists(0, $data)) $keywords = sanitize_text_field(esc_sql('"' . $data[0] .'"'));
-					if(array_key_exists(2, $data)) $title = sanitize_text_field(esc_sql('"' . $data[2] .'"'));
-					if(array_key_exists(5, $data)) $stats = sanitize_text_field(esc_sql('"' . $data[5] .'"'));
-					if(array_key_exists(3, $data)) $samelink = sanitize_text_field(esc_sql('"' . $data[3] .'"'));
-					if(array_key_exists(4, $data)) $disclosureoff = sanitize_text_field(esc_sql('"' . $data[4] .'"'));
+					if(array_key_exists(1, $data)) $link = sanitize_url(esc_url_raw(esc_sql($data[1])));
+					if(array_key_exists(0, $data)) $keywords = sanitize_text_field(esc_sql($data[0]));
+					if(array_key_exists(2, $data)) $title = sanitize_text_field(esc_sql($data[2]));
+					if(array_key_exists(5, $data)) $stats = sanitize_text_field(esc_sql($data[5]));
+					if(array_key_exists(3, $data)) $samelink = sanitize_text_field(esc_sql($data[3]));
+					if(array_key_exists(4, $data)) $disclosureoff = sanitize_text_field(esc_sql($data[4]));
+					
+							
+					
 					if($link && $keywords && strlen($link)<1000 && strlen($keywords)<2000 ) {
 						
 						if($deleted == 1 && $_POST['aal_import_overwrite']=='delete') {
