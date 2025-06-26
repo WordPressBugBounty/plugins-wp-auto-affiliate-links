@@ -197,7 +197,7 @@ function aalKWSuggestionAjax(){
 			} else {
         	$wholestring = preg_replace("/[^A-Za-z0-9]/", " ", $wholestring );
         }
-        
+       
         
         
         $wholestring = aal_removecommonwords($wholestring);
@@ -215,6 +215,33 @@ function aalKWSuggestionAjax(){
         //Turning the string into an array
         $karray = explode(" ",strtolower($wholestring));
         
+	   
+	   
+//Logic for two-keywords
+
+		$twokeywords = array();
+
+		for ($i = 0; $i < count($karray) - 1; $i++) {
+			
+	   		 $word1 = $karray[$i];
+   			 $word2 = $karray[$i+1];
+
+    
+  				 $bigram = trim(trim($word1) . ' ' . trim($word2));  
+	   
+	   		if (!empty($bigram) && strlen($bigram) >= 6 && !in_array($bigram, $alllinks) && (strpos($bigram, 'nbsp') === false) && (aal_removecommonwords($word1) || aal_removecommonwords($word2) ) && trim($word1) && trim($word2) )  {
+	   				$twokeywords[] = $bigram;	
+						   		
+	   		}
+        				
+	   
+	   }
+	   
+	   $twokeywords = array_count_values($twokeywords);
+	   arsort($twokeywords);
+	   $twokeywords = array_slice($twokeywords, 0, 100);
+	  // print_r($twokeywords);
+	   
 	   
         
         //remove numbers and short keys
@@ -244,6 +271,13 @@ function aalKWSuggestionAjax(){
                 }
 
         }	
+        
+        
+        //Combining one words with two words.
+        foreach ($twokeywords as $keyword => $count) {
+   			 $final[] = $keyword;
+   			 $times[] = $count;
+			}
 
         //Sorting the array
         $length = count($final);
@@ -263,7 +297,7 @@ function aalKWSuggestionAjax(){
                         }
                 }
         }
-		$extended = array_slice($final, 0, 100);
+		$extended = array_slice($final, 0, 150);
         //Taking only the most used 20 keywords and displaying them
         $final = array_slice($final, 0, 19);
         
