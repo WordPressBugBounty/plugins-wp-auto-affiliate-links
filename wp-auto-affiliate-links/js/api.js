@@ -66,9 +66,6 @@
 						
 				var aalapidata = {content: aal_content, apikey: aal_apikey, aal_postid: aal_postid, clickbankid: aal_clickbankid, clickbankcat: aal_clickbankcat,  clickbankgravity: aal_clickbankgravity, amazonid: aal_amazonid, amazoncat: aal_amazoncat, amazonlocal: aal_amazonlocal, amazondisplaylinks: aal_amazondisplaylinks, amazondisplaywidget: aal_amazondisplaywidget, amazonactive: aal_amazonactive, clickbankactive: aal_clickbankactive, shareasaleactive: aal_shareasaleactive, shareasaleid: aal_shareasaleid, cjactive: aal_cjactive, ebayactive: aal_ebayactive, ebayid: aal_ebayid, bestbuyactive: aal_bestbuyactive, bestbuyid: aal_bestbuyid, walmartactive: aal_walmartactive, walmartid: aal_walmartid, envatoid: aal_envatoid, envatosite: aal_envatosite, envatoactive: aal_envatoactive, rakutenactive: aal_rakutenactive, rakutenid: aal_rakutenid, discoveryjapanactive: aal_discoveryjapanactive, discoveryjapanid: aal_discoveryjapanid, discoveryjapanapikey: aal_discoveryjapanapikey, aurl: aal_aurl, notimes: aal_notimes, excludewords: aal_excludewords};
 	
-				//Check for cache
-		
-		
 				//Cache get ajax
 				$.ajax({
 					type: "post", url: aal_amazon_obj.ajaxurl, data: { action: 'aal_cache_get', cachegetnonce: aal_amazon_obj.cachegetnonce, aalpostid: aalapidata.aal_postid },
