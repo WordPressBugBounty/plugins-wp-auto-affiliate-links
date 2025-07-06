@@ -32,7 +32,7 @@ jQuery(document).ready(function() {
 							
 							if(urldomain.hostname.replace('www.','') == window.location.hostname.replace('www.','')) {
 														var kwlist = '';
-												if (typeof entry.keywords !== 'undefined') {
+												if (typeof entry.keywords !== 'undefined' || typeof entry.keywords !== 'null') {
 							   
 												var keywords = jQuery.parseJSON(entry.keywords);
 														if(keywords.constructor !== Array)  keywords = keywords.links;

@@ -216,7 +216,7 @@ add_action('wpmu_new_blog', 'aal_setup_new_blog');
 
 function aal_admin_notice() {  
 	
-	$aal_notice_dismissed = get_option('aal_option_dismissed94'); 
+	$aal_notice_dismissed = get_option('aal_option_dismissed95'); 
 	if(!$aal_notice_dismissed && !get_option('aal_apikey'))
 	{  if(current_user_can('activate_plugins')) {
     ?>
@@ -279,8 +279,8 @@ function aalDismissNotice() {
 
 
 		
-		delete_option('aal_option_dismissed93');
-		add_option('aal_option_dismissed94',true);
+		delete_option('aal_option_dismissed94');
+		add_option('aal_option_dismissed95',true);
 	
 	
 }
