@@ -103,6 +103,7 @@ function aalChangeOptions(){
 		
 		$aal_cloakurl = strtolower($aal_cloakurl);
 		$aal_cloakurl = preg_replace("/[^a-z]+/", "", $aal_cloakurl);
+		if(!$aal_cloakurl || !is_string($aal_cloakurl)) $aal_cloakurl = get_option('aal_cloakurl');
 		if(!$aal_cloakurl || !is_string($aal_cloakurl)) $aal_cloakurl = 'goto';
 		
 		//set-reset the aal_settings_updated field.
