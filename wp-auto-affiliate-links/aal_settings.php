@@ -425,7 +425,7 @@ function wpaal_general_settings() {
                     
                     <span class="aal_label">Cloak links:</span> <input type="checkbox" name="aal_iscloacked" id="aal_iscloacked" value="true" <?php echo $isc;?> /> Check this box if you want to cloak your links. <br /><br />
 						 
-						  <span class="aal_label">Cloak url (optional):</span> <input type="text" id="aal_cloakurl" name="aal_cloakurl" value="<?php echo $cloakurl; ?>" />  Use with caution. For this setting to come into effect, you need to visit Settings -> Permalinks and save the settings ( no need to change anything )       
+						  <span class="aal_label">Cloak url (optional):</span> <input type="text" id="aal_cloakurl" name="aal_cloakurl" value="<?php echo $cloakurl; ?>" />  Use with caution, claoked link might not work in some setups. For maximum compatibility, onli letters are allowed, no numbers or special chars. For this setting to come into effect, after you change and save settings on this page, you need to visit <a href="<?php echo admin_url('options-permalink.php'); ?>" target="_blank">Settings -> Permalinks</a> and click on Save Changes ( no need to change anything )       
                     <br /><br />
                      					
                      					
