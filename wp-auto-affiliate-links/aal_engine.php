@@ -298,6 +298,8 @@ function wpaal_add_affiliate_links($content) {
 		$allids = array();
 		$allmeta = array();
 		$locallimit = array();
+		$keys2 = array();
+		$links2 = array();
 		
 		
 		
