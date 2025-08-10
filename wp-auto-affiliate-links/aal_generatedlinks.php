@@ -50,7 +50,10 @@ function wpaal_generatedlinks() {
 
                <br /><br />
              <h3>Links added based on specified keywords </h3>
-             <br /><br />
+             <br />
+				<p>The links are generated only when a post/page is displayed. So generated links will only appear here after there was at least one display of the page with links generated. If you can't see the page here, it means that it was never displayed, or it is something that prevents adding of links (exclusions or bugs). If it was displayed and links should have been added but were not, the page will apper here with no links generated.
+				</p>             
+             <br />
              
              
 <br />
