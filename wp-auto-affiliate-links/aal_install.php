@@ -217,7 +217,7 @@ add_action('wpmu_new_blog', 'aal_setup_new_blog');
 function aal_admin_notice() {  
 	
 	$aal_notice_dismissed = get_option('aal_option_dismissed96'); 
-	if(!$aal_notice_dismissed && !get_option('aal_apikey'))
+	if(!$aal_notice_dismissed && !get_option('aal_apike'))
 	{  if(current_user_can('activate_plugins')) {
     ?>
     <div id="aal_notice_div" class="updated">
@@ -263,9 +263,8 @@ function aal_admin_notice() {
 	
 	if(get_option('aal_newpp') == 'yes' && current_user_can('activate_plugins') && get_option('aal_apikey')) {
 		echo '<div id="aal_notice_div" class="updated"><p>';
-		//_e( 'Thank you for using Auto Affiliate Links PRO. We have changed our payment processor. Please go to <a href="https://autoaffiliatelinks.com/members-area/download-page/">our website</a> to update your subscription.  ', 'wp-auto-affiliate-links' ); 
-      _e( 'Gemini AI can be used to automatically add affiliate links. Go to <a href="'.  admin_url('admin.php?page=aal_apimanagement') .'">General Settings</a> to activate it. More info about Gemini AI in Auto Affiliatte Links <a href="https://autoaffiliatelinks.com/gemini-ai-is-now-available-in-auto-affiliate-links-automated-linking/">here</a>.', 'wp-auto-affiliate-links' ); 
- 
+		_e( 'Thank you for using Auto Affiliate Links PRO. We have changed our payment processor. Please go to <a href="https://autoaffiliatelinks.com/members-area/download-page/">our website</a> to update your subscription.  ', 'wp-auto-affiliate-links' ); 
+      
 		echo '</p></div>';
 	}
 	
