@@ -38,6 +38,7 @@ function aalChangeOptions(){
 		$aal_sugint = filter_input(INPUT_POST, 'aal_sugint', FILTER_SANITIZE_SPECIAL_CHARS);
 		$aal_spoption = filter_input(INPUT_POST, 'aal_spoption', FILTER_SANITIZE_SPECIAL_CHARS);
 		$aal_wordreplace = filter_input(INPUT_POST, 'aal_wordreplace', FILTER_SANITIZE_SPECIAL_CHARS);
+		$aal_geminiaion = filter_input(INPUT_POST, 'aal_geminiaion', FILTER_SANITIZE_SPECIAL_CHARS);
 		$aal_casesensitive = filter_input(INPUT_POST, 'aal_casesensitive', FILTER_SANITIZE_SPECIAL_CHARS);
 		$aal_display = filter_input(INPUT_POST, 'aal_display', FILTER_SANITIZE_SPECIAL_CHARS);
 		$aal_samekeyword = filter_input(INPUT_POST, 'aal_samekeyword', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -85,6 +86,7 @@ function aalChangeOptions(){
 		$aal_sugint = sanitize_text_field($aal_sugint);
 		$aal_spoption = sanitize_text_field($aal_spoption);		
 		$aal_wordreplace = sanitize_text_field($aal_wordreplace);
+		$aal_geminiaion = sanitize_text_field($aal_geminiaion);
 		$aal_casesensitive = sanitize_text_field($aal_casesensitive);
 		$aal_display = sanitize_text_field($aal_display);	
 		$aal_samekeyword = sanitize_text_field($aal_samekeyword);
@@ -139,6 +141,7 @@ function aalChangeOptions(){
       aal_add_option( 'aal_sugint', $aal_sugint, '', 'yes');
       aal_add_option( 'aal_spoption', $aal_spoption, '', 'yes');
       aal_add_option( 'aal_wordreplace', $aal_wordreplace, '', 'yes');
+      aal_add_option( 'aal_geminiaion', $aal_geminiaion, '', 'yes');
       aal_add_option( 'aal_casesensitive', $aal_casesensitive, '', 'yes');
       aal_add_option( 'aal_display', $aal_display, '', 'yes');
       aal_add_option( 'aal_samekeyword', $aal_samekeyword, '', 'yes');
@@ -180,6 +183,8 @@ function wpaal_general_settings() {
 	global $wpdb;
 	$table_name = $wpdb->prefix . "automated_links";	
 	
+	$apikey = get_option('aal_apikey');
+	
 
 	$pluginstatus = get_option('aal_pluginstatus');
         
@@ -198,6 +203,9 @@ function wpaal_general_settings() {
 	
 	 $wordreplace = get_option('aal_wordreplace');
 	if($wordreplace=='true') $wrse = 'checked'; else $wrse = '';
+	
+ 	$geminiaion = get_option('aal_geminiaion');
+	if($geminiaion=='true') $gase = 'checked'; else $gase = '';
 	
 		$casesensitive = get_option('aal_casesensitive');
 	if($casesensitive=='true') $casecb = 'checked'; else $casecb = '';
@@ -445,6 +453,10 @@ function wpaal_general_settings() {
                     
                     
                     <span class="aal_label">Link color:</span> <input type="text" name="aal_linkcolor" id="aal_linkcolor"  value="<?php echo $linkcolor; ?>" /><br /><br />
+                 
+						 <span class="aal_label">Use Gemini AI:</span> <input type="checkbox" <?php if(!$apikey) echo 'disabled="true"'; ?> name="aal_geminiaion" id="aal_geminiaion" value="true" <?php echo $gase; ?> /> Check this box if you want to use Gemini AI API for automatic linking. <?php if(!$apikey) echo 'PRO only. <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/" target="_blank">Learn more</a>'; else echo 'Please leave us feedback on the Gemini integration using <a href="https://forms.gle/e9Gw792YaBrUwizt5" target="_blank">this form</a>'; ?>   <br /><br />
+                                     
+                 
                  
                  	<?php if ( is_multisite() && !is_main_site() ) { ?>
                    <span class="aal_label">Use main site links:</span> <input type="checkbox" name="aal_ismulinks" id="aal_ismulinks" value="true" <?php echo $imulse; ?> />  Check this box if this website is part of a network ( Wordpress multi site, and you want to display links added in main site.<br /><br />

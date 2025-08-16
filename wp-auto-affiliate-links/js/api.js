@@ -45,6 +45,7 @@
 				var aal_aurl = datadiv.getAttribute('data-aurl');
 				var aal_excludewords = datadiv.getAttribute('data-excludewords');
 				var aal_linkcolor = datadiv.getAttribute('data-linkcolor');
+				var aal_geminiaion = datadiv.getAttribute('data-geminiaion');
 				
 				//generatecontent
 				var spydiv = document.getElementById('aalcontent_' + aal_divnumber);
@@ -64,7 +65,7 @@
 				
 				//generate content end
 						
-				var aalapidata = {content: aal_content, apikey: aal_apikey, aal_postid: aal_postid, clickbankid: aal_clickbankid, clickbankcat: aal_clickbankcat,  clickbankgravity: aal_clickbankgravity, amazonid: aal_amazonid, amazoncat: aal_amazoncat, amazonlocal: aal_amazonlocal, amazondisplaylinks: aal_amazondisplaylinks, amazondisplaywidget: aal_amazondisplaywidget, amazonactive: aal_amazonactive, clickbankactive: aal_clickbankactive, shareasaleactive: aal_shareasaleactive, shareasaleid: aal_shareasaleid, cjactive: aal_cjactive, ebayactive: aal_ebayactive, ebayid: aal_ebayid, bestbuyactive: aal_bestbuyactive, bestbuyid: aal_bestbuyid, walmartactive: aal_walmartactive, walmartid: aal_walmartid, envatoid: aal_envatoid, envatosite: aal_envatosite, envatoactive: aal_envatoactive, rakutenactive: aal_rakutenactive, rakutenid: aal_rakutenid, discoveryjapanactive: aal_discoveryjapanactive, discoveryjapanid: aal_discoveryjapanid, discoveryjapanapikey: aal_discoveryjapanapikey, aurl: aal_aurl, notimes: aal_notimes, excludewords: aal_excludewords};
+				var aalapidata = {content: aal_content, apikey: aal_apikey, aal_postid: aal_postid, clickbankid: aal_clickbankid, clickbankcat: aal_clickbankcat,  clickbankgravity: aal_clickbankgravity, amazonid: aal_amazonid, amazoncat: aal_amazoncat, amazonlocal: aal_amazonlocal, amazondisplaylinks: aal_amazondisplaylinks, amazondisplaywidget: aal_amazondisplaywidget, amazonactive: aal_amazonactive, clickbankactive: aal_clickbankactive, shareasaleactive: aal_shareasaleactive, shareasaleid: aal_shareasaleid, cjactive: aal_cjactive, ebayactive: aal_ebayactive, ebayid: aal_ebayid, bestbuyactive: aal_bestbuyactive, bestbuyid: aal_bestbuyid, walmartactive: aal_walmartactive, walmartid: aal_walmartid, envatoid: aal_envatoid, envatosite: aal_envatosite, envatoactive: aal_envatoactive, rakutenactive: aal_rakutenactive, rakutenid: aal_rakutenid, discoveryjapanactive: aal_discoveryjapanactive, discoveryjapanid: aal_discoveryjapanid, discoveryjapanapikey: aal_discoveryjapanapikey, aurl: aal_aurl, notimes: aal_notimes, excludewords: aal_excludewords, geminiaion: aal_geminiaion};
 	
 				//Cache get ajax
 				$.ajax({
@@ -126,12 +127,11 @@
 	
 
 	function aal_retrievelinks(aalapidata,aal_divnumber,aal_target,aal_relation,aal_linkcolor) {
-		
 			
 		//aalapidata = {action: 'aal_update_exclude_posts',aal_exclude_posts:'aaa'};
  		$.ajax({
         type: "POST",
-        url: "//autoaffiliatelinks.com/api/pro2.php",
+        url: aal_amazon_obj.aal_api_pro_url,
         data: aalapidata,
         cache: false,
         success: function(returned){  

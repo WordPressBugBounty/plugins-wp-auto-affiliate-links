@@ -4,7 +4,7 @@ Plugin Name: Auto Affiliate Links
 Plugin URI: https://autoaffiliatelinks.com
 Description: Auto add affiliate links to your blog content
 Author: Lucian Apostol
-Version: 6.5.2.6
+Version: 6.6
 Author URI: https://autoaffiliatelinks.com
 */
 
@@ -24,6 +24,7 @@ function aal_load_js() {
         // load our jquery file that sends the $.post request1
 		wp_enqueue_script( "aal_js", plugin_dir_url( __FILE__ ) . 'js/js.js', array( 'jquery', 'wp-color-picker' ), false, true);
         $aal_plugin_url = plugin_dir_url(__FILE__);
+        
         // make the ajaxurl var available to the above script
 		wp_localize_script( 'aal_js', 'ajax_script', array( 'ajaxurl' => admin_url( 'admin-ajax.php'),'aal_plugin_url' => $aal_plugin_url, 'aal_nonce' => wp_create_nonce('aal-ajax-nonce'), 'aal_kw_nonce' => wp_create_nonce('aal-ajax-kw-nonce') ) );	     
 		
@@ -36,6 +37,14 @@ function aal_load_front_scripts() {
 	
 	$aal_apikey = esc_attr( get_option( 'aal_apikey' ) );
 		if($aal_apikey) {
+			
+		$geminiaion = get_option('aal_geminiaion');
+        if($geminiaion) { 
+        		$aal_api_pro_url = '//autoaffiliatelinks.com/api/pro5.php';
+        	}
+        	else {
+				$aal_api_pro_url = '//autoaffiliatelinks.com/api/pro2.php';        	
+        	}
 		
 		
 			//if( get_option( 'aal_apikey' ) ) { 
@@ -45,6 +54,7 @@ function aal_load_front_scripts() {
 	 		if( get_option( 'aal_apikey' ) ) { 
     				$local_arr = array(
     	    		'ajaxurl'   => admin_url( 'admin-ajax.php' ),
+    	    		'aal_api_pro_url' => $aal_api_pro_url,
      	  			'security'  => wp_create_nonce( 'aalamazonnonce' ),
      	  			'cachegetnonce' => wp_create_nonce( 'aalcachegetnonce' ),
      	  			'cachesetnonce' => wp_create_nonce( 'aalcachesetnonce' )
