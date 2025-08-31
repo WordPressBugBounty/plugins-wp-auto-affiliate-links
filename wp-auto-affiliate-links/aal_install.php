@@ -216,7 +216,7 @@ add_action('wpmu_new_blog', 'aal_setup_new_blog');
 
 function aal_admin_notice() {  
 	
-	$aal_notice_dismissed = get_option('aal_option_dismissed96'); 
+	$aal_notice_dismissed = get_option('aal_option_dismissed97'); 
 	if(!$aal_notice_dismissed && !get_option('aal_apike'))
 	{  if(current_user_can('activate_plugins')) {
     ?>
@@ -226,10 +226,10 @@ function aal_admin_notice() {
       
 		 //  _e( 'Black Friday special offer for <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Auto Affiliate Links PRO</a>. 50% off for any plan. <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Learn more.</a>', 'wp-auto-affiliate-links' ); 
  	 
- 			_e( 'Gemini AI can be used to automatically add affiliate links. Go to <a href="'.  admin_url('admin.php?page=aal_apimanagement') .'">General Settings</a> to activate it. More info about Gemini AI in Auto Affiliatte Links <a href="https://autoaffiliatelinks.com/gemini-ai-is-now-available-in-auto-affiliate-links-automated-linking/">here</a>.', 'wp-auto-affiliate-links' ); 
+ 			// _e( 'Gemini AI can be used to automatically add affiliate links. Go to <a href="'.  admin_url('admin.php?page=aal_apimanagement') .'">General Settings</a> to activate it. More info about Gemini AI in Auto Affiliatte Links <a href="https://autoaffiliatelinks.com/gemini-ai-is-now-available-in-auto-affiliate-links-automated-linking/">here</a>.', 'wp-auto-affiliate-links' ); 
  
   
-      	//_e( 'Thank you for using Auto Affiliate Links. Upgrade to <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Auto Affiliate Links PRO</a> to get access to advanced linking features. <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Learn more.</a>', 'wp-auto-affiliate-links' ); 
+      	_e( 'Thank you for using Auto Affiliate Links. Upgrade to <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Auto Affiliate Links PRO</a> to get access to advanced linking features. <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Learn more.</a>', 'wp-auto-affiliate-links' ); 
  
   			//_e( 'Thank you for using Auto Affiliate Links. Upgrade to PRO to have links from Amazon, Clickbank, Shareasale, Walmart, Ebay, Best Buy, Envato, extracted and added automatically to your content.  Learn more about <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Auto Affiliate Links PRO</a>. ', 'wp-auto-affiliate-links' );   	    	 
 
@@ -276,8 +276,8 @@ function aalDismissNotice() {
 
 
 		
-		delete_option('aal_option_dismissed95');
-		add_option('aal_option_dismissed96',true);
+		delete_option('aal_option_dismissed96');
+		add_option('aal_option_dismissed97',true);
 	
 	
 }

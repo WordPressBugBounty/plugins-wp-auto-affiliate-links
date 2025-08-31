@@ -476,7 +476,7 @@ function wpaal_add_affiliate_links($content) {
 								if($iltargeto == '_blank' ) $iltgo = " target=\"_blank\" "; else $iltgo = '';
 								if($ilrelationo == 'nofollow' ) $ilrlo = " rel=\"nofollow\" "; else $ilrlo = '';
 
-								$replace[] = "<a title=\"$title\" class=\"". $illclass . "\"" . $iltgo . $ilrlo ." href=\"$url\">$1</a>". html_entity_decode($ildisclosureshow);
+								$replace[] = "<a title=\"$title\" class=\"". $illclass . "\"" . $iltgo . $ilrlo ." ". $lcstyle ."href=\"$url\">$1</a>". html_entity_decode($ildisclosureshow);
 							}
 							else {
 								$replace[] = "<a title=\"$title\" class=\"". $lclass ."\" target=\"". $targeto ."\" ". $relo ." ". $lcstyle ." href=\"$url\">$1</a>". html_entity_decode($disclosureshow);
