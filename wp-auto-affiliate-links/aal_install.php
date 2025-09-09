@@ -217,7 +217,7 @@ add_action('wpmu_new_blog', 'aal_setup_new_blog');
 function aal_admin_notice() {  
 	
 	$aal_notice_dismissed = get_option('aal_option_dismissed97'); 
-	if(!$aal_notice_dismissed && !get_option('aal_apike'))
+	if(!$aal_notice_dismissed && !get_option('aal_apikey'))
 	{  if(current_user_can('activate_plugins')) {
     ?>
     <div id="aal_notice_div" class="updated">
