@@ -470,7 +470,7 @@ $(document).ready(function() {
 
 	$.ajax({
          type: "GET",
-         url: "//autoaffiliatelinks.com/api/getcustomlinks.php",
+         url: "//api.autoaffiliatelinks.com/getcustomlinks.php",
          data: apidata,
          cache: false,
          success: function(returned){
@@ -483,7 +483,7 @@ $(document).ready(function() {
          	
          	
          	if(!returned || returned == 'there was an error' ) {
-					canvas.innerHTML = 'No shareasale links added yet';	         		
+					canvas.innerHTML = 'No links added yet';	         		
          		return false;
 				}	                    
                   
@@ -624,7 +624,124 @@ $(document).ready(function() {
 	}
 	
 	
-	
+
+
+//Show-hide add link toast
+$(document).ready(function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    if (urlParams.has('aal_add_link_success')) {
+        const $notice = $('#aal-add-link-inline-notice');
+        
+        // Slide down the notice
+        $notice.slideDown(400);
+        
+        // Optional: Auto-hide after a few seconds, or keep it visible
+        setTimeout(function() {
+            $notice.slideUp(800);
+            
+            // Clean the URL without reloading
+            const cleanUrl = window.location.href.split('&aal_add_link_success')[0].split('?aal_add_link_success')[0];
+            window.history.replaceState({}, document.title, cleanUrl);
+        }, 5000);
+    }
+});
+
+
+
+//Send keyword suggestions to API
+jQuery(document).ready(function($) {
+    $('#aal_get_ai_suggestions').on('click', function(e) {
+        e.preventDefault();
+        
+        const affiliateUrl = $('#aal_formlink').val();
+        if (!affiliateUrl || affiliateUrl.length < 10) {
+            alert('Please enter a valid affiliate link first.');
+            return;
+        }
+
+        const $btn = $(this);
+        const $spinner = $('#aal_ai_spinner');
+
+        $btn.prop('disabled', true);
+        $spinner.css('visibility', 'visible');
+
+        // Tell WordPress to scrape the URL locally
+        $.post(ajax_script.ajaxurl, {
+            action: 'aal_get_ai_keywords',
+            affiliate_url: affiliateUrl,
+            aal_nonce: ajax_script.aal_nonce
+        }, function(response) {
+            if (response.success) {
+                // Append generated keywords to the input field
+                const currentKeywords = $('#aal_formkeywords').val();
+                const newKeywords = response.data.keywords.join(', ');
+                
+                $('#aal_formkeywords').val(currentKeywords ? currentKeywords + ', ' + newKeywords : newKeywords);
+                
+                // Trigger the 'inline toast' 
+                $('#aal-inline-notice').find('span:last').text('AI Keywords added!');
+                $('#aal-inline-notice').slideDown().delay(3000).slideUp();
+            } else {
+            	if (response.data && response.data.code === 'scrape_failed') {
+            			    $('#aal_ai_fallback_container').slideDown();
+    							 $('#aal_ai_spinner').css('visibility', 'hidden');
+    							 $('#aal_get_ai_suggestions').prop('disabled', false);
+            	}
+            	else {
+                alert('AI Error: ' + (response.data || 'Could not generate suggestions.'));
+             }
+            }
+              
+            
+        }).always(function() {
+            $btn.prop('disabled', false);
+            $spinner.css('visibility', 'hidden');
+        });
+    });
+    
+    
+	$('#aal_generate_from_hint').on('click', function(e) {
+        e.preventDefault();
+        const hint = $('#aal_product_hint').val();
+        const $btn = $(this);
+        
+        if (!hint) { alert('Please enter a hint.'); return; }
+
+        $btn.prop('disabled', true);
+        $('#aal_ai_spinner').css('visibility', 'visible');
+
+        $.post(ajax_script.ajaxurl, {
+            action: 'aal_get_ai_keywords', 
+            product_hint: hint,           
+            aal_nonce: ajax_script.aal_nonce
+        }, function(response) {
+        		if (response.success) {
+               // Append generated keywords to the input field
+                const currentKeywords = $('#aal_formkeywords').val();
+                const newKeywords = response.data.keywords.join(', ');
+                
+                $('#aal_formkeywords').val(currentKeywords ? currentKeywords + ', ' + newKeywords : newKeywords);
+                $('#aal_ai_fallback_container').slideUp();
+                
+                // Trigger the 'inline toast' 
+                $('#aal-inline-notice').find('span:last').text('AI Keywords added!');
+                $('#aal-inline-notice').slideDown().delay(3000).slideUp();
+             }
+             else {
+             		alert('AI Error: ' + (response.data || 'Could not generate suggestions.'));      
+             }
+        }).always(function() {
+            $btn.prop('disabled', false);
+            $('#aal_ai_spinner').css('visibility', 'hidden');
+        });
+    });    
+    
+    
+    
+    
+    
+});
 
 	
 })(jQuery);
@@ -710,7 +827,7 @@ function aalCustomLinkDelete(linkid) {
 
 	jQuery.ajax({
          type: "GET",
-         url: "//autoaffiliatelinks.com/api/deletecustomlinks.php",
+         url: "//api.autoaffiliatelinks.com/deletecustomlinks.php",
          data: apidata,
          cache: false,
          success: function(returned){
@@ -771,7 +888,7 @@ var answer = confirm("Are you sure you want to delete all the links below  ?")
 
 	jQuery.ajax({
          type: "GET",
-         url: "//autoaffiliatelinks.com/api/deletecustomlinks.php",
+         url: "//api.autoaffiliatelinks.com/deletecustomlinks.php",
          data: apidata,
          cache: false,
          success: function(returned){
@@ -847,7 +964,6 @@ function aalCopyCloak(el) {
   /* Alert the copied text */
   alert("Copied the link: " + cloak.value);
 }
-
 
 
 

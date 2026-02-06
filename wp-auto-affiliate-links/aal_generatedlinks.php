@@ -8,7 +8,7 @@ function wpaal_generatedlinks() {
 
 
 
-		//$data = file_get_contents('http://autoaffiliatelinks.com/api/getlinks.php?apikey='. get_option('aal_apikey') );
+		//$data = file_get_contents('http://api.autoaffiliatelinks.com/getlinks.php?apikey='. get_option('aal_apikey') );
 		//echo $data;
 		if(isset($data)) $data = json_decode($data);
 

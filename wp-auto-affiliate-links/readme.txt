@@ -3,8 +3,8 @@ Contributors: thedark
 Donate link: https://autoaffiliatelinks.com/donations/
 Tags: affiliate, posts, keywords, content, auto
 Requires at least: 3.5
-Tested up to: 6.8.2
-Stable tag: 6.6.1.2
+Tested up to: 6.9.1
+Stable tag: 6.8.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -107,6 +107,61 @@ Microsoft Excel adds odd formatting to the file and making problems at import an
 If you can't find the options to do this, try LibreOffice, as it is a bit easier to find them there.
 
 == Changelog ==
+
+= 6.8.1.1 =
+* Tested and updated to work with WordPress 6.9.1
+
+= 6.8.1 =
+* Added a fallback for keyword suggestion: when scraping is not avaialble, ask for a hint
+
+= 6.8 =
+* Added AI keywords suggestion feature
+
+= 6.7.2.2 = 
+* Added visual confirmation after links are added
+
+= 6.7.2.1 =
+* Removed payment processor update notice and fixed API Key related notices
+
+= 6.7.2 =
+* Added search feature for added links
+
+= 6.7.1.2 =
+* Added label for links per page
+
+= 6.7.1.1 =
+* Fixed issue when cache was not correctly updating
+
+= 6.7.1 =
+* Unified API endpoint URL
+
+= 6.7.0.1 =
+* Added link to API Management in plugin list
+
+= 6.7 =
+* Added Awin network support
+
+= 6.6.5 = 
+* Fixed local caching system
+* Changed the way settings are sent to the API server
+
+= 6.6.4.1 =
+* Added a timeout when ckecking if API key is valid
+
+= 6.6.4 =
+* Changed the API URL to point to a subdomain
+
+= 6.6.3 =
+* Added option to delete links cache for API users
+
+= 6.6.2.1 =
+* Added support for Bricks Builder elements
+
+= 6.6.2 =
+* Changed exported file to .csv
+
+= 6.6.1.3 =
+* Tested and updated to work with WordPress 6.8.3
 
 = 6.6.1.2 =
 * Fixed error causing notice to be displayed to all users

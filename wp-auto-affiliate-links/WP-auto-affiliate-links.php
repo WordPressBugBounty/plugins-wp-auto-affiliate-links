@@ -4,9 +4,17 @@ Plugin Name: Auto Affiliate Links
 Plugin URI: https://autoaffiliatelinks.com
 Description: Auto add affiliate links to your blog content
 Author: Lucian Apostol
-Version: 6.6.1.2
+Version: 6.8.1.1
 Author URI: https://autoaffiliatelinks.com
 */
+
+//Shared API settings
+global $aal_page_globals; 
+$aal_page_globals = null;
+
+//Individual API settings
+global $aal_page_items;
+$aal_page_items = array();
 
 //Load css stylesheets
 function aal_load_css() {
@@ -39,13 +47,8 @@ function aal_load_front_scripts() {
 		if($aal_apikey) {
 			
 		$geminiaion = get_option('aal_geminiaion');
-        if($geminiaion) { 
-        		$aal_api_pro_url = '//autoaffiliatelinks.com/api/pro5.php';
-        	}
-        	else {
-				$aal_api_pro_url = '//autoaffiliatelinks.com/api/pro2.php';        	
-        	}
-		
+
+		$aal_api_pro_url = '//api.autoaffiliatelinks.com/pro5.php';
 		
 			//if( get_option( 'aal_apikey' ) ) { 
 			wp_register_script( 'aal_apijs', plugin_dir_url( __FILE__ ) . 'js/api.js', array( 'jquery' ), false, true );
@@ -69,6 +72,23 @@ function aal_load_front_scripts() {
 	
 		}
 	
+}
+
+add_action( 'wp_footer', 'aal_print_footer_scripts', 10 );
+
+function aal_print_footer_scripts() {
+    global $aal_page_globals, $aal_page_items;
+
+    // Only output if we actually found posts that need processing
+    if ( ! empty( $aal_page_items ) && ! empty( $aal_page_globals ) ) {
+        
+        $final_data = array(
+            'config' => $aal_page_globals, // The big list of settings
+            'items'  => $aal_page_items    // The list of specific posts
+        );
+
+        wp_localize_script( 'aal_apijs', 'aal_data', $final_data );
+    }
 }
 
 
@@ -123,6 +143,9 @@ add_filter( 'bp_get_activity_content_body', 'wpaal_add_affiliate_links', $filter
 
 //Support for Wp ecommerce plugin
 add_filter( 'wpsc_the_product_description', 'wpaal_add_affiliate_links', $filterpriority );
+
+//Support for Bricks Builder
+add_filter( 'bricks/frontend/render_data', 'wpaal_add_affiliate_links', $filterpriority );
 
 
 //Support for BBpress
@@ -279,6 +302,7 @@ add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), 'aal_action_link
 function aal_action_links( $actions ) {
    $actions[] = '<a href="'. esc_url( get_admin_url(null, 'admin.php?page=aal_topmenu') ) .'">Add Links</a>';
    $actions[] = '<a href="'. esc_url( get_admin_url(null, 'admin.php?page=aal_general_settings') ) .'">Settings</a>';
+   $actions[] = '<a href="'. esc_url( get_admin_url(null, 'admin.php?page=aal_apimanagement') ) .'">API Management</a>';
    return $actions;
 }
 
@@ -323,7 +347,8 @@ function wpaal_actions() {
 			} 		
 		}
 
-		wp_redirect($_SERVER['REQUEST_URI']);	
+		$redirect_url = add_query_arg('aal_add_link_success', '1', $_SERVER['REQUEST_URI']);
+		wp_redirect($redirect_url);	
 		
 	}
 
@@ -378,9 +403,9 @@ function wpaal_actions() {
 		if(!$separator) $separator = "|";
 		//$separator = "|";
 		
-		$File = 'aal_export.txt';
+		$File = 'aal_export.csv';
 		header("Content-Disposition: attachment; filename=\"" . basename($File) . "\"");
-		header('Content-type: text/plain');
+		header('Content-type: text/csv');
 		header("Connection: close");
 		
 		foreach($myrows as $row) {
@@ -502,7 +527,7 @@ function wpaal_manage_affiliates() {
 			
 			<?php if(!$apikey) {
 				
-						echo 'Thank you for using Auto Affiliate Links. Check out advanced features of <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Auto Affiliate Links PRO</a>.<br /><br />';					
+						echo 'Upgrade to <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">PRO</a> for advanced linking features. Learn more about <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Auto Affiliate Links PRO</a>.<br /><br />';					
 				
 				} ?>
         <div class="postbox" style="padding: 15px;">                        
@@ -515,12 +540,35 @@ function wpaal_manage_affiliates() {
                   if (function_exists('wp_nonce_field')) wp_nonce_field('WP-auto-affiliate-links_add_link');
                   ?>
                 <span class="aal_label">Affiliate link:</span> <input class="aal_biginput" type="text" name="aal_link" value="" id="aal_formlink" placeholder="Affiliate Link, please include https:// or https://" /> <br /><br />
+             
+                
                 <span class="aal_label">Keywords:</span> <input class="aal_biginput" type="text" name="aal_keywords" id="aal_formkeywords" placeholder="keyword1, keyword2" /> <br /><br />
+
+					<div id="aal_ai_fallback_container" style="display:none; margin: 15px 0; padding: 15px; background: #fff8e5; border-left: 4px solid #ffb900;">
+						 <p style="margin: 0 0 10px 0;">We couldn't read the link automatically (it might be protected). Please tell us what this link is about (product name, site name):</p>
+						 <input type="text" id="aal_product_hint" placeholder="e.g. Samsung Galaxy S24" style="width: 70%;" />
+						 <button type="button" id="aal_generate_from_hint" class="button button-primary">Generate from Hint</button>
+					</div>
+
+
+					<button type="button" <?php if(!$apikey) echo 'disabled'; ?> id="aal_get_ai_suggestions" class="button secondary" style="margin-left: 10px;">
+					    <span class="dashicons dashicons-admin-appearance" style="vertical-align: middle; margin-right: 5px;"></span>
+					    Suggest Keywords (AI)
+					</button> 
+					<?php if(!$apikey) echo 'API Key is required for keyword suggestions based on URL. Please go to our website to <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">get your API Key</a>.'; ?>
+					<span id="aal_ai_spinner" class="spinner" style="float: none; visibility: hidden;"></span>   
+					<br /><br />                
+                
                 <div class="aal_form_advanced_options">	
                 <span class="aal_label">Title:</span> <input class="aal_biginput_title" type="text" name="aal_title" id="aal_formtitle" placeholder="link title" /> ( optional )
 					 </div>
 					<a href="javascript:;" class="aal_form_toggle_advanced" onclick="" >Show advanced options</a>  <br /><br />
                 <input type="submit" class="button-primary" name="Save" value="Add Link" />&nbsp;&nbsp;&nbsp; 
+                <br /><br />
+					<div id="aal-add-link-inline-notice" class="aal-add-link-notice-hidden">
+					    <span class="dashicons dashicons-yes aal-notice-icon"></span> 
+					    <span class="aal-notice-text">Link added successfully!</span>
+					</div>           
                 
                 <br /><br />
                 <?php aalGetSugestions();?>
@@ -543,7 +591,16 @@ function wpaal_manage_affiliates() {
 		
 	if($apikey) {
 		
-		$validcheck = file_get_contents('https://autoaffiliatelinks.com/api/apivalidate.php?apikey='. urlencode($apikey) );
+	$vc_ctx = stream_context_create(array(
+    'http' => array(
+        'timeout' => 1 // Timeout in seconds
+    )
+	));
+		
+		
+		//Tempprary disable apikey check
+		//$validcheck = @file_get_contents('https://api.autoaffiliatelinks.com/apivalidate.php?apikey='. urlencode($apikey), false, $vc_ctx );
+		$validcheck = FALSE;
 		//echo $validcheck;
 		if($validcheck === FALSE) {
 			$valid = new StdClass();
@@ -599,22 +656,6 @@ function wpaal_manage_affiliates() {
 	}
 	
 	
-		if(isset($valid->notes) && ($valid->notes == '' || $valid->notes == 'myproduct manual' || $valid->notes == 'myproduct yearly manual' )  ) {
-		echo 'We have changed our payment processor. Please go to <a href="https://autoaffiliatelinks.com/members-area/download-page/">our website</a> to update your subscription. <br /><br />';
-		if(get_option('aal_newpp')) {
-			update_option('aal_newpp','yes');
-		}
-		else {
-			add_option('aal_newpp','yes','','yes');
-		}
-		
-	}
-	else {
-		delete_option('aal_querylimit');
-		delete_option('aal_newpp');
-	}
-	
-	
 	
 	}	
 	
@@ -623,7 +664,7 @@ function wpaal_manage_affiliates() {
 		//echo 'Please support Auto Affiliate Links development by upgrading to  <a href="https://autoaffiliatelinks.com/auto-affiliate-links-payment-plans/">Auto Affiliate Links PRO</a>.';	
 			
 	
-		echo 'If you want links to be extracted and displayed automatically from Amazon, Clickbank, Shareasale, Ebay, Walmart, Commision Junction and Envato Marketplace, you only have to <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">get your API key</a>.';	
+		echo 'If you want links to be extracted and displayed automatically from Amazon, Clickbank, Awin, Ebay, Walmart, Commision Junction and Envato Marketplace, find out more about <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Auto Affiliate Links PRO</a>.';	
 		
 		echo '<br /><br />You can bulk add multiple links using the <a href="'. admin_url('admin.php?page=aal_import_export') .'">"Import/Export"</a> page. ';
 		
@@ -671,7 +712,7 @@ function wpaal_manage_affiliates() {
 					 if(isset($aalorder) && $aalorder) $aallppdisplay .= '<input type="hidden" name="aalorder" value="'. $aalorder .'" />';
 					 if(isset($aalsort) && $aalsort) $aallppdisplay .= '<input type="hidden" name="aalsort" value="'. $aalsort .'" />';
 					 $aallppdisplay .= '
-				    <select name="lp" onchange="if(this.value != 0) { this.form.submit(); }">';
+				    Links per page: <select name="lp" onchange="if(this.value != 0) { this.form.submit(); }">';
 				        $aallppdisplay .='<option value="20" ';  if($aallinksperpage == 20) $aallppdisplay .='selected'; $aallppdisplay .='>20</option>';
 				        $aallppdisplay .='<option value="50" ';  if($aallinksperpage == 50) $aallppdisplay .='selected'; $aallppdisplay .='>50</option>';
 				        $aallppdisplay .='<option value="100" ';  if($aallinksperpage == 100 || !$aallinksperpage) $aallppdisplay .='selected'; $aallppdisplay .='>100</option>';
@@ -744,6 +785,27 @@ function wpaal_manage_affiliates() {
                                     
                     
                     <h3>Affiliate Links:</h3>
+                    
+							                    
+							<div class="aal-search-container" style="margin-bottom: 15px; background: #fff; padding: 10px; border: 1px solid #ccd0d4;">
+							    <form method="get" action="">
+							        <input type="hidden" name="page" value="aal_topmenu" />
+							        <?php 
+							            // Keep existing sort/order/pagination settings during search
+							            if(isset($aalorder)) echo '<input type="hidden" name="aalorder" value="'. esc_attr($aalorder) .'" />';
+							            if(isset($aalsort)) echo '<input type="hidden" name="aalsort" value="'. esc_attr($aalsort) .'" />';
+							            $search_value = filter_input(INPUT_GET, 'aal_search', FILTER_SANITIZE_SPECIAL_CHARS);
+							        ?>
+							        <strong>Search Links/Keywords:</strong> 
+							        <input type="text" name="aal_search" value="<?php echo $search_value; ?>" placeholder="e.g. amazon or samsung" style="width: 250px;" />
+							        <input type="submit" class="button" value="Search" />
+							        <?php if($search_value): ?>
+							            <a href="?page=aal_topmenu" class="button">Clear</a>
+							        <?php endif; ?>
+							    </form>
+							</div>                    
+							                    
+                    
                     
 							<?php echo $order_list; ?>
                     <ul class="aal_links">

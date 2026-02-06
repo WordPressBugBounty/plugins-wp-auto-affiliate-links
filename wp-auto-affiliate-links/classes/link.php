@@ -64,6 +64,21 @@ class AalLink
 			else 	$ordersql = " ORDER BY id"; 
 			//end order-sort
 			
+			
+			//Search logic
+			$search_term = filter_input(INPUT_GET, 'aal_search', FILTER_SANITIZE_SPECIAL_CHARS);
+			$search_sql = '';
+			
+			// 2. Build the WHERE clause if search is present
+			if ($search_term) {
+			    // We use $wpdb->prepare for security even though we sanitized above
+			    $search_sql = $wpdb->prepare(
+			        " WHERE link LIKE %s OR keywords LIKE %s ", 
+			        '%' . $wpdb->esc_like($search_term) . '%', 
+			        '%' . $wpdb->esc_like($search_term) . '%'
+			    );
+			}
+			
 			//pagination
 			
 			$linkspage = 1;
@@ -75,7 +90,7 @@ class AalLink
 			$paginationsql = '';
 			$paginationhtml = '';
 			$offset = 0;
-			$num_links = $wpdb->get_var('SELECT COUNT(*) FROM '.  $table_name);
+			$num_links = $wpdb->get_var("SELECT COUNT(*) FROM $table_name" . $search_sql);
 			if($num_links>$rowsonpage) {
 				$offset = ($linkspage - 1) * $rowsonpage; 
 				$paginationsql = ' LIMIT '. $rowsonpage .' OFFSET '. $offset;
@@ -105,7 +120,7 @@ class AalLink
 			
 			
 			
-			$myrows = $wpdb->get_results( "SELECT * FROM ". $table_name . $ordersql . $paginationsql);
+			$myrows = $wpdb->get_results("SELECT * FROM " . $table_name . $search_sql . $ordersql . $paginationsql);
 
 			if($myrows) {
         	 foreach($myrows as $row) {
@@ -182,7 +197,7 @@ class AalLink
 
                         <div class="aal_edit_advanced" id="edit_advanced_<?php echo $this->id; ?>" style="display:none; margin-left: 25px;">
                          ID: <span style="font-weight: bold; margin-right: 15px;"><?php echo $this->id; ?></span>
-                         Disabled: <input type="checkbox" name="aal_disabled" <?php echo $disabledcheck; ?> />                       
+                         Don't add this link: <input type="checkbox" name="aal_disabled" <?php echo $disabledcheck; ?> />                       
                       	 Title: <input style="margin: 5px 10px;width: 10%;" type="text" name="aal_title" value="<?php echo $meta->title; ?>" />
                       	 Custom same link limit: <input style="margin: 5px 10px;width: 10%;" type="text" name="aal_samelinkmeta" value="<?php echo $meta->samelink; ?>" />
                       	 Don't show link disclosure <input type="checkbox" name="aal_disclosureoff" <?php echo $disclosureoffcheck; ?> value="off" />  

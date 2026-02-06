@@ -18,6 +18,7 @@ function aal_api_register_settings() {
    register_setting( 'aal_api_settings', 'aal_apikey' );
    register_setting( 'aal_api_settings', 'aal_amazonactive' );
    register_setting( 'aal_api_settings', 'aal_clickbankactive' );
+   register_setting( 'aal_api_settings', 'aal_awinactive' );
    register_setting( 'aal_api_settings', 'aal_shareasaleactive' );
    register_setting( 'aal_api_settings', 'aal_cjactive' );
    register_setting( 'aal_api_settings', 'aal_ebayactive' );
@@ -27,6 +28,36 @@ function aal_api_register_settings() {
    register_setting( 'aal_api_settings', 'aal_rakutenactive' );
    register_setting( 'aal_api_settings', 'aal_discoveryjapanactive' );
 }	
+
+
+
+add_action( 'admin_post_wpaal_api_delete_cache', 'wpaal_handle_api_delete_cache' );
+
+function wpaal_handle_api_delete_cache() {
+
+
+    check_admin_referer( 'wpaal_api_delete_cache_action' );
+
+    if ( ! current_user_can( 'manage_options' ) ) {
+        wp_die( 'You do not have permission to do this.' );
+    }
+
+
+delete_metadata(
+        'post',                     
+        0,                          
+        'aal_cache_links',          
+        '',                         
+        true                        
+    );
+
+	 set_transient( 'wpaal_cache_cleared_notice', true, 5 );
+	 
+    $redirect_url = wp_get_referer();
+
+    wp_redirect( $redirect_url );
+    exit; 
+}
 	
 
 
@@ -42,7 +73,7 @@ function wpaal_apimanagement() {
 		$apiemail = $_POST['aal_apiemail'];	
 		
 		$getcontent = 'apiname='. $apiname .'&apiemail='. $apiemail;	
-		$returned = aal_post($getcontent,'http://autoaffiliatelinks.com/api/apirequest.php');
+		$returned = aal_post($getcontent,'http://api.autoaffiliatelinks.com/apirequest.php');
 		$returned = json_decode($returned);
 		
 		//print_r($returned);
@@ -67,6 +98,15 @@ $apikey = get_option('aal_apikey');
 ?>
 
 <div class="wrap">  
+
+
+		<?php
+      if ( get_transient( 'wpaal_cache_cleared_notice' ) ) {
+        echo '<div class="notice notice-success is-dismissible"><p>Links cache has been successfully deleted!</p></div>';
+        delete_transient( 'wpaal_cache_cleared_notice' );
+    }
+    ?>
+
         <div class="icon32" id="icon-options-general"></div>  
         
                  <h2>Auto Affiliate Links PRO features</h2>
@@ -84,12 +124,11 @@ $apikey = get_option('aal_apikey');
 						<li>Links will be added <b>automatically</b> based on your content 
 						<li><b>Amazon</b> Links are automatically extracted and inserted in content
 						<li><b>ClickBank</b> Links are automatically extracted and inserted
-						<li><b>Shareasale</b> links can be uploaded and displayed into your content   
+						<li><b>Awin</b> links can be uploaded and displayed into your content   
 						<li><b>Ebay</b> auctions can be automatically linked based on your content
 						<!-- <li><b>Rakuten Linkshare</b> affiliate links can be automatically linked based on your content -->
 						<li><b>Walmart</b> links can be automatically extracted and displayed
-						<li><b>Commission Junction</b> product datafeeds can be uploaded and automatically displayed
-						<li><b>Shareasale</b> links will be automatically shown          
+						<li><b>Commission Junction</b> product datafeeds can be uploaded and automatically displayed        
 						<li><b>Envato Marketplace</b> automatic links    	
 						<li><b>Discovery Japan affiliate links can be extracted and displayed automatically</b> automatic links  
               	</ul>
@@ -122,13 +161,25 @@ $apikey = get_option('aal_apikey');
 ?>    
 
 	<?php
-		
-		$validcheck = @file_get_contents('https://autoaffiliatelinks.com/api/apivalidate.php?apikey='. $apikey );
-		if($validcheck === FALSE) {
-			$valid = new StdClass();
-			$valid->status = 'failed';
+	
+	
+		$vc_ctx = stream_context_create(array(
+	    'http' => array(
+	        'timeout' => 3 // Timeout in seconds
+	    )
+		));
+			
+		if($apikey) {
+			$validcheck = @file_get_contents('https://api.autoaffiliatelinks.com/apivalidate.php?apikey='. urlencode($apikey), false, $vc_ctx );
 		}
-		else $valid = json_decode($validcheck);
+		else {
+			$validcheck = FALSE;
+		}
+			if($validcheck === FALSE) {
+				$valid = new StdClass();
+				$valid->status = 'failed';
+			}
+			else $valid = json_decode($validcheck);
 		
 	
 	
@@ -144,6 +195,7 @@ $apikey = get_option('aal_apikey');
 	
 	
 	<?php submit_button('Save');  ?>	
+	
 
 
                 <?php if($apikey) {
@@ -168,7 +220,7 @@ $apikey = get_option('aal_apikey');
 	
 	if($valid->status == 'expired' && $apikey) { 
 		echo 'Your Auto Affiliate Links PRO subscription is expired. Please <a href="https://autoaffiliatelinks.com/auto-affiliate-links-payment-plans/">renew your subscription</a> or <a href="https://autoaffiliatelinks.com/auto-affiliate-links-payment-plans/">create a new API key</a> <br /><br />';
-		if(get_option('aal_apistatus')) {
+		if(get_option('aal_apiexpired')) {
 			update_option('aal_apiexpired','expired');
 		}
 		else {
@@ -179,8 +231,8 @@ $apikey = get_option('aal_apikey');
 	{
 		delete_option('aal_apistatus');
 		if($valid->status == 'invalid' && $apikey) { 
-			echo 'The API key you entered is invalid. You have to <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">register on our website</a> to get a valid API key. <br /><br />';
-			if(get_option('aal_apiexpired')) {
+			echo 'Auto Affiliate Links: The API key you entered is invalid. You have to <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">register on our website</a> to get a valid API key. <br /><br />';
+			if(get_option('aal_apistatus')) {
 				update_option('aal_apistatus','invalid');
 			}
 			else {
@@ -194,7 +246,7 @@ $apikey = get_option('aal_apikey');
 	}  
 	
 	if(isset($valid->queries)) if($valid->queries == 'overquota') {
-		echo 'Your API queries monthly limit has been reached. Go to <a href="https://autoaffiliatelinks.com/members-area/download-page/">our website</a> to upgrade your plan. <br /><br />';
+		echo 'Your API queries monthly limit for Auto Affiliate Links has been reached. Go to <a href="https://autoaffiliatelinks.com/members-area/download-page/">our website</a> to upgrade your plan. <br /><br />';
 		if(get_option('aal_querylimit')) {
 			update_option('aal_querylimit','overquota');
 		}
@@ -274,6 +326,18 @@ $apikey = get_option('aal_apikey');
 		</select></td>
 		<td><?php if(get_option('aal_shareasaleactive')=='1') { ?><a href="<?php echo admin_url('admin.php?page=aal_module_shareasale'); ?>">Configure Shareasale Module</a><?php } 
 		else { ?>   <a href="javascript:;" onclick="return aalActivateModule('aal_shareasaleactive');" >Activate Shareasale Module</a>    <?php } ?></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>	
+	<tr class="alternate">
+		<td>Awin</td>
+		<td><select name="aal_awinactive">
+			<option value="0" <?php if(get_option('aal_awinactive')=='0') echo "selected"; ?> > Inactive</option>
+			<option value="1" <?php if(get_option('aal_awinactive')=='1') echo "selected"; ?> >Active</option>
+		</select></td>
+		<td><?php if(get_option('aal_awinactive')=='1') { ?><a href="<?php echo admin_url('admin.php?page=aal_module_awin'); ?>">Configure Awin Module</a><?php } 
+		else { ?>   <a href="javascript:;" onclick="return aalActivateModule('aal_awinactive');" >Activate Awin Module</a>    <?php } ?></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -421,6 +485,14 @@ $apikey = get_option('aal_apikey');
 		<td></td>
 		<td></td>
 	</tr>	
+	<tr class="alternate">
+		<td>Awin</td>
+		<td>Inactive</td>
+		<td><a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Get API Key</a></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>	
 	<tr>
 		<td>Commission Junction</td>
 		<td>Inactive</td>
@@ -480,6 +552,7 @@ $apikey = get_option('aal_apikey');
 	<input type="hidden" name="aal_amazonactive" value="<?php echo get_option('aal_amazonactive'); ?>" />
 	<input type="hidden" name="aal_clickbankactive" value="<?php echo get_option('aal_clickbankactive'); ?>" />
 	<input type="hidden" name="aal_shareasaleactive" value="<?php echo get_option('aal_shareasaleactive'); ?>" />
+	<input type="hidden" name="aal_awinactive" value="<?php echo get_option('aal_awinactive'); ?>" />	
 	<input type="hidden" name="aal_ebayactive" value="<?php echo get_option('aal_sebayactive'); ?>" />
 	<input type="hidden" name="aal_cjactive" value="<?php echo get_option('aal_cjactive'); ?>" />
 	<input type="hidden" name="aal_bestbuyactive" value="<?php echo get_option('aal_bestbuyactive'); ?>" />
@@ -489,7 +562,31 @@ $apikey = get_option('aal_apikey');
 	
 	<?php } ?>
 	
+	<hr />
+	<h2>Additional actions</h2>
+	
 	</form>
+	
+	
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+        <p>
+            Clear all cached links. Use this feature to delete the cached links. 
+        </p>
+
+        <input type="hidden" name="action" value="wpaal_api_delete_cache">
+
+        <?php
+            wp_nonce_field( 'wpaal_api_delete_cache_action' ); 
+        ?>
+
+        <?php
+            submit_button( 'Delete Links Cache', 'primary' ); 
+        ?>
+    </form>	
+	
+	
+	
+	
 	</div>
 	
 	

@@ -5,7 +5,7 @@ function wpaal_add_affiliate_links($content) {
 
 
 		do_action( 'aal_before_content_display' );
-
+		global $aal_page_globals, $aal_page_items;
 		global $wpdb;
 		global $post;
 		global $wp;
@@ -193,6 +193,9 @@ function wpaal_add_affiliate_links($content) {
 		
 		$shareasaleid = get_option('aal_shareasaleid');
 		$shareasaleactive = get_option('aal_shareasaleactive');
+		
+		$awinid = get_option('aal_awinid');
+		$awinactive = get_option('aal_awinactive');
 
 		$cjactive = get_option('aal_cjactive');
 		
@@ -672,13 +675,14 @@ function wpaal_add_affiliate_links($content) {
 				global $aal_apirequestno;
 				if(!$aal_apirequestno) $aal_apirequestno = 0;
 				//If the manual replacement did not found enough links		
-				if($aal_apirequestno < 5 ) if($apikey && !is_feed() && ($sofar<$notimes || $amazondisplaywidget) && $querylimit!='overquota' && ($clickbankactive || $amazonactive || $shareasaleactive || $cjactive || $ebayactive || $bestbuyactive || $walmartactive || $envatoactive || $rakutenactive || $discoveryjapanactive)) {
+				if($aal_apirequestno < 5 ) if($apikey && !is_feed() && ($sofar<$notimes || $amazondisplaywidget) && $querylimit!='overquota' && ($clickbankactive || $amazonactive || $shareasaleactive || $awinactive || $cjactive || $ebayactive || $bestbuyactive || $walmartactive || $envatoactive || $rakutenactive || $discoveryjapanactive)) {
 
 					$aal_apirequestno = $aal_apirequestno + 1;
 					
 					if(!$clickbankactive) { $clickbankid = ''; }
 					if(!$amazonactive) { $amazonid = ''; }
 					if(!$shareasaleactive) { $shareasaleid = ''; }
+					if(!$awinactive) { $awinid = ''; }
 					if(!$ebayactive) { $ebayid = ''; }
 					if(!$bestbuyactive) { $bestbuyid = ''; }
 					if(!$walmartactive) { $walmartid = ''; }
@@ -699,25 +703,85 @@ if($post && $post->ID) $aal_postid = $post->ID;
 	else $aal_postid = '';
 
 
-		
+//Old code to add variables
+/* 	
 $aalprovars = '
 
 <div id="aal_api_data" data-divnumber="'. $aaldivnumber .'" data-target="'. $targeto .'" data-relation="'. $relationo .'" data-postid="post-'. $aal_postid .'" data-apikey="'. $apikey .'" data-clickbankid="'. $clickbankid .'" data-clickbankcat="'. $clickbankcat .'" data-clickbankgravity="'. $clickbankgravity .'"  data-amazonid="'. $amazonid .'" data-amazoncat="'. $amazoncat .'" data-amazonlocal="'. $amazonlocal .'" data-amazondisplaylinks="'. $amazondisplaylinks .'" data-amazondisplaywidget="'. $amazondisplaywidget .'" data-amazonactive="'. $amazonactive .'" data-clickbankactive="'. $clickbankactive .'"  data-shareasaleid="'. $shareasaleid .'"   data-shareasaleactive="'. $shareasaleactive .'" data-cjactive="'. $cjactive .'"  data-ebayactive="'. $ebayactive .'"  data-ebayid="'. $ebayid .'"   data-bestbuyactive="'. $bestbuyactive .'"  data-bestbuyid="'. $bestbuyid .'" data-walmartactive="'. $walmartactive .'"  data-walmartid="'. $walmartid .'" data-envatoid="'. $envatoid .'" data-envatosite="'. $envatosite .'" data-envatoactive="'. $envatoactive .'" data-rakutenactive="'. $rakutenactive .'"  data-rakutenid="'. $rakutenid .'" data-discoveryjapanactive="'. $discoveryjapanactive .'"  data-discoveryjapanid="'. $discoveryjapanid .'" data-discoveryjapanapikey="'. $discoveryjapanapikey .'" data-aurl="'. $aurl .'" data-notimes="'. $left .'" data-excludewords="'. $excludewords .'" data-cssclass="'. $cssclass .'" data-disclosure="'. $disclosure .'" data-linkcolor="'. $linkcolor .'" data-geminiaion="'. $geminiaion .'"  data-apidata=\'\' ></div>
 
 		
 		';	
-		
-		
+*/
 
+if ( is_null( $aal_page_globals ) ) {
+	$aal_page_globals = array(
+	            'target'                => $targeto,
+	            'relation'              => $relationo,
+	            'apikey'                => $apikey,
+	            
+	            // Clickbank
+	            'clickbankid'           => $clickbankid,
+	            'clickbankcat'          => $clickbankcat,
+	            'clickbankgravity'      => $clickbankgravity,
+	            'clickbankactive'       => $clickbankactive,
+	            
+	            // Amazon
+	            'amazonid'              => $amazonid,
+	            'amazoncat'             => $amazoncat,
+	            'amazonlocal'           => $amazonlocal,
+	            'amazondisplaylinks'    => $amazondisplaylinks,
+	            'amazondisplaywidget'   => $amazondisplaywidget,
+	            'amazonactive'          => $amazonactive,
+	            
+	            // Other Networks
+	            'shareasaleid'          => $shareasaleid,
+	            'shareasaleactive'      => $shareasaleactive,
+	            'awinid'          => $awinid,
+	            'awinactive'      => $awinactive,
+	            'cjactive'              => $cjactive,
+	            'ebayactive'            => $ebayactive,
+	            'ebayid'                => $ebayid,
+	            'bestbuyactive'         => $bestbuyactive,
+	            'bestbuyid'             => $bestbuyid,
+	            'walmartactive'         => $walmartactive,
+	            'walmartid'             => $walmartid,
+	            'envatoid'              => $envatoid,
+	            'envatosite'            => $envatosite,
+	            'envatoactive'          => $envatoactive,
+	            'rakutenactive'         => $rakutenactive,
+	            'rakutenid'             => $rakutenid,
+	            'discoveryjapanactive'  => $discoveryjapanactive,
+	            'discoveryjapanid'      => $discoveryjapanid,
+	            'discoveryjapanapikey'  => $discoveryjapanapikey,
+	            
+	            // General Settings
+	            'excludewords'          => $excludewords,
+	            'linkcolor'             => $linkcolor,
+	            'geminiaion'            => $geminiaion,
+	            'cssclass'              => $cssclass,     // Added
+	            'disclosure'            => $disclosure    // Added
+	        );
+        }
+		
+		
+		$aal_page_items[] = array(
+            'postid'    => $aal_postid,
+            'divnumber' => $aaldivnumber,
+            'aurl'      => $aurl,
+            'notimes'   => $left 
+        );
+
+
+		wp_enqueue_script( 'aal_apijs' );
 		
 		
 		$aalprodivcontent = '<div id="aalcontent_'. $aaldivnumber .'"></div> ';
 			
 		
-		if(is_string($content)) $content = $content . $aalprovars . $aalprodivcontent;
+		if(is_string($content)) $content = $content . $aalprodivcontent;
 		
 		if($post && $post->post_type == 'wpsc-product') 
-			echo $aalprovars . $aalprodivcontent;
+			echo $aalprodivcontent;
 					
 		
 			}

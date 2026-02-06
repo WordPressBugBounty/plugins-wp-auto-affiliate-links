@@ -162,7 +162,7 @@ function aalShareasaleActions() {
 
 		$slejson = json_encode($slearray); 
 		$postcontent = "slejson=". urlencode($slejson) ."&shareasaleid=". get_option('aal_shareasaleid') ."&apikey=". get_option('aal_apikey');
-		$response = aal_post($postcontent, 'http://autoaffiliatelinks.com/api/shareasale.php');
+		$response = aal_post($postcontent, 'http://api.autoaffiliatelinks.com/shareasale.php');
 		
 		echo $response;
 		$uploadmessage = "Upload succesfull";

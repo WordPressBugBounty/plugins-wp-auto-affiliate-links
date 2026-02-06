@@ -119,4 +119,57 @@ function aal_get_host_from_parse($url){
 }
 
 
+function aal_get_remote_metadata($url, $depth = 0) {
+    if ($depth > 3) return false; 
+
+    $args = array(
+        'timeout'     => 15,
+        'redirection' => 5,
+        'user-agent'  => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 AutoAffiliateLinks/6.0'
+    );
+
+    $response = wp_remote_get($url, $args);
+    //return $response;
+    if (is_wp_error($response)) return false;
+
+    $html = wp_remote_retrieve_body($response);
+    $parsed_url = parse_url($url);
+    $base_url = $parsed_url['scheme'] . '://' . $parsed_url['host'];
+
+    //Check for Meta Refresh Redirects
+    /*
+    if (preg_match('/<meta[^>]*http-equiv=["\']refresh["\'][^>]*content=["\'](?:\d+;\s*url=)?([^"\']+)["\']/i', $html, $matches)) {
+        $next_url = $matches[1];
+        
+        // Handle Relative URLs
+        if (strpos($next_url, 'http') !== 0) {
+            $next_url = rtrim($base_url, '/') . '/' . ltrim($next_url, '/');
+        }
+        
+        return aal_get_remote_metadata($next_url, $depth + 1);
+    }
+
+    if (preg_match('/(?:window\.location\.href|window\.location\.replace|location\.assign)\s*=\s*["\']([^"\']+)["\']/i', $html, $matches)) {
+        $next_url = $matches[1];
+
+        // Handle Relative URLs
+        if (strpos($next_url, 'http') !== 0) {
+            $next_url = rtrim($base_url, '/') . '/' . ltrim($next_url, '/');
+        }
+
+        return aal_get_remote_metadata($next_url, $depth + 1);
+    }
+    */
+
+    preg_match('/<title>(.*)<\/title>/i', $html, $title);
+    preg_match('/<meta name="description" content="([^"]*)"/i', $html, $desc);
+    preg_match('/<meta property="og:description" content="([^"]*)"/i', $html, $og_desc);
+
+    return array(
+        'title' => isset($title[1]) ? sanitize_text_field($title[1]) : '',
+        'description' => isset($desc[1]) ? sanitize_text_field($desc[1]) : (isset($og_desc[1]) ? sanitize_text_field($og_desc[1]) : '')
+    );
+}
+
+
 ?>

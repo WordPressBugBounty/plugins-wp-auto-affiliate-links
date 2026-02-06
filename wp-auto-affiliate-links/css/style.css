@@ -87,3 +87,42 @@ span.aal_urlbroken { color: #FF0000; font-weight: bold; }
 	content: "\f140";
 }
 
+
+
+#aal-add-link-toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #23282d; /* WordPress dark theme color */
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 4px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    transition: opacity 0.5s ease;
+}
+.aal-add-link-toast-hidden { opacity: 0; pointer-events: none; }
+#aal-add-link-toast .dashicons { color: #46b450; margin-right: 8px; }
+
+
+
+.aal-add-link-notice-hidden {
+    display: none;
+    border-left: 4px solid #46b450;
+    background: #fff;
+    padding: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.aal-notice-icon {
+    color: #46b450;
+    vertical-align: middle;
+}
+
+.aal-notice-text {
+    vertical-align: middle;
+    font-weight: 500;
+}

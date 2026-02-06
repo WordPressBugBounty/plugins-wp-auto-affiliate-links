@@ -182,7 +182,7 @@ function aalCjActions() {
 
 		$slejson = json_encode($slearray); 
 		$postcontent = "slejson=". urlencode($slejson) ."&apikey=". get_option('aal_apikey');
-		$response = aal_post($postcontent, 'http://autoaffiliatelinks.com/api/cj.php');
+		$response = aal_post($postcontent, 'http://api.autoaffiliatelinks.com/cj.php');
 		
 		echo $response;
 

@@ -12,9 +12,9 @@ function aal_cache_set_func() {
 	check_ajax_referer( 'aalcachesetnonce', 'cachesetnonce' ); 
 	
 	
-	if(isset($_POST['aalpostid']) && $_POST['aalpostid'] && is_numeric(substr($_POST['aalpostid'], 5)) ) {
+	if(isset($_POST['aalpostid']) && $_POST['aalpostid'] && is_numeric(substr($_POST['aalpostid'], 0, 5)) ) {
 		
-		$postidnr = substr(sanitize_text_field($_POST['aalpostid']), 5);
+		$postidnr = substr(sanitize_text_field($_POST['aalpostid']), 0, 5);
 		$links = array();
 		//$links = array_map( 'sanitize_text_field', $_POST['aalcachelinks'] );
 		//print_r($_POST['aalcachelinks']);
@@ -83,9 +83,9 @@ function aal_cache_get_func() {
 	check_ajax_referer( 'aalcachegetnonce', 'cachegetnonce' ); 
 	
 	
-	if(isset($_POST['aalpostid']) && $_POST['aalpostid'] && is_numeric(substr($_POST['aalpostid'], 5)) ) {
+	if(isset($_POST['aalpostid']) && $_POST['aalpostid'] && is_numeric(substr($_POST['aalpostid'],0, 5)) ) {
 		
-		$postidnr = substr(sanitize_text_field($_POST['aalpostid']), 5);
+		$postidnr = substr(sanitize_text_field($_POST['aalpostid']),0, 5);
 		$now = time();
 		
 		if(get_post_status($postidnr)) { 

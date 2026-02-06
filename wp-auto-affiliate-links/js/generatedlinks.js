@@ -12,7 +12,7 @@ jQuery(document).ready(function() {
 	aalapidata = { apikey: apikey };
   jQuery.ajax({
                     type: "GET",
-                    url: "//autoaffiliatelinks.com/api/getlinks.php",
+                    url: "//api.autoaffiliatelinks.com/getlinks.php",
                     data: aalapidata,
                     cache: false,
                     success: function(returned){

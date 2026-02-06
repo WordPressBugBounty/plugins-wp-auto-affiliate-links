@@ -5,7 +5,8 @@
 		//if(document.getElementById('aal_api_data')) {  
 		if(!aalInIframe()) {
 			
-			
+			//Old code for variables 
+			/*
 			$("div[id*='aal_api_data']").each(function() { 
 				//datadiv = document.getElementById('aal_api_data');		
 				var datadiv = this;
@@ -46,30 +47,129 @@
 				var aal_excludewords = datadiv.getAttribute('data-excludewords');
 				var aal_linkcolor = datadiv.getAttribute('data-linkcolor');
 				var aal_geminiaion = datadiv.getAttribute('data-geminiaion');
+				*/
+				
+				//new code for variables
+		// Check if our data object exists and has items
+		if (typeof aal_data !== 'undefined' && aal_data.items && aal_data.items.length > 0) {
+		
+		    // 1. Get the Global Settings (Config)
+		    // These are the same for every post, so we define them once here.
+		    var config = aal_data.config;
+		    
+		    
+        //creat variables to use here
+		   var aal_target = config.target;
+		   var aal_relation = config.relation;
+		   var aal_apikey = config.apikey;
+		   var aal_geminiaion = config.geminiaion;
+		   var aal_linkcolor = config.linkcolor;
+		   var aal_excludewords = config.excludewords;
+		   
+		
+		    // 2. Loop through specific Post Items
+		    $.each(aal_data.items, function(index, item) {
+		        
+		        // Extract specific variables for this post
+		        var aal_divnumber = item.divnumber;
+		        var aal_postid    = item.postid;
+		        var aal_aurl      = item.aurl;
+		        var aal_notimes   = item.notimes;
+		
+		        // --- Content Generation Logic (Existing Logic) ---
+		        var spydiv = document.getElementById('aalcontent_' + aal_divnumber);
+		        
+		        // Safety check: if the div is missing, skip this iteration
+		        if (!spydiv) return; 
+		
+		        var parentdiv = spydiv.parentNode;
+		        
+		        // Check if parent is just a wrapper (using your original logic)
+		        // Note: This string comparison is sensitive to spaces/quotes, kept as requested
+		        if (parentdiv.innerHTML == '<div id="aalcontent_' + aal_divnumber + '></div>') {
+		            parentdiv = parentdiv.parentNode;
+		        }
+		        
+		        var acontent = aalParse(parentdiv, '');
+		        if (acontent.length > 10000) {
+		            acontent = acontent.substring(0, 10000);
+		        }
+		
+		        var aal_content = encodeURIComponent(acontent);
+		
+		        // --- Construct the Data Object ---
+		        // We combine the 'item' specifics, 'config' globals, and the 'content' we just parsed.
+		        
+		        var aalapidata = {
+		            // Data generated just now
+		            content:                aal_content,
+		            
+		            // Data from the specific Item
+		            aal_postid:             aal_postid,
+		            aurl:                   aal_aurl,
+		            notimes:                aal_notimes,
+		
+		            // Data from the Global Config
+		            apikey:                 config.apikey,
+		            clickbankid:            config.clickbankid,
+		            clickbankcat:           config.clickbankcat,
+		            clickbankgravity:       config.clickbankgravity,
+		            amazonid:               config.amazonid,
+		            amazoncat:              config.amazoncat,
+		            amazonlocal:            config.amazonlocal,
+		            amazondisplaylinks:     config.amazondisplaylinks,
+		            amazondisplaywidget:    config.amazondisplaywidget,
+		            amazonactive:           config.amazonactive,
+		            clickbankactive:        config.clickbankactive,
+		            shareasaleactive:       config.shareasaleactive,
+		            shareasaleid:           config.shareasaleid,
+		            awinactive:       config.awinactive,
+		            awinid:           config.awinid,
+		            cjactive:               config.cjactive,
+		            ebayactive:             config.ebayactive,
+		            ebayid:                 config.ebayid,
+		            bestbuyactive:          config.bestbuyactive,
+		            bestbuyid:              config.bestbuyid,
+		            walmartactive:          config.walmartactive,
+		            walmartid:              config.walmartid,
+		            envatoid:               config.envatoid,
+		            envatosite:             config.envatosite,
+		            envatoactive:           config.envatoactive,
+		            rakutenactive:          config.rakutenactive,
+		            rakutenid:              config.rakutenid,
+		            discoveryjapanactive:   config.discoveryjapanactive,
+		            discoveryjapanid:       config.discoveryjapanid,
+		            discoveryjapanapikey:   config.discoveryjapanapikey,
+		            excludewords:           config.excludewords,
+		            geminiaion:             config.geminiaion
+		        };
+		        
+
+						
 				
 				//generatecontent
-				var spydiv = document.getElementById('aalcontent_' + aal_divnumber);
-				var parentdiv = spydiv.parentNode;
-				if(parentdiv.innerHTML == '<div id="aalcontent_' + aal_divnumber + '></div>') parentdiv = parentdiv.parentNode;
+				//var spydiv = document.getElementById('aalcontent_' + aal_divnumber);
+				//var parentdiv = spydiv.parentNode;
+				//if(parentdiv.innerHTML == '<div id="aalcontent_' + aal_divnumber + '></div>') parentdiv = parentdiv.parentNode;
 				
-				var acontent = aalParse(parentdiv, '');
-				if(acontent.length>10000) {
-					acontent = acontent.substring(0, 10000);
-				}
+				//var acontent = aalParse(parentdiv, '');
+				//if(acontent.length>10000) {
+				//	acontent = acontent.substring(0, 10000);
+				//}
 				//console.log(acontent);							
 				
-				var aal_content = encodeURIComponent(acontent);
+				//var aal_content = encodeURIComponent(acontent);
 				//aalapidata = datadiv.getAttribute('data-apidata');	
 				//console.log(decodeURIComponent(aal_content));
 				
 				
 				//generate content end
 						
-				var aalapidata = {content: aal_content, apikey: aal_apikey, aal_postid: aal_postid, clickbankid: aal_clickbankid, clickbankcat: aal_clickbankcat,  clickbankgravity: aal_clickbankgravity, amazonid: aal_amazonid, amazoncat: aal_amazoncat, amazonlocal: aal_amazonlocal, amazondisplaylinks: aal_amazondisplaylinks, amazondisplaywidget: aal_amazondisplaywidget, amazonactive: aal_amazonactive, clickbankactive: aal_clickbankactive, shareasaleactive: aal_shareasaleactive, shareasaleid: aal_shareasaleid, cjactive: aal_cjactive, ebayactive: aal_ebayactive, ebayid: aal_ebayid, bestbuyactive: aal_bestbuyactive, bestbuyid: aal_bestbuyid, walmartactive: aal_walmartactive, walmartid: aal_walmartid, envatoid: aal_envatoid, envatosite: aal_envatosite, envatoactive: aal_envatoactive, rakutenactive: aal_rakutenactive, rakutenid: aal_rakutenid, discoveryjapanactive: aal_discoveryjapanactive, discoveryjapanid: aal_discoveryjapanid, discoveryjapanapikey: aal_discoveryjapanapikey, aurl: aal_aurl, notimes: aal_notimes, excludewords: aal_excludewords, geminiaion: aal_geminiaion};
+				//var aalapidata = {content: aal_content, apikey: aal_apikey, aal_postid: aal_postid, clickbankid: aal_clickbankid, clickbankcat: aal_clickbankcat,  clickbankgravity: aal_clickbankgravity, amazonid: aal_amazonid, amazoncat: aal_amazoncat, amazonlocal: aal_amazonlocal, amazondisplaylinks: aal_amazondisplaylinks, amazondisplaywidget: aal_amazondisplaywidget, amazonactive: aal_amazonactive, clickbankactive: aal_clickbankactive, shareasaleactive: aal_shareasaleactive, shareasaleid: aal_shareasaleid, cjactive: aal_cjactive, ebayactive: aal_ebayactive, ebayid: aal_ebayid, bestbuyactive: aal_bestbuyactive, bestbuyid: aal_bestbuyid, walmartactive: aal_walmartactive, walmartid: aal_walmartid, envatoid: aal_envatoid, envatosite: aal_envatosite, envatoactive: aal_envatoactive, rakutenactive: aal_rakutenactive, rakutenid: aal_rakutenid, discoveryjapanactive: aal_discoveryjapanactive, discoveryjapanid: aal_discoveryjapanid, discoveryjapanapikey: aal_discoveryjapanapikey, aurl: aal_aurl, notimes: aal_notimes, excludewords: aal_excludewords, geminiaion: aal_geminiaion};
 	
 				//Cache get ajax
 				$.ajax({
-					type: "post", url: aal_amazon_obj.ajaxurl, data: { action: 'aal_cache_get', cachegetnonce: aal_amazon_obj.cachegetnonce, aalpostid: aalapidata.aal_postid },
+					type: "post", url: aal_amazon_obj.ajaxurl, data: { action: 'aal_cache_get', cachegetnonce: aal_amazon_obj.cachegetnonce, aalpostid: aal_postid },
 		
 		
 					success: function(html){ 
@@ -120,9 +220,10 @@
 				//aal_retrievelinks(aalapidata,aal_divnumber,aal_target,aal_relation,aal_linkcolor);
 			
 		//}
-			});
-		}		
-	});
+			}); //close each function
+		} //close if typeof
+		}		//close aalinframe loop
+	}); //close document ready function
 	
 	
 
@@ -169,55 +270,100 @@
 			
 			//End add to cache
 		
-			if(response.keywords && aalapidata.amazonactive && aalapidata.amazonid) { 
-			//response.keywords.forEach(function(entry) {
-					$.ajax({
-					type: "post", url: aal_amazon_obj.ajaxurl, data: { action: 'aal_amazon_get', security: aal_amazon_obj.security, keywords: response.keywords, notimes: notimes },
-	
-					success: function(html){ 
-	   				 	//console.log(html);
-						try {
-	       				var aresults = $.parseJSON(html);
-	   				} catch (e) {
-	   				 	//console.log(html);
-	   				 	//console.log(e);
-	   				 	return;
-	   				}
-						//var aresults = $.parseJSON(html);
-						var alinks = aresults.amazonlinks;
-						var awidgets;
-						if(aresults.amazonwidget) awidgets = aresults.amazonwidget;
-					
+			if(response.keywords) {
+					if(aalapidata.amazonactive && aalapidata.amazonid) { 
+				//response.keywords.forEach(function(entry) {
+						$.ajax({
+						type: "post", url: aal_amazon_obj.ajaxurl, data: { action: 'aal_amazon_get', security: aal_amazon_obj.security, keywords: response.keywords, notimes: notimes },
+		
+						success: function(html){ 
+		   				 	//console.log(html);
+							try {
+		       				var aresults = $.parseJSON(html);
+		   				} catch (e) {
+		   				 	//console.log(html);
+		   				 	//console.log(e);
+		   				 	return;
+		   				}
+							//var aresults = $.parseJSON(html);
+							var alinks = aresults.amazonlinks;
+							var awidgets;
+							if(aresults.amazonwidget) awidgets = aresults.amazonwidget;
 						
-						if(alinks) for(var i=alinks.length-1;i>=0;i--) {
-							if(alinks[i].key && alinks[i].url) {
-								parray.unshift(alinks[i]);
-								if(parray.length>notimes) parray.pop();
+							
+							if(alinks) for(var i=alinks.length-1;i>=0;i--) {
+								if(alinks[i].key && alinks[i].url) {
+									parray.unshift(alinks[i]);
+									if(parray.length>notimes) parray.pop();
+								}
+									
+							
+							}	
+							//console.log(parray);
+							//console.log(awidgets);
+							
+							//var finalLinks = JSON.stringify(parray);
+							if(insertid && (alinks[0] || awidgets[0])) {
+								$.ajax({
+				                type: "POST",
+				                url: "//api.autoaffiliatelinks.com/acache.php",
+				                data: { apikey: aalapidata.apikey, insertid: insertid, parray: parray, amazonwidget: awidgets },
+				                cache: false,
+				                success: function(acacheres){
+				                		console.log(acacheres);
+				                	}
+			               });
 							}
 								
-						
-						}	
-						//console.log(parray);
-						//console.log(awidgets);
-						
-						//var finalLinks = JSON.stringify(parray);
-						if(insertid && (alinks[0] || awidgets[0])) {
-							$.ajax({
-			                type: "POST",
-			                url: "//autoaffiliatelinks.com/api/acache.php",
-			                data: { apikey: aalapidata.apikey, insertid: insertid, parray: parray, amazonwidget: awidgets },
-			                cache: false,
-			                success: function(acacheres){
-			                		console.log(acacheres);
-			                	}
-		               });
+															
+							//salveaza cache si afiseaza link-uri
+
+									if(aalapidata.aal_postid) {
+					
+											//Cache set ajax
+											$.ajax({
+												type: "post", url: aal_amazon_obj.ajaxurl, data: { action: 'aal_cache_set', cachesetnonce: aal_amazon_obj.cachesetnonce, aalpostid: aalapidata.aal_postid, aalcachelinks: parray, aalcacheawidget: awidgets },
+								
+												success: function(html){ 
+								   				 	//console.log(html);
+												
+												}
+											}); //close Cache set ajax 			
+										
+										
+										}	
+							
+							
+							
+							aal_replacement(parray,awidgets,response,aalapidata,aal_divnumber,aal_target,aal_relation,aal_linkcolor);
 						}
+					}); //close jQuery.ajax 
+			//	});
+				}	//end if amazon active and id
+				else {
+					//save links without keywords
+					
 						
-						aal_replacement(parray,awidgets,response,aalapidata,aal_divnumber,aal_target,aal_relation,aal_linkcolor);
-					}
-				}); //close jQuery.ajax 
-		//	});
-			}	//end if (response.keywords)
+									if(aalapidata.aal_postid) {
+					
+											//Cache set ajax
+											$.ajax({
+												type: "post", url: aal_amazon_obj.ajaxurl, data: { action: 'aal_cache_set', cachesetnonce: aal_amazon_obj.cachesetnonce, aalpostid: aalapidata.aal_postid, aalcachelinks: parray, aalcacheawidget: awidgets },
+								
+												success: function(html){ 
+								   				 	//console.log(html);
+												
+												}
+											}); //close Cache set ajax 			
+										
+										
+										}					
+							//daca nu e setat post id, le lasa asa cum sunt si merge mai departe
+							aal_replacement(parray,awidgets,response,aalapidata,aal_divnumber,aal_target,aal_relation,aal_linkcolor);
+				
+				}
+			
+			} //end if (response.keywords)
 			else {
 				aal_replacement(parray,awidgets,response,aalapidata,aal_divnumber,aal_target,aal_relation,aal_linkcolor);
 		
@@ -232,9 +378,14 @@
 
 	function aal_replacement(parray,awidgets,response,aalapidata,aal_divnumber,aal_target,aal_relation,aal_linkcolor) {
 	
-					var datadiv = document.getElementById('aal_api_data');
-					var cssclass = datadiv.getAttribute('data-cssclass');	
-					var disclosure = datadiv.getAttribute('data-disclosure');	
+					//var datadiv = document.getElementById('aal_api_data');
+					//var cssclass = datadiv.getAttribute('data-cssclass');	
+					//var disclosure = datadiv.getAttribute('data-disclosure');	
+					
+					if (typeof aal_data !== 'undefined' && aal_data.config) {
+					    var cssclass = aal_data.config.cssclass;
+					    var disclosure = aal_data.config.disclosure;
+					}
 	
 	
 					var spydiv = document.getElementById('aalcontent_' + aal_divnumber);

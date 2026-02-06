@@ -339,6 +339,63 @@ function aalKWSuggestionAjax(){
 
 
 
+//AAL Ajax for suggesting keywords based on entered link
+add_action('wp_ajax_aal_get_ai_keywords', 'aal_ajax_get_ai_keywords');
+
+function aal_ajax_get_ai_keywords() {
+    check_ajax_referer('aal-ajax-nonce', 'aal_nonce');
+    
+    $product_hint = isset($_POST['product_hint']) ? sanitize_text_field($_POST['product_hint']) : '';
+    $affiliate_url = isset($_POST['affiliate_url']) ? esc_url_raw($_POST['affiliate_url']) : '';
+
+	$post_data = [
+        'apikey'  => get_option('aal_apikey'),
+        'site_url' => get_site_url()
+    ];    
+    
+if (!empty($product_hint)) {
+        $post_data['product_hint'] = mb_substr($product_hint, 0, 200);
+    } 
+    elseif (!empty($affiliate_url)) {
+        $metadata = aal_get_remote_metadata($affiliate_url);
+        
+        if (!$metadata || empty($metadata['title'])) {
+            wp_send_json_error(['code' => 'scrape_failed', 'message' => 'Metadata extraction failed.']);
+        }
+        
+        $post_data['title']       = mb_substr(sanitize_text_field($metadata['title']), 0, 200);
+        $post_data['description'] = mb_substr(sanitize_text_field($metadata['description']), 0, 500);
+    } else {
+        wp_send_json_error('No input provided.');
+    }
+
+    $api_url = 'https://api.autoaffiliatelinks.com/link-kw-suggest.php';
+
+	$api_response = wp_remote_post($api_url, [
+        'timeout' => 20,
+        'body'    => $post_data
+    ]);
+    
+    //print_r($api_response);
+
+    if (is_wp_error($api_response)) {
+        wp_send_json_error('Central API is unreachable.');
+    }
+
+    $body = json_decode(wp_remote_retrieve_body($api_response), true);
+
+    if (isset($body['keywords']) && is_array($body['keywords'])) {
+        wp_send_json_success(array('keywords' => $body['keywords']));
+    } else {
+        wp_send_json_error($body['error'] ?? 'AI failed to generate results.');
+    }
+    
+    die();
+}
+
+
+
+
 
 
 ?>
