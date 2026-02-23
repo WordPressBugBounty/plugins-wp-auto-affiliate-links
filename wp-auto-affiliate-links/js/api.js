@@ -471,7 +471,7 @@
         if (obj.hasChildNodes()) {
           var child = obj.firstChild;
           while (child) {
-            if ((child.nodeType === 1 || child.nodeType === 3 ) && child.nodeName != 'SCRIPT' && child.nodeName != 'A' && child.nodeName != 'IMG' && child.nodeName[0] != 'H'    ){
+            if ((child.nodeType === 1 || child.nodeType === 3 ) && child.nodeName != 'SCRIPT' && child.nodeName != 'A' && child.nodeName != 'IMG' && child.nodeName[0] != 'H'  && child.nodeName != 'STYLE'    ){
               		
               	if(child.nodeType === 3 && child.nodeValue !== null && child.nodeValue.replace(/\s/g, "").length>2 ) {
            			
@@ -496,7 +496,7 @@
           var con = 'go';
           while (child && con == 'go') {
           	var p = child.parentNode;
-            if ((child.nodeType === 1 || child.nodeType === 3 ) && child.nodeName != 'SCRIPT' && child.nodeName != 'A' && child.nodeName != 'IMG' && child.nodeName[0] != 'H'    ){
+            if ((child.nodeType === 1 || child.nodeType === 3 ) && child.nodeName != 'SCRIPT' && child.nodeName != 'A' && child.nodeName != 'IMG' && child.nodeName[0] != 'H' && child.nodeName != 'STYLE'   ){
               		
               	if(child.nodeType === 3 && child.nodeValue !== null && child.nodeValue.replace(/\s/g, "").length>2 ) {
            			
