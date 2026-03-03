@@ -214,66 +214,48 @@ function aal_setup_new_blog($blog_id) {
 add_action('wpmu_new_blog', 'aal_setup_new_blog');
 
 
-function aal_admin_notice() {  
-	
-	$aal_notice_dismissed = get_option('aal_option_dismissed99'); 
-	if(!$aal_notice_dismissed && !get_option('aal_apikey'))
-	{  if(current_user_can('activate_plugins')) {
-    ?>
-    <div id="aal_notice_div" class="updated">
-     <div style="float: right;padding-top: 10px;margin-left: 100px;"><a id="aal_dismiss_link" href="javascript:;" >Dismiss this notice</a></div>
-      <p><?php    
-      
-		 //  _e( 'Black Friday special offer for <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Auto Affiliate Links PRO</a>. 50% off for any plan. <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Learn more.</a>', 'wp-auto-affiliate-links' ); 
- 	 
- 			// _e( 'Gemini AI can be used to automatically add affiliate links. Go to <a href="'.  admin_url('admin.php?page=aal_apimanagement') .'">General Settings</a> to activate it. More info about Gemini AI in Auto Affiliatte Links <a href="https://autoaffiliatelinks.com/gemini-ai-is-now-available-in-auto-affiliate-links-automated-linking/">here</a>.', 'wp-auto-affiliate-links' ); 
- 
-      	_e( 'Thank you for using Auto Affiliate Links. Upgrade to <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Auto Affiliate Links PRO</a> to get access to advanced linking features. <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Learn more.</a>', 'wp-auto-affiliate-links' ); 
- 
- 
-  			//_e( 'Thank you for using Auto Affiliate Links. Upgrade to PRO to have links from Amazon, Clickbank, Aein, Walmart, Ebay, Best Buy, Envato, extracted and added automatically to your content.  Learn more about <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Auto Affiliate Links PRO</a>. ', 'wp-auto-affiliate-links' );   	    	 
+define('AAL_NOTICE_VER', '1.0'); 
 
-  
-		//  _e( 'Auto Affiliate Links PRO special offer: lifetime subscription, exclusive on <a href="https://appsumo.com/products/auto-affiliate-links/">AppSumo</a>. ', 'wp-auto-affiliate-links' ); 
-    	   
-  
-      ?></p>
-     
-    </div>  
+function aal_admin_notice() {
+    if (!current_user_can('activate_plugins')) return;
+
+    $dismissed_ver = get_option('aal_notice_dismissed_ver');
     
-    
-    <?php
-    	}
-    
-	}
-	
-	if(get_option('aal_apistatus') == 'expired' && current_user_can('activate_plugins') && get_option('aal_apikey')) {
-		echo '<div id="aal_notice_div" class="updated"><p>';
-		_e( 'Your Auto Affiliate Links PRO subscription is expired. Please <a href="https://autoaffiliatelinks.com/auto-affiliate-links-payment-plans/">renew your subscription</a> or <a href="https://autoaffiliatelinks.com/auto-affiliate-links-payment-plans/">create a new API key</a>  ', 'wp-auto-affiliate-links' ); 
-      
-		echo '</p></div>';
-	}
-	
-	if(get_option('aal_apistatus') == 'invalid' && current_user_can('activate_plugins') && get_option('aal_apikey')) {
-		echo '<div id="aal_notice_div" class="updated"><p>';
-		_e( 'Auto Affiliate Links: The API key you entered is invalid. You have to <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">register on our website</a> to get a valid API key ', 'wp-auto-affiliate-links' ); 
-      
-		echo '</p></div>';
-	}
-	
-	
+    if ($dismissed_ver !== AAL_NOTICE_VER && !get_option('aal_apikey')) {
+        ?>
+        <div class="notice notice-info is-dismissible aal-notice-pro" data-notice-ver="<?php echo AAL_NOTICE_VER; ?>">
+            <p>
+                <?php 
+                //_e('Thank you for using Auto Affiliate Links. Upgrade to <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/" >Auto Affiliate Links PRO</a> for advanced features.', 'wp-auto-affiliate-links'); 
+                _e('Thank you for using Auto Affiliate Links. Your feedback is important to us, please give us few minutes to tell us what you think about our plugin and help us to know what we should improve <a href="https://autoaffiliatelinks.com/auto-affiliate-links-feedback-form-2026/">Click here to send us feedback</a>.', 'wp-auto-affiliate-links'); 
+                
+   
+                ?>
+            </p>
+        </div>
+        <?php
+    }
+
+
+    $api_status = get_option('aal_apistatus');
+    if (get_option('aal_apikey')) {
+        if ($api_status === 'expired') {
+            echo '<div class="notice notice-error"><p>' . __('Your subscription is expired. Please <a href="...">renew</a>.', 'wp-auto-affiliate-links') . '</p></div>';
+        } elseif ($api_status === 'invalid') {
+            echo '<div class="notice notice-error"><p>' . __('Invalid API key. Please <a href="...">register</a>.', 'wp-auto-affiliate-links') . '</p></div>';
+        }
+    }
 }
 
 
 function aalDismissNotice() {
-	
-
-
-		
-		delete_option('aal_option_dismissed98');
-		add_option('aal_option_dismissed99',true);
-	
-	
+    check_ajax_referer('aal-ajax-nonce', 'security');
+    
+    // We store the version number we are dismissing
+    $version = sanitize_text_field($_POST['version']);
+    update_option('aal_notice_dismissed_ver', $version);
+    
+    wp_send_json_success();
 }
 
 

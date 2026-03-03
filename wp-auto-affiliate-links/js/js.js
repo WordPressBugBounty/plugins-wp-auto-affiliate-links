@@ -966,4 +966,14 @@ function aalCopyCloak(el) {
 }
 
 
+//Code for notification
+jQuery(document).on('click', '.aal-notice-pro .notice-dismiss', function() {
+    var version = jQuery(this).closest('.notice').data('notice-ver');
+
+    jQuery.post(ajaxurl, {
+        action: 'aal_dismiss_notice',
+        version: version,
+        security: ajax_script.aal_nonce
+    });
+});
 
