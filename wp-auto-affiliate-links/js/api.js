@@ -385,8 +385,10 @@
 					if (typeof aal_data !== 'undefined' && aal_data.config) {
 					    var cssclass = aal_data.config.cssclass;
 					    var disclosure = aal_data.config.disclosure;
+					    var linkdistribution = aal_data.config.linkdistribution;
 					}
-	
+					
+		
 	
 					var spydiv = document.getElementById('aalcontent_' + aal_divnumber);
 					var parentdiv = spydiv.parentNode;
@@ -422,16 +424,34 @@
 					
 					if(parray) parray.forEach(function(entry) {
 					
-					var aal_lcstyle = '';
-					if(aal_linkcolor) aal_lcstyle = 'style="color:' + aal_linkcolor +';"';					
-					
-					var re2 = new RegExp("(?!(?:[^<\\[]+[>\\]]|[^>\\]]+<\/a>))\\b("+ entry.key +")\\b","i");
-					var re = new RegExp("(?!(?:[^<\\[]+[>\\]]|[^>\\]]+<\/a>))(?!(?:[^<\\[]+[>\\]]|[^>\\]]+<\/h.>))(?!(?:[^<\\[]+[>\\]]|[^>\\]]+<\/script.>))\\b("+ entry.key +")\\b","i");
-					var mat = '<a title="$1" class="'+ cssclass +' aalauto" target="' + aal_target + '" ' + '" rel="' + aal_relation + '" ' + aal_lcstyle + ' href="'+ entry.url +'">$1</a>' + disclosure;
-					//acontent = acontent.replace(re, '<a title="$1" class="'+ cssclass +' aalauto" target="' + aal_target + '" ' + '" rel="' + aal_relation + '" ' + aal_lcstyle + ' href="'+ entry.url +'">$1</a>');	    
-				   
-				   	rt = 'go';
-					   aalTree(parentdiv,re,mat);  
+						var aal_lcstyle = '';
+						if(aal_linkcolor) aal_lcstyle = 'style="color:' + aal_linkcolor +';"';			
+							
+						
+						var re2 = new RegExp("(?!(?:[^<\\[]+[>\\]]|[^>\\]]+<\/a>))\\b("+ entry.key +")\\b","i");
+						var re = new RegExp("(?!(?:[^<\\[]+[>\\]]|[^>\\]]+<\/a>))(?!(?:[^<\\[]+[>\\]]|[^>\\]]+<\/h.>))(?!(?:[^<\\[]+[>\\]]|[^>\\]]+<\/script.>))\\b("+ entry.key +")\\b","i");
+						var mat = '<a title="$1" class="'+ cssclass +' aalauto" target="' + aal_target + '" ' + '" rel="' + aal_relation + '" ' + aal_lcstyle + ' href="'+ entry.url +'">$1</a>' + disclosure;
+						//acontent = acontent.replace(re, '<a title="$1" class="'+ cssclass +' aalauto" target="' + aal_target + '" ' + '" rel="' + aal_relation + '" ' + aal_lcstyle + ' href="'+ entry.url +'">$1</a>');	    
+	
+						rt = 'go';
+	
+					   if(linkdistribution == 'random') {
+							var aalLinkCandidates = [];
+	        				aalCollectNodes(parentdiv, re, aalLinkCandidates);			
+	        				
+	        				if (aalLinkCandidates.length > 0) {
+			            	var randomIndex = Math.floor(Math.random() * aalLinkCandidates.length);
+			            	var targetNode = aalLinkCandidates[randomIndex];
+			            	aalPerformReplace(targetNode, re, mat);
+			        		}
+	        					   
+					   
+					   }
+					   else {
+					   	
+						   aalTree(parentdiv,re,mat);  
+						   
+						}
 					    
 					});
 					
@@ -531,6 +551,52 @@
         
         return 'go';
       }
+      
+      
+//Find and replace functions for random distribution
+
+function aalCollectNodes(obj, re, candidates) {
+    if (obj.hasChildNodes()) {
+        var child = obj.firstChild;
+        while (child) {
+            // Filter non-linkable elements (Script, A, Style, Headers, etc.)
+            if ((child.nodeType === 1 || child.nodeType === 3) && 
+                !['SCRIPT', 'A', 'IMG', 'STYLE'].includes(child.nodeName) && 
+                child.nodeName[0] !== 'H') {
+
+                if (child.nodeType === 3 && child.nodeValue !== null && child.nodeValue.length > 2) {
+                    if (re.test(child.nodeValue)) {
+                        candidates.push(child);
+                    }
+                }
+                aalCollectNodes(child, re, candidates);
+            }
+            child = child.nextSibling;
+        }
+    }
+}
+
+
+
+function aalPerformReplace(child, re, mat) {
+    var p = child.parentNode;
+    var astr = child.nodeValue;
+    var rstr = astr.replace(re, mat);
+
+    if (rstr !== astr) {
+        var newel = document.createElement('div');
+        newel.innerHTML = rstr;
+        var c = newel.firstChild;
+        while (c) {
+            var d = c.cloneNode(true);
+            p.insertBefore(d, child);
+            c = c.nextSibling;
+        }
+        p.removeChild(child);
+    }
+}
+
+//End functions for random distribution
 	
 	
 	

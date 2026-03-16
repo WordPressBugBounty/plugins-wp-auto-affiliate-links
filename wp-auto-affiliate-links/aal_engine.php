@@ -759,7 +759,8 @@ if ( is_null( $aal_page_globals ) ) {
 	            'linkcolor'             => $linkcolor,
 	            'geminiaion'            => $geminiaion,
 	            'cssclass'              => $cssclass,     // Added
-	            'disclosure'            => $disclosure    // Added
+	            'disclosure'            => $disclosure,    // Added
+	            'linkdistribution'      => $linkdistribution
 	        );
         }
 		

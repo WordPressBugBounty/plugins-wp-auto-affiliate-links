@@ -214,7 +214,7 @@ function aal_setup_new_blog($blog_id) {
 add_action('wpmu_new_blog', 'aal_setup_new_blog');
 
 
-define('AAL_NOTICE_VER', '1.0'); 
+define('AAL_NOTICE_VER', '1.1'); 
 
 function aal_admin_notice() {
     if (!current_user_can('activate_plugins')) return;
@@ -226,9 +226,8 @@ function aal_admin_notice() {
         <div class="notice notice-info is-dismissible aal-notice-pro" data-notice-ver="<?php echo AAL_NOTICE_VER; ?>">
             <p>
                 <?php 
-                //_e('Thank you for using Auto Affiliate Links. Upgrade to <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/" >Auto Affiliate Links PRO</a> for advanced features.', 'wp-auto-affiliate-links'); 
-                _e('Thank you for using Auto Affiliate Links. Your feedback is important to us, please give us few minutes to tell us what you think about our plugin and help us to know what we should improve <a href="https://autoaffiliatelinks.com/auto-affiliate-links-feedback-form-2026/">Click here to send us feedback</a>.', 'wp-auto-affiliate-links'); 
-                
+                _e('Thank you for using Auto Affiliate Links. Upgrade to <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/" >Auto Affiliate Links PRO</a> for advanced features.', 'wp-auto-affiliate-links'); 
+               
    
                 ?>
             </p>
