@@ -39,15 +39,15 @@ function aalUpdateExcludePosts(){
 	$excluded_id = filter_input(INPUT_POST, 'aal_excluded_item_link_id', FILTER_SANITIZE_SPECIAL_CHARS);
 	check_ajax_referer( 'aal_excluded_item_link_action'. $excluded_id, 'aal_excluded_item_link_nonce' );
             
-    // $update_exclude_posts= filter_input(INPUT_POST, 'aal_exclude_posts', FILTER_SANITIZE_SPECIAL_CHARS);
-   $update_exclude_posts=  $_POST['aal_exclude_posts'];
-    $update_exclude_posts=  implode(',', $update_exclude_posts);
-    $update_exclude_posts= esc_sql(htmlentities($update_exclude_posts));
-    $update_exclude_posts = filter_var($update_exclude_posts, FILTER_SANITIZE_SPECIAL_CHARS);
-    delete_option('aal_exclude');add_option( 'aal_exclude', $update_exclude_posts);
-
+    $update_exclude_posts = isset($_POST['aal_exclude_posts']) ? $_POST['aal_exclude_posts'] : '';
     
-    die();
+    $update_exclude_posts = esc_sql(htmlentities($update_exclude_posts));
+    $update_exclude_posts = filter_var($update_exclude_posts, FILTER_SANITIZE_SPECIAL_CHARS);
+    
+    delete_option('aal_exclude');
+    add_option('aal_exclude', $update_exclude_posts);
+    
+    wp_die(); 
 }
 
 	

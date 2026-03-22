@@ -401,8 +401,14 @@ $(".aal_excludedcol").on('click', '.aal_delete_exclude_link', function() {
        //console.log(posts);
         
         
-        var data = {action: 'aal_update_exclude_posts',aal_exclude_posts:posts, aal_excluded_item_link_nonce: this.getAttribute('data-security'), aal_excluded_item_link_id: this.getAttribute('data-id')};
-            
+				var data = {
+				    action: 'aal_update_exclude_posts',
+				    aal_exclude_posts: posts.join(','), 
+				    aal_excluded_item_link_nonce: this.getAttribute('data-security'), 
+				    aal_excluded_item_link_id: this.getAttribute('data-id')
+				};
+
+          
             $.ajax({
                     type: "POST",
                     url: ajax_script.ajaxurl,
@@ -967,13 +973,24 @@ function aalCopyCloak(el) {
 
 
 //Code for notification
-jQuery(document).on('click', '.aal-notice-pro .notice-dismiss', function() {
-    var version = jQuery(this).closest('.notice').data('notice-ver');
 
-    jQuery.post(ajaxurl, {
-        action: 'aal_dismiss_notice',
-        version: version,
-        security: ajax_script.aal_nonce
+
+jQuery(document).ready(function($) {
+    $(document).on('click', '.aal-notice-dismiss-link', function(e) {
+        e.preventDefault();
+        
+        $(this).closest('.notice').find('.notice-dismiss').trigger('click');
+    });
+
+    // Existing dismissal logic (make sure it handles the versioning correctly)
+    $(document).on('click', '.aal-notice-pro .notice-dismiss', function() {
+        var version = $(this).closest('.notice').data('notice-ver');
+
+        $.post(ajaxurl, {
+            action: 'aal_dismiss_notice',
+            version: version,
+            security: ajax_script.aal_nonce
+        });
     });
 });
 
