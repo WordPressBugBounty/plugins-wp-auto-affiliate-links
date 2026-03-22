@@ -187,6 +187,7 @@ function wpaal_add_affiliate_links($content) {
 		
 		$amazondisplaylinks = get_option('aal_amazondisplaylinks');
 		$amazondisplaywidget = get_option('aal_amazondisplaywidget');
+		if(!$amazondisplaywidget && !$amazondisplaylinks) $amazondisplaylinks = '1';
 		//do not display amazon bottom links in widget
 		global $aaliswidget;
 		if($aaliswidget) $amazondisplaywidget = '';
