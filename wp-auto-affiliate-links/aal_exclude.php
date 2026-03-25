@@ -35,19 +35,20 @@ function aalAddExcludePost(){
 
 
 function aalUpdateExcludePosts(){
-	
-	$excluded_id = filter_input(INPUT_POST, 'aal_excluded_item_link_id', FILTER_SANITIZE_SPECIAL_CHARS);
-	check_ajax_referer( 'aal_excluded_item_link_action'. $excluded_id, 'aal_excluded_item_link_nonce' );
+
+    check_ajax_referer('aal_update_exclude_action', 'aal_global_nonce');
             
     $update_exclude_posts = isset($_POST['aal_exclude_posts']) ? $_POST['aal_exclude_posts'] : '';
     
+ 
     $update_exclude_posts = esc_sql(htmlentities($update_exclude_posts));
     $update_exclude_posts = filter_var($update_exclude_posts, FILTER_SANITIZE_SPECIAL_CHARS);
     
+ 
     delete_option('aal_exclude');
     add_option('aal_exclude', $update_exclude_posts);
     
-    wp_die(); 
+    wp_die();
 }
 
 	
@@ -114,7 +115,10 @@ function wpaal_exclude_posts() {
                 
                 <br />
                 <h4>Excluded Posts</h4>
-                <form class="aal_exclude_posts">
+					<form class="aal_exclude_posts">
+					    <input type="hidden" id="aal_global_exclude_nonce" value="<?php echo wp_create_nonce('aal_update_exclude_action'); ?>" />
+					    
+
                 <?php 
                 $aal_exclude_posts=get_option('aal_exclude');
                 $aal_exclude_posts_array=explode(',', $aal_exclude_posts);
@@ -157,13 +161,13 @@ function wpaal_exclude_posts() {
 						
 				  	if($status = 'publish') { $status = 'Published'; }
 				
-				  			$aal_excluded_item_link_nonce = wp_create_nonce( 'aal_excluded_item_link_action'. $aal_exclude_post_id );
+
 				  	
-                    echo "<div class='aal_excludeditem'>
+					echo "<div class='aal_excludeditem'>
                             <div class='aal_excludedcol aal_excludedidcol'>".$aal_exclude_post_id."</div>
                             <div class='aal_excludedcol aal_excludedtitle'> <a href='".get_permalink($aal_exclude_post_id)."'>".get_the_title($aal_exclude_post_id)."</a></div> 
                             <div class='aal_excludedcol'>  ". $status ." </div> 
-                            <div class='aal_excludedcol'> <a href='javascript:' id='".$aal_exclude_post_id."' data-id='". $aal_exclude_post_id ."' data-security='". $aal_excluded_item_link_nonce ."' class='aal_delete_exclude_link'><img src='".plugin_dir_url(__FILE__)."images/delete.png'/></a></div><br/>
+                            <div class='aal_excludedcol'> <a href='javascript:;' class='aal_delete_exclude_link'><img src='".plugin_dir_url(__FILE__)."images/delete.png'/></a></div><br/>
                           </div><div style='clear: both;'></div>";
 					
 				}	//endforeach

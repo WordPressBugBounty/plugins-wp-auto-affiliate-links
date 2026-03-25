@@ -350,7 +350,9 @@ $("#aal_changeOptions").submit(function() {
  									alert('A posts with the same ID is already excluded'); 
  							}
  							else { 	
-                     $(".aal_exclude_posts").append('<div class="aal_excludeditem"><div class="aal_excludedcol aal_excludedidcol">'+id+'</div>   ' + response + '<div class="aal_excludedcol"><a href="javascript:;" id="'+id+'" class="aal_delete_exclude_link"><img src="'+ajax_script.aal_plugin_url+'images/delete.png"/></a></div><br/></div><div style="clear: both;"></div>');
+                     //$(".aal_exclude_posts").append('<div class="aal_excludeditem"><div class="aal_excludedcol aal_excludedidcol">'+id+'</div>   ' + response + '<div class="aal_excludedcol"><a href="javascript:;" id="'+id+'" class="aal_delete_exclude_link"><img src="'+ajax_script.aal_plugin_url+'images/delete.png"/></a></div><br/></div><div style="clear: both;"></div>');
+							//$(".aal_exclude_posts").append('<div class="aal_excludeditem"><div class="aal_excludedcol aal_excludedidcol">'+id+'</div>   ' + response + '<div class="aal_excludedcol"><a href="javascript:;" id="'+id+'" data-id="'+id+'" data-security="" class="aal_delete_exclude_link"><img src="'+ajax_script.aal_plugin_url+'images/delete.png"/></a></div><br/></div><div style="clear: both;"></div>');                     
+							$(".aal_exclude_posts").append('<div class="aal_excludeditem"><div class="aal_excludedcol aal_excludedidcol">'+id+'</div>   ' + response + '<div class="aal_excludedcol"><a href="javascript:;" class="aal_delete_exclude_link"><img src="'+ajax_script.aal_plugin_url+'images/delete.png"/></a></div><br/></div><div style="clear: both;"></div>');                     
                      $(".aal_exclude_status").append('<p><i>Exclude ID added!</i></p>');
                      
                   }
@@ -365,63 +367,48 @@ $("#aal_changeOptions").submit(function() {
      }); 
 
 
-$(".aal_excludedcol").on('click', '.aal_delete_exclude_link', function() {
+$(".aal_exclude_posts").on('click', '.aal_delete_exclude_link', function(e) {
+    e.preventDefault();
         
     var answer = confirm("Are you sure you want to delete this excluded link?");
     
-        if (answer){
+    if (answer) {
+        // Find the exact row container
+        var linkContainer = $(this).closest('.aal_excludeditem');
         
-        //delete selected exclude id box from the form 
-        var linkContainer = $(this).parent().parent();
-        linkContainer.slideUp('slow', function() {$(this).remove();
-            
-});
+  
+        var removeItem = linkContainer.children(".aal_excludedcol:first-child").text().trim();
         
-        var removeItem=$(this).parent().parent().children(".aal_excludedcol:first-child").text();
-        //console.log(removeItem);
+ 
+        linkContainer.slideUp('slow', function() { $(this).remove(); });
         
-        var posts=new Array();
-        
-        
-        $(".aal_excludeditem").each(function(){
-			//console.log($(this).children(".aal_excludedcol:first-child").text());
-        	
-            posts.push($(this).children(".aal_excludedcol:first-child").text());
-        });
-        
-        //console.log(posts);
-        
-        posts=$.grep(posts,function(value){
-            return value!=removeItem;
-        });
-        
-        //console.log(this.getAttribute('data-id'));
-        //console.log(this.getAttribute('data-security'));
-        
-       //console.log(posts);
-        
-        
-				var data = {
-				    action: 'aal_update_exclude_posts',
-				    aal_exclude_posts: posts.join(','), 
-				    aal_excluded_item_link_nonce: this.getAttribute('data-security'), 
-				    aal_excluded_item_link_id: this.getAttribute('data-id')
-				};
 
-          
-            $.ajax({
-                    type: "POST",
-                    url: ajax_script.ajaxurl,
-                    data: data,
-                    cache: false,
-                    success: function(){
-                    //console.log('succes');                    
-                    }
-                });
+        var posts = [];
+        $(".aal_excludeditem").each(function() {
+            var currentItem = $(this).children(".aal_excludedcol:first-child").text().trim();
+            if (currentItem !== removeItem && currentItem !== "") {
+                posts.push(currentItem);
             }
+        });
+        
+        // Prepare data with the GLOBAL nonce
+        var data = {
+            action: 'aal_update_exclude_posts',
+            aal_exclude_posts: posts.join(','), 
+            aal_global_nonce: $('#aal_global_exclude_nonce').val() 
+        };
+          
+        $.ajax({
+            type: "POST",
+            url: ajax_script.ajaxurl,
+            data: data,
+            cache: false,
+            success: function() {
 
-                return false;
-        }); 
+            }
+        });
+    }
+});
 
 
 
