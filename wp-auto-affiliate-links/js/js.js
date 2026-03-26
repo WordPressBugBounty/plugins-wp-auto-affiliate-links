@@ -324,47 +324,73 @@ $("#aal_changeOptions").submit(function() {
      }); 
  
  
- $("#aal_add_exclude_posts_form").submit(function() {
-            
-            
-            var id = $("#aal_add_exclude_post_id").val();
-            
-            var data = {
-                        action: 'aal_add_exclude_posts',
-                        aal_post: id,
-                        aal_excludepostbyid_nonce: this.aal_excludepostbyid_nonce.value,
-
-                       };
-
-            $.ajax({
-                    type: "POST",
-                    url: ajax_script.ajaxurl,
-                    data: data,
-                    cache: false,
-                    success: function(response){
-                    	
- 							if(response=='nopost') { 
- 									alert('The post ID does not correspond with any post or page'); 
- 							}
- 							else if(response=='duplicate') { 
- 									alert('A posts with the same ID is already excluded'); 
- 							}
- 							else { 	
-                     //$(".aal_exclude_posts").append('<div class="aal_excludeditem"><div class="aal_excludedcol aal_excludedidcol">'+id+'</div>   ' + response + '<div class="aal_excludedcol"><a href="javascript:;" id="'+id+'" class="aal_delete_exclude_link"><img src="'+ajax_script.aal_plugin_url+'images/delete.png"/></a></div><br/></div><div style="clear: both;"></div>');
-							//$(".aal_exclude_posts").append('<div class="aal_excludeditem"><div class="aal_excludedcol aal_excludedidcol">'+id+'</div>   ' + response + '<div class="aal_excludedcol"><a href="javascript:;" id="'+id+'" data-id="'+id+'" data-security="" class="aal_delete_exclude_link"><img src="'+ajax_script.aal_plugin_url+'images/delete.png"/></a></div><br/></div><div style="clear: both;"></div>');                     
-							$(".aal_exclude_posts").append('<div class="aal_excludeditem"><div class="aal_excludedcol aal_excludedidcol">'+id+'</div>   ' + response + '<div class="aal_excludedcol"><a href="javascript:;" class="aal_delete_exclude_link"><img src="'+ajax_script.aal_plugin_url+'images/delete.png"/></a></div><br/></div><div style="clear: both;"></div>');                     
-                     $(".aal_exclude_status").append('<p><i>Exclude ID added!</i></p>');
-                     
-                  }
-                     
-                    }
-
-               });
-            
-       
+$("#aal_add_exclude_posts_form").submit(function() {
     
-        return false;
-     }); 
+    var id_input = $("#aal_add_exclude_post_id").val();
+    var nonce_val = this.aal_excludepostbyid_nonce.value; // Capture nonce outside the loop
+    
+    // Split the string by comma, trim spaces, and remove empty entries
+    var idsArray = id_input.split(',').map(function(item) {
+        return $.trim(item);
+    }).filter(function(item) {
+        return item !== '';
+    });
+
+    // Prevent submission if the field was empty
+    if (idsArray.length === 0) return false;
+    
+    // Clear the status area before adding new statuses
+    $(".aal_exclude_status").empty();
+
+    // Loop through each ID and make a separate AJAX call
+    $.each(idsArray, function(index, single_id) {
+        
+        var data = {
+            action: 'aal_add_exclude_posts',
+            aal_post: single_id, // Send just the single ID for this loop iteration
+            aal_excludepostbyid_nonce: nonce_val
+        };
+
+        $.ajax({
+            type: "POST",
+            url: ajax_script.ajaxurl,
+            data: data,
+            cache: false,
+            success: function(response){
+                
+                if(response == 'nopost') { 
+                    alert('The post ID ' + single_id + ' does not correspond with any post or page.'); 
+                }
+                else if(response == 'duplicate') { 
+                    alert('A post with the ID ' + single_id + ' is already excluded.'); 
+                }
+                else {  
+                    // Append the unique row for this ID and its specific title/response
+                    $(".aal_exclude_posts").append(
+                        '<div class="aal_excludeditem">' +
+                            '<div class="aal_excludedcol aal_excludedidcol">' + single_id + '</div>   ' + 
+                            response + 
+                            '<div class="aal_excludedcol">' +
+                                '<a href="javascript:;" class="aal_delete_exclude_link">' +
+                                    '<img src="' + ajax_script.aal_plugin_url + 'images/delete.png"/>' +
+                                '</a>' +
+                            '</div><br/>' +
+                        '</div>' +
+                        '<div style="clear: both;"></div>'
+                    );
+                    
+                    // Append a success message for this specific ID
+                    $(".aal_exclude_status").append('<p><i>Exclude ID ' + single_id + ' added!</i></p>');
+                }
+            }
+        });
+    });
+
+    // Clear the input field after the requests are fired off
+    $("#aal_add_exclude_post_id").val('');
+    
+    return false;
+});
 
 
 $(".aal_exclude_posts").on('click', '.aal_delete_exclude_link', function(e) {

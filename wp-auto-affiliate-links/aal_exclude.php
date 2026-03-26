@@ -99,8 +99,8 @@ function wpaal_exclude_posts() {
                  <form name="aal_add_exclude_posts_form" id="aal_add_exclude_posts_form" method="post">
                     <b>Enter post/page ID </b>:
                     <?php wp_nonce_field( 'aal_excludepostbyid_action', 'aal_excludepostbyid_nonce' ); ?>
-                    <input type="text" name="aal_exclude_post_id" id="aal_add_exclude_post_id"  size="10" />
-                    <input  class="button-primary"  type="submit" value="Exclude Post"/>
+                    <input type="text" name="aal_exclude_post_id" id="aal_add_exclude_post_id"  size="10" /> 
+                    <input  class="button-primary"  type="submit" value="Exclude Post"/>  <label>You can add multiple ids separated by comma (,) </label>
                 </form>
                 
  <br />
