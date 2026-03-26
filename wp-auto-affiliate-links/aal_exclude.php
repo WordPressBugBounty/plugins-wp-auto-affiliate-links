@@ -51,7 +51,48 @@ function aalUpdateExcludePosts(){
     wp_die();
 }
 
-	
+//Ajax for exclude search
+
+
+function aal_search_posts_to_exclude_callback() {
+    // Basic permissions check
+    if ( !current_user_can('manage_options') ) {
+        wp_send_json(array());
+    }
+
+    $search_term = sanitize_text_field( $_POST['search_term'] );
+
+// --- FETCH EXCLUDED IDs ---
+    $excluded_ids = array(); 
+    $raw_excluded = get_option('aal_exclude', '');
+    
+    if ( !empty($raw_excluded) ) {
+        $excluded_ids = array_map('intval', explode(',', $raw_excluded));
+    }
+
+    // Query parameters
+    $args = array(
+        's'              => $search_term,
+        'post_type'      => array('post', 'page'), // Add custom post types if needed
+        'post_status'    => 'publish',
+        'posts_per_page' => 10,
+        'post__not_in'   => $excluded_ids, // WP_Query will automatically filter these out!
+    );
+
+    $query = new WP_Query( $args );
+    $results = array();
+
+    if ( $query->have_posts() ) {
+        foreach ( $query->posts as $post ) {
+            $results[] = array(
+                'id'    => $post->ID,
+                'title' => get_the_title( $post->ID )
+            );
+        }
+    }
+
+    wp_send_json( $results );
+}	
 
 function wpaal_exclude_posts() {
 	global $wpdb;
@@ -68,6 +109,10 @@ function wpaal_exclude_posts() {
 			} 
 	
 	}
+	
+	
+	
+
 
 	
 	?>
@@ -112,6 +157,29 @@ function wpaal_exclude_posts() {
                     <?php wp_nonce_field( 'aal_excludepostbyurl_action', 'aal_excludepostbyurl_nonce' ); ?>
                     <input  class="button-primary"  type="submit" value="Exclude Post"/>
                 </form>
+                
+					<br />
+					<h3>Search and Exclude Posts</h3>
+					<div id="aal_search_exclude_container">
+					    <b>Search by Title:</b>
+					    <input type="text" id="aal_search_post_input" placeholder="Type at least 3 characters..." size="30" autocomplete="off" />
+					    <button type="button" id="aal_trigger_search_btn" class="button">Search</button>
+					    <span id="aal_search_spinner" style="display:none; color: #666;"><i> Searching...</i></span>
+					    
+					    <br/><br/>
+					    
+					    <div id="aal_search_results_container" style="display:none;">
+					        <select id="aal_search_results" multiple="multiple" style="width: 100%; max-width: 400px; height: 150px;">
+					        </select>
+					        <br/>
+					        <button type="button" id="aal_select_all_btn" class="button">Select All</button>
+					        <br/><br/>
+					        <button type="button" id="aal_submit_search_exclude" class="button-primary">Exclude Selected Posts</button>
+					        <?php wp_nonce_field( 'aal_excludepostbyid_action', 'aal_excludepostbyid_nonce_search' ); ?>
+					    </div>
+					</div>             
+                
+                
                 
                 <br />
                 <h4>Excluded Posts</h4>

@@ -438,6 +438,121 @@ $(".aal_exclude_posts").on('click', '.aal_delete_exclude_link', function(e) {
 
 
 
+// --- 1. SEARCH LISTENER ---
+// 1. Trigger the search when the button is clicked
+$('#aal_trigger_search_btn').on('click', function(e) {
+    e.preventDefault();
+    var searchTerm = $('#aal_search_post_input').val();
+
+    if (searchTerm.length < 3) {
+        alert('Please enter at least 3 characters to search.');
+        return;
+    }
+
+    $('#aal_search_spinner').show();
+    $('#aal_search_results_container').hide(); // Hide previous results
+
+    $.ajax({
+        url: ajax_script.ajaxurl,
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            action: 'aal_search_posts_to_exclude',
+            search_term: searchTerm
+        },
+        success: function(response) {
+            $('#aal_search_spinner').hide();
+            var $select = $('#aal_search_results');
+            $select.empty();
+
+            if (response && response.length > 0) {
+                // Populate the multi-select box
+                $.each(response, function(index, post) {
+                    $select.append($('<option>', {
+                        value: post.id,
+                        text: post.title + ' (ID: ' + post.id + ')'
+                    }));
+                });
+                $('#aal_search_results_container').show();
+            } else {
+                alert('No posts found matching that title (or they are already excluded).');
+            }
+        },
+        error: function() {
+            $('#aal_search_spinner').hide();
+            alert('An error occurred while searching. Check console for details.');
+        }
+    });
+});
+
+// 2. "Select All" Button Logic
+$('#aal_select_all_btn').on('click', function(e) {
+    e.preventDefault();
+    $('#aal_search_results option').prop('selected', true);
+});
+
+// 3. Submit selected posts to be excluded
+$('#aal_submit_search_exclude').on('click', function(e) {
+    e.preventDefault();
+
+    var selectedIds = $('#aal_search_results').val(); 
+    var nonce_val = $('#aal_excludepostbyid_nonce_search').val();
+
+    if (!selectedIds || selectedIds.length === 0) {
+        alert('Please select at least one post from the list.');
+        return;
+    }
+
+    $(".aal_exclude_status").empty();
+
+    // Loop through the selected IDs and fire the AJAX call
+    $.each(selectedIds, function(index, single_id) {
+        var data = {
+            action: 'aal_add_exclude_posts',
+            aal_post: single_id,
+            aal_excludepostbyid_nonce: nonce_val
+        };
+
+        $.ajax({
+            type: "POST",
+            url: ajax_script.ajaxurl,
+            data: data,
+            cache: false,
+            success: function(response){
+                if(response == 'nopost') { 
+                    alert('The post ID ' + single_id + ' does not correspond with any post or page.'); 
+                }
+                else if(response == 'duplicate') { 
+                    // Do nothing, or you can log it to console
+                }
+                else {  
+                    $(".aal_exclude_posts").append(
+                        '<div class="aal_excludeditem">' +
+                            '<div class="aal_excludedcol aal_excludedidcol">' + single_id + '</div>   ' + 
+                            response + 
+                            '<div class="aal_excludedcol">' +
+                                '<a href="javascript:;" class="aal_delete_exclude_link">' +
+                                    '<img src="' + ajax_script.aal_plugin_url + 'images/delete.png"/>' +
+                                '</a>' +
+                            '</div><br/>' +
+                        '</div>' +
+                        '<div style="clear: both;"></div>'
+                    );
+                    
+                    $(".aal_exclude_status").append('<p><i>Exclude ID ' + single_id + ' added!</i></p>');
+                }
+            }
+        });
+    });
+
+    // Cleanup interface after submission
+    $('#aal_search_results_container').hide();
+    $('#aal_search_results').empty();
+    $('#aal_search_post_input').val('');
+});
+
+//End exclude posts by search
+
 
 
 
