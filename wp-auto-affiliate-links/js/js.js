@@ -557,6 +557,20 @@ $('#aal_submit_search_exclude').on('click', function(e) {
 
 
 
+});
+
+
+
+//Code for reset exclude rules
+jQuery(document).ready(function($) {
+    // Reset functionality
+    $('#aal_reset_date_rules').on('click', function() {
+        if(confirm('This will clear both "Before" and "After" date exclusion rules. Continue?')) {
+            $('#aal_excluderulesdatebefore').val('');
+            $('#aal_excluderulesdateafter').val('');
+            $('#aal_excluderules').submit();
+        }
+    });
 }); 
 
 

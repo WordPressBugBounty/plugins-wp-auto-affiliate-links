@@ -109,11 +109,26 @@ function wpaal_add_affiliate_links($content) {
 		$pmgen = array();
 		
 		
-		// Exclusion by date
-		if(isset($post)) $pdate = get_the_date('Y-m-d',$post->ID); else $pdate = '';
-		$edate = get_option('aal_excluderulesdatebefore');
-		
-		if($pdate<$edate && $edate && $pdate) return $content;
+// Exclusion by date
+if (isset($post)) {
+    $pdate = get_the_date('Y-m-d', $post->ID);
+} else {
+    $pdate = '';
+}
+
+if ($pdate) {
+    // 1. Exclude Before (Existing)
+    $edate_before = get_option('aal_excluderulesdatebefore');
+    if (!empty($edate_before) && $pdate < $edate_before) {
+        return $content;
+    }
+
+    // 2. Exclude After (New)
+    $edate_after = get_option('aal_excluderulesdateafter');
+    if (!empty($edate_after) && $pdate > $edate_after) {
+        return $content;
+    }
+}
 		
 		//Exclusion by cat
 		if(isset($ecats) && is_object($post)) if(is_array($ecats)) {

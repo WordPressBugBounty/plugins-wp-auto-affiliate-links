@@ -4,7 +4,7 @@ Plugin Name: Auto Affiliate Links
 Plugin URI: https://autoaffiliatelinks.com
 Description: Auto add affiliate links to your blog content
 Author: Lucian Apostol
-Version: 6.8.4.5
+Version: 6.8.5
 Author URI: https://autoaffiliatelinks.com
 */
 
@@ -427,17 +427,27 @@ function wpaal_actions() {
 		wp_redirect("admin.php?page=aal_topmenu");	
 	}
 	
-	//Actions to run if exclude rule was set
-	if(isset($_POST['aal_excluderulesaction'])) {
-		
-		check_admin_referer( 'aal_ecluderulesdatebeforena', 'aal_excluderulesdatebefore_nonce' );		
 	
-		$date = sanitize_text_field($_POST['aal_excluderulesdatebefore']);
-		//echo $date;
-		delete_option('aal_excluderulesdatebefore');
-		add_option('aal_excluderulesdatebefore', $date);
 	
-	}	
+// Actions to run if exclude rule was set
+if(isset($_POST['aal_excluderulesaction'])) {
+    
+    // Updated nonce check name to match the HTML
+    check_admin_referer( 'aal_excluderules_action', 'aal_excluderules_nonce' );        
+
+    // Sanitize and save the "Before" date
+    $date_before = sanitize_text_field($_POST['aal_excluderulesdatebefore']);
+    update_option('aal_excluderulesdatebefore', $date_before);
+
+    // Sanitize and save the "After" date
+    $date_after = sanitize_text_field($_POST['aal_excluderulesdateafter']);
+    update_option('aal_excluderulesdateafter', $date_after);
+
+    //Success notice can be added
+}
+
+
+
 	
 	
 	

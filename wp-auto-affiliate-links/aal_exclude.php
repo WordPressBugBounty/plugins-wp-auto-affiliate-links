@@ -126,16 +126,60 @@ function wpaal_exclude_posts() {
                 <h2>Exclude Posts/Pages from Auto Affiliate Links</h2>
                 <br /><br /><br />
                 
-<h3>Automatic rules for post exclusions</h3>    
+<h3>Automatic rules for post exclusions</h3>
 
-                 <form name="aal_excluderules" id="aal_excluderules" method="post">
-                    <b>Exclude all posts/pages published before this date:  </b>:
-                    <input type="date" name="aal_excluderulesdatebefore" id="aal_excluderulesdatebefore" value="<?php echo get_option('aal_excluderulesdatebefore'); ?>" />Use this option if you want links to show only in posts published after the selected date
-                    <br /><br />
-                    <?php wp_nonce_field( 'aal_ecluderulesdatebeforena', 'aal_excluderulesdatebefore_nonce' ); ?>
-                    <input type="hidden" name="aal_excluderulesaction" id="aal_excluderulesaction"  value="1" />
-                    <input  class="button-primary"  type="submit" value="Save"/> 
-                </form>
+<form name="aal_excluderules" id="aal_excluderules" method="post">
+    <p>
+        <b>Exclude all posts/pages published before this date:</b><br />
+        <input type="date" name="aal_excluderulesdatebefore" id="aal_excluderulesdatebefore" value="<?php echo esc_attr(get_option('aal_excluderulesdatebefore')); ?>" />
+        <span class="description">Links will only show in posts published <b>after</b> this date.</span>
+    </p>
+
+    <p>
+        <b>Exclude all posts/pages published after this date:</b><br />
+        <input type="date" name="aal_excluderulesdateafter" id="aal_excluderulesdateafter" value="<?php echo esc_attr(get_option('aal_excluderulesdateafter')); ?>" />
+        <span class="description">Links will only show in posts published <b>before</b> this date.</span>
+    </p>
+
+<?php
+
+$aal_date_notice = '';
+
+//Code to display current setting
+$before_raw = get_option('aal_excluderulesdatebefore');
+$after_raw = get_option('aal_excluderulesdateafter');
+
+$date_format = get_option('date_format'); // Uses your WordPress site's date setting
+$before_pretty = !empty($before_raw) ? '<b>' . date_i18n($date_format, strtotime($before_raw)) . '</b>' : '';
+$after_pretty = !empty($after_raw) ? '<b>' . date_i18n($date_format, strtotime($after_raw)) . '</b>' : '';
+
+if ($before_pretty && $after_pretty) {
+    $aal_date_notice = "Posts published before $before_pretty and after $after_pretty are currently excluded.";
+} elseif ($before_pretty) {
+    $aal_date_notice = "Posts published before $before_pretty are currently excluded.";
+} elseif ($after_pretty) {
+    $aal_date_notice = "Posts published after $after_pretty are currently excluded.";
+}
+
+?>
+
+
+<?php if (isset($aal_date_notice) && $aal_date_notice): ?>
+        <p style="color: #46b450; font-weight: 500; margin-bottom: 15px;">
+            <span class="dashicons dashicons-calendar-alt" style="font-size: 18px; margin-right: 5px;"></span> 
+            <?php echo $aal_date_notice; ?>
+        </p>
+    <?php endif; ?>    
+    
+
+    <?php wp_nonce_field( 'aal_excluderules_action', 'aal_excluderules_nonce' ); ?>
+    <input type="hidden" name="aal_excluderulesaction" value="1" />
+    
+    <input class="button-primary" type="submit" value="Save Rules"/> 
+    
+    <button type="button" id="aal_reset_date_rules" class="button" style="margin-left: 10px;">Reset date exclusion rules</button>
+</form>
+
 
 <br /><br />
 
