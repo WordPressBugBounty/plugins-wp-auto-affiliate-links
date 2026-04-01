@@ -383,6 +383,8 @@ $("#aal_add_exclude_posts_form").submit(function() {
                     $(".aal_exclude_status").append('<p><i>Exclude ID ' + single_id + ' added!</i></p>');
                 }
             }
+            
+
         });
     });
 
@@ -391,6 +393,55 @@ $("#aal_add_exclude_posts_form").submit(function() {
     
     return false;
 });
+
+
+// AJAX search for authors to exclude
+$('#aal_trigger_author_search_btn').on('click', function(e) {
+    e.preventDefault();
+    var searchTerm = $('#aal_search_author_input').val();
+
+    if (searchTerm.length < 3) {
+        alert('Please enter at least 3 characters to search for an author.');
+        return;
+    }
+
+    $('#aal_author_search_spinner').show();
+
+    $.ajax({
+        url: ajax_script.ajaxurl,
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            action: 'aal_search_authors_to_exclude',
+            search_term: searchTerm
+        },
+        success: function(response) {
+            $('#aal_author_search_spinner').hide();
+            var $select = $('#aal_search_author_results');
+            $select.empty();
+
+            if (response && response.length > 0) {
+                $.each(response, function(index, user) {
+                    $select.append($('<option>', {
+                        value: user.id,
+                        text: user.name + ' (' + user.login + ')'
+                    }));
+                });
+            } else {
+                $select.append($('<option disabled>', {text: 'No authors found matching that term.'}));
+            }
+        },
+        error: function() {
+            $('#aal_author_search_spinner').hide();
+            alert('An error occurred while searching. Check console for details.');
+        }
+    });
+});
+
+
+
+
+//end ajax search for authors to exclude
 
 
 $(".aal_exclude_posts").on('click', '.aal_delete_exclude_link', function(e) {
@@ -552,6 +603,13 @@ $('#aal_submit_search_exclude').on('click', function(e) {
 });
 
 //End exclude posts by search
+
+
+
+
+
+
+
 
 
 

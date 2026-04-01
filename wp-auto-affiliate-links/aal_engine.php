@@ -265,6 +265,16 @@ if ($pdate) {
 		$addedlinks = array();
 		$addedkeys = array();
 		
+		
+		//If the author is on exclusion list, exit
+		$aal_exclude_authors = get_option('aal_exclude_authors');
+		$exclude_authors_array = explode(',', $aal_exclude_authors);
+		
+		if (isset($post->post_author) && $post->post_author && in_array($post->post_author, $exclude_authors_array)) {
+		    return $content;
+		}		
+		
+		
 		//If the post is set for exclusion, exit
 		if(isset($post->ID) && $post->ID && in_array($post->ID, $excludearray)) return $content;
 

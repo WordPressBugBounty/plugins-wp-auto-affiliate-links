@@ -1,6 +1,7 @@
 <?php
 
 
+
 function aalAddExcludePost(){
 			global $wpdb;            
             	 if ( !current_user_can("publish_pages") ) die();
@@ -179,7 +180,9 @@ if ($before_pretty && $after_pretty) {
     
     <button type="button" id="aal_reset_date_rules" class="button" style="margin-left: 10px;">Reset date exclusion rules</button>
 </form>
+<br /><br />
 
+<?php wpaal_exclude_authors_ui(); ?>
 
 <br /><br />
 
