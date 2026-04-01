@@ -23,6 +23,7 @@ function wpaal_add_affiliate_links($content) {
 		$showhome = get_option('aal_showhome');
 		$showlist = get_option('aal_showlist');
 		$showhtags = get_option('aal_showhtags');
+		$showfigcaption = get_option('aal_showfigcaption');
 		$showacf = get_option('aal_showacf');
 		$notimes = get_option('aal_notimes'); if(!$notimes) $notimes = -1;
 		$notimescustom = trim(get_option('aal_notimescustom'));
@@ -66,6 +67,7 @@ function wpaal_add_affiliate_links($content) {
 		if($samelink =='nolimit') $samelink = 100;
 	//	if($samekeyword > $samelink) $samekeyword = $samelink;  Removed on 28.06.2021, to let users add more links with the same keyword
 		$linkdistribution = get_option('aal_linkdistribution');
+		
 		
 		$targeto = get_option('aal_target');
 		$relationo = get_option('aal_relation');
@@ -246,9 +248,10 @@ if ($pdate) {
 		$reg_post		=	 '/(?!(?:[^<\[]+[>\]]|[^>\]]+<\/a>))($name)/ims'. $langsupport .'U';		
 		if('true' == get_option('aal_showhtags') || true == get_option('aal_showhtags')) { $reghtags = ''; }  else { $reghtags = '+<\/h.>|[^>]+><\/h.>|[^>]'; }
 		if('true' == get_option('aal_showspan') || true == get_option('aal_showspan')) { $regspan = ''; }  else { $regspan = '+<\/span>|[^>]+><\/span>|[^>]'; }
+		if('true' == get_option('aal_showfigcaption') || true == get_option('aal_showfigcaption')) { $regfigcaption = ''; }  else { $regfigcaption = '+<\/figcaption>|[^>]+><\/figcaption>|[^>]'; }
 			// reghtags = '+<\/h.>|[^>\]]+><\/h.>|[^>\]]';
 		if(true == $casesensitive) $csi = ""; else $csi = 'i';
-		$reg			=	 '/(?!(?:[^<]+[>]|[^\[]+[\]]|[^>]+<\/[^>]+><\/a>|[^>]+<\/a>|[^>]'. $regspan . $reghtags .'+<\/script*>|[^>]+<\/code*>))'. $wrse .'($name)'. $wrse .'/'. $csi .'ms'. $langsupport .'U';
+		$reg			=	 '/(?!(?:[^<]+[>]|[^\[]+[\]]|[^>]+<\/[^>]+><\/a>|[^>]+<\/a>|[^>]'. $regspan . $reghtags . $regfigcaption .'+<\/script*>|[^>]+<\/code*>))'. $wrse .'($name)'. $wrse .'/'. $csi .'ms'. $langsupport .'U';
 		//$reg			=	 '/(?!(?:[^<\[]+[>\]]|[^>]+<\/[^>]+><\/a>|[^>\]]+<\/a>|[^>\]]'. $reghtags .'+<\/script*>|[^>\]]+<\/code*>))'. $wrse .'($name)'. $wrse .'/'. $csi .'ms'. $langsupport .'U';
 		//else $reg	=	 '/(?!(?:[^<\[]+[>\]]|[^>]+<\/[^>]+><\/a>|[^>\]]+<\/a>|[^>\]]'. $reghtags .'+<\/script*>|[^>\]]+<\/code*>))\b($name)\b/ims'. $langsupport .'U';
 		$strpos_fnc		=	 'strpos';		
@@ -774,8 +777,9 @@ if ( is_null( $aal_page_globals ) ) {
 	            'excludewords'          => $excludewords,
 	            'linkcolor'             => $linkcolor,
 	            'geminiaion'            => $geminiaion,
-	            'cssclass'              => $cssclass,     // Added
-	            'disclosure'            => $disclosure,    // Added
+	            'cssclass'              => $cssclass,     
+	            'disclosure'            => $disclosure, 
+	            'showfigcaption'        => $showfigcaption,     
 	            'linkdistribution'      => $linkdistribution
 	        );
         }

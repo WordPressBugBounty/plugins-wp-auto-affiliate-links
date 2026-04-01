@@ -214,7 +214,7 @@ function aal_setup_new_blog($blog_id) {
 add_action('wpmu_new_blog', 'aal_setup_new_blog');
 
 
-define('AAL_NOTICE_VER', '1.2'); 
+define('AAL_NOTICE_VER', '1.3'); 
 
 function aal_admin_notice() {
     if (!current_user_can('activate_plugins')) return;
@@ -225,9 +225,9 @@ function aal_admin_notice() {
         ?>
         <div class="notice notice-info is-dismissible aal-notice-pro" data-notice-ver="<?php echo AAL_NOTICE_VER; ?>">
 				<p>
-                <?php _e('Are you enjoying <strong>Auto Affiliate Links</strong>? If so, please consider leaving us a 5-star review on WordPress.org. It helps us a lot!', 'wp-auto-affiliate-links'); ?>
+                <?php _e('Try <strong>Auto Affiliate Links PRO</strong> for <strong>FREE</strong>. Explore automated link generation and advanced features, now with <strong>AI powered</strong> features. ', 'wp-auto-affiliate-links'); ?>
                 <br /><br />
-                <a href="https://wordpress.org/support/plugin/wp-auto-affiliate-links/reviews/#new-post" target="_blank" class="button button-primary"><?php _e('Leave a Review', 'wp-auto-affiliate-links'); ?></a>
+                <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/" target="_blank" class="button button-primary"><?php _e('Start Your 7-Day Free Trial', 'wp-auto-affiliate-links'); ?></a>
                 &nbsp;
                 <a href="#" class="aal-notice-dismiss-link" style="text-decoration: none; color: #666; margin-left: 10px;"><?php _e('No thanks.', 'wp-auto-affiliate-links'); ?></a>
             </p>

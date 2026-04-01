@@ -17,6 +17,7 @@ function aalChangeOptions(){
 		$aal_showwidget = filter_input(INPUT_POST, 'aal_showwidget', FILTER_SANITIZE_SPECIAL_CHARS);
 		$aal_showexcerpt = filter_input(INPUT_POST, 'aal_showexcerpt', FILTER_SANITIZE_SPECIAL_CHARS);
 		$aal_showcatdesc = filter_input(INPUT_POST, 'aal_showcatdesc', FILTER_SANITIZE_SPECIAL_CHARS);
+		$aal_showfigcaption = filter_input(INPUT_POST, 'aal_showfigcaption', FILTER_SANITIZE_SPECIAL_CHARS);
 		$aal_showacf = filter_input(INPUT_POST, 'aal_showacf', FILTER_SANITIZE_SPECIAL_CHARS);
 		$aal_showmetabox = filter_input(INPUT_POST, 'aal_showmetabox', FILTER_SANITIZE_SPECIAL_CHARS);
 		$aal_showhtags = filter_input(INPUT_POST, 'aal_showhtags', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -65,7 +66,8 @@ function aalChangeOptions(){
 		$aal_showlist = sanitize_text_field($aal_showlist);	
 		$aal_showwidget = sanitize_text_field($aal_showwidget);	
 		$aal_showexcerpt = sanitize_text_field($aal_showexcerpt);
-		$aal_showcatdesc = sanitize_text_field($aal_showcatdesc);
+		$aal_showcatdesc = sanitize_text_field($aal_showcatdesc); 
+		$aal_showfigcaption = sanitize_text_field($aal_showfigcaption);
 		$aal_showacf = sanitize_text_field($aal_showacf);
 		$aal_showmetabox = sanitize_text_field($aal_showmetabox);
 		$aal_showhtags = sanitize_text_field($aal_showhtags);	
@@ -122,6 +124,7 @@ function aalChangeOptions(){
 		aal_add_option( 'aal_showwidget', $aal_showwidget, '', 'yes');
 		aal_add_option( 'aal_showexcerpt', $aal_showexcerpt, '', 'yes');
 		aal_add_option( 'aal_showcatdesc', $aal_showcatdesc, '', 'yes');
+		aal_add_option( 'aal_showfigcaption', $aal_showfigcaption, '', 'yes');
 		aal_add_option( 'aal_showacf', $aal_showacf, '', 'yes');
 		aal_add_option( 'aal_showmetabox', $aal_showmetabox, '', 'yes');
 		aal_add_option( 'aal_showhtags', $aal_showhtags, '', 'yes');
@@ -225,6 +228,9 @@ function wpaal_general_settings() {
        
     $showcatdesc = get_option('aal_showcatdesc'); 
         if($showcatdesc=='true') $scdse = 'checked'; else $scdse = '';
+        
+    $showfigcaption = get_option('aal_showfigcaption'); 
+        if($showfigcaption=='true') $sfcse = 'checked'; else $sfcse = '';
         
     $showacf = get_option('aal_showacf'); //echo $showacf;
         if($showacf=='true') $sacfse = 'checked'; else $sacfse = '';
@@ -401,6 +407,7 @@ function wpaal_general_settings() {
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br /> <input type="checkbox" name="aal_showwidget" id="aal_showwidget" value="true" <?php echo $swse;?> /> Widget text 
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br /> <input type="checkbox" name="aal_showexcerpt" id="aal_showexcerpt" value="true" <?php echo $sese;?> /> Excerpt
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br /> <input type="checkbox" name="aal_showcatdesc" id="aal_showcatdesc" value="true" <?php echo $scdse;?> /> Category description
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br /> <input type="checkbox" name="aal_showfigcaption" id="aal_showfigcaption" value="true" <?php echo $sfcse;?> /> Image Caption
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br /> <input type="checkbox" name="aal_showhtags" id="aal_showhtags" value="true" <?php echo $shtagsse;?> /> Subtitles (H tags)
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br /> <input type="checkbox" name="aal_showacf" id="aal_showacf" value="true" <?php echo $sacfse;?> /> Advanced Custom Fields
 						  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br /> <input type="checkbox" name="aal_showmetabox" id="aal_showmetabox" value="true" <?php echo $smetaboxse;?> /> Meta Box Fields
