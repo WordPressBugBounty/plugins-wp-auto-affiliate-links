@@ -546,41 +546,57 @@ $('#aal_select_all_btn').on('click', function(e) {
 $('#aal_submit_search_exclude').on('click', function(e) {
     e.preventDefault();
 
-    var selectedIds = $('#aal_search_results').val(); 
+    // Selectăm direct elementele <option> selectate
+    var $selectedOptions = $('#aal_search_results option:selected');
+    
+    // Extragem ID-urile într-un array
+    var selectedIds = [];
+    $selectedOptions.each(function() {
+        selectedIds.push($(this).val());
+    });
+    
     var nonce_val = $('#aal_excludepostbyid_nonce_search').val();
 
-    if (!selectedIds || selectedIds.length === 0) {
+    if (selectedIds.length === 0) {
         alert('Please select at least one post from the list.');
         return;
     }
 
+    // Unim toate ID-urile cu virgulă pentru request
+    var idsString = selectedIds.join(',');
+
     $(".aal_exclude_status").empty();
 
-    // Loop through the selected IDs and fire the AJAX call
-    $.each(selectedIds, function(index, single_id) {
-        var data = {
-            action: 'aal_add_exclude_posts',
-            aal_post: single_id,
-            aal_excludepostbyid_nonce: nonce_val
-        };
+    var data = {
+        action: 'aal_add_exclude_posts',
+        aal_post: idsString,
+        aal_excludepostbyid_nonce: nonce_val
+    };
 
-        $.ajax({
-            type: "POST",
-            url: ajax_script.ajaxurl,
-            data: data,
-            cache: false,
-            success: function(response){
-                if(response == 'nopost') { 
-                    alert('The post ID ' + single_id + ' does not correspond with any post or page.'); 
-                }
-                else if(response == 'duplicate') { 
-                    // Do nothing, or you can log it to console
-                }
-                else {  
+    $.ajax({
+        type: "POST",
+        url: ajax_script.ajaxurl,
+        data: data,
+        cache: false,
+        success: function(response){
+            if(response == 'nopost') { 
+                alert('One or more post IDs do not correspond with any post or page.'); 
+            }
+            else {  
+                // Aici iterăm prin opțiunile pe care user-ul le-a selectat în listă
+                // IGNORĂM răspunsul PHP și construim interfața dinamic.
+                $selectedOptions.each(function() {
+                    var single_id = $(this).val();
+                    var rawText = $(this).text();
+                    
+                    // În search, textul era "Titlu Postare (ID: 42)". Extragem doar titlul curat.
+                    var postTitle = rawText.replace(/ \(ID: \d+\)$/, '');
+
                     $(".aal_exclude_posts").append(
                         '<div class="aal_excludeditem">' +
-                            '<div class="aal_excludedcol aal_excludedidcol">' + single_id + '</div>   ' + 
-                            response + 
+                            '<div class="aal_excludedcol aal_excludedidcol">' + single_id + '</div>' + 
+                            '<div class="aal_excludedcol aal_excludedtitle">' + postTitle + '</div>' + 
+                            '<div class="aal_excludedcol">Added</div>' + 
                             '<div class="aal_excludedcol">' +
                                 '<a href="javascript:;" class="aal_delete_exclude_link">' +
                                     '<img src="' + ajax_script.aal_plugin_url + 'images/delete.png"/>' +
@@ -589,17 +605,17 @@ $('#aal_submit_search_exclude').on('click', function(e) {
                         '</div>' +
                         '<div style="clear: both;"></div>'
                     );
-                    
-                    $(".aal_exclude_status").append('<p><i>Exclude ID ' + single_id + ' added!</i></p>');
-                }
+                });
+                
+                $(".aal_exclude_status").append('<p><i>Selected posts excluded!</i></p>');
+                
+                // Cleanup interfață
+                $('#aal_search_results_container').hide();
+                $('#aal_search_results').empty();
+                $('#aal_search_post_input').val('');
             }
-        });
+        }
     });
-
-    // Cleanup interface after submission
-    $('#aal_search_results_container').hide();
-    $('#aal_search_results').empty();
-    $('#aal_search_post_input').val('');
 });
 
 //End exclude posts by search
