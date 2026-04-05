@@ -4,7 +4,7 @@ Plugin Name: Auto Affiliate Links
 Plugin URI: https://autoaffiliatelinks.com
 Description: Auto add affiliate links to your blog content
 Author: Lucian Apostol
-Version: 6.8.6.1
+Version: 6.8.7
 Author URI: https://autoaffiliatelinks.com
 */
 
@@ -25,7 +25,7 @@ function aal_load_css() {
 }
 
 //Load javascript files used both for front and back end
-function aal_load_js() {
+function aal_load_js($hook) {
 	
 		wp_enqueue_style( 'wp-color-picker' );
 	
@@ -36,7 +36,16 @@ function aal_load_js() {
         // make the ajaxurl var available to the above script
 		wp_localize_script( 'aal_js', 'ajax_script', array( 'ajaxurl' => admin_url( 'admin-ajax.php'),'aal_plugin_url' => $aal_plugin_url, 'aal_nonce' => wp_create_nonce('aal-ajax-nonce'), 'aal_kw_nonce' => wp_create_nonce('aal-ajax-kw-nonce') ) );	     
 		
-		
+		if ( strpos( $hook, 'aal' ) === false ) {
+        return; 
+    }
+    
+	if ( $hook === 'aal_exclude_posts' || $hook === 'aal_exclude_cats' || $hook === 'aal_exclude_words' || strpos($hook, 'exclude') !== false ) {
+        wp_enqueue_script( 'aal-exclude-js', plugin_dir_url( __FILE__ ) . 'js/exclude.js', array('jquery'), '1.0', true);
+        
+    }
+    
+    
 }
 
 //Function to include js script to be used only on front-end
@@ -241,7 +250,7 @@ add_action('query_vars', 'wpaal_add_query_var');
 add_action('wp','wpaal_check_for_goto');
 add_action('wp_print_scripts', 'aal_load_css');
 //add_action('wp_print_scripts', 'aal_load_js');  
-add_action('admin_footer', 'aal_load_js'); 
+add_action('admin_enqueue_scripts', 'aal_load_js'); 
 add_action('wp_ajax_aal_delete_link', 'aalDeleteLink');
 add_action('wp_ajax_aal_update_link', 'aalUpdateLink');
 add_action('wp_ajax_aal_add_link', 'aalAddLink');
@@ -291,7 +300,7 @@ function wpaal_create_menu() {
 	add_submenu_page( 'aal_topmenu', 'Exclude Words', 'Exclude Words', 'publish_pages', 'aal_exclude_words', 'wpaal_exclude_words' );
 	
 
-	add_submenu_page( 'aal_topmenu', 'Exclude Posts/Pages', 'Exclude Posts/Pages', 'publish_pages', 'aal_exclude_posts', 'wpaal_exclude_posts' );
+	add_submenu_page( 'aal_topmenu', 'Exclude Posts/Pages', 'Exclude Posts/Pages', 'publish_pages', 'aal_exclude_posts', 'wpaal_exclude_page_controller' );
 	add_submenu_page( 'aal_topmenu', 'Exclude Categories', 'Exclude Categories', 'publish_pages', 'aal_exclude_cats', 'wpaal_exclude_cats' );
 	add_submenu_page( 'aal_topmenu', 'Import/Export', 'Import/Export', 'activate_plugins', 'aal_import_export', 'wpaal_import_export' );
 	

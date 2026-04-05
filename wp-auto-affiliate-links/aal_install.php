@@ -214,7 +214,7 @@ function aal_setup_new_blog($blog_id) {
 add_action('wpmu_new_blog', 'aal_setup_new_blog');
 
 
-define('AAL_NOTICE_VER', '1.3'); 
+define('AAL_NOTICE_VER', '1.4'); 
 
 function aal_admin_notice() {
     if (!current_user_can('activate_plugins')) return;
