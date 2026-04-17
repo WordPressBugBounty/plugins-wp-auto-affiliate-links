@@ -108,6 +108,9 @@ If you can't find the options to do this, try LibreOffice, as it is a bit easier
 
 == Changelog ==
 
+= 6.8.8 =
+* Added inserted links view tracking
+
 = 6.8.7 =
 * Added tab view for exclusion post rules
 

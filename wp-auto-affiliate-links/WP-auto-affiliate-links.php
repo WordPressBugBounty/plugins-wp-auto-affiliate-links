@@ -4,7 +4,7 @@ Plugin Name: Auto Affiliate Links
 Plugin URI: https://autoaffiliatelinks.com
 Description: Auto add affiliate links to your blog content
 Author: Lucian Apostol
-Version: 6.8.7
+Version: 6.8.8
 Author URI: https://autoaffiliatelinks.com
 */
 
@@ -510,6 +510,96 @@ if(isset($_POST['aal_excluderulesaction'])) {
 	//End actions to run when post is excluded by url
 	
 }  //End main plugin actions function
+
+
+//Cron job for view usage
+
+
+add_action( 'init', 'aal_schedule_hourly_telemetry' );
+function aal_schedule_hourly_telemetry() {
+    if ( ! wp_next_scheduled( 'aal_hourly_usage_sync' ) ) {
+        wp_schedule_event( time(), 'hourly', 'aal_hourly_usage_sync' );
+    }
+}
+
+add_action( 'aal_hourly_usage_sync', 'aal_send_usage_data_to_server' );
+function aal_send_usage_data_to_server() {
+    
+    $api_key = get_option('aal_apikey'); 
+    if ( empty($api_key) ) return;
+
+    $current_month = date('Y_m');
+    $current_month_key = 'aal_views_' . $current_month;
+    $sent_month_key    = 'aal_views_sent_' . $current_month;
+    
+    $total_views = (int) get_option( $current_month_key, 0 );
+    
+    if ( $total_views === 0 ) return;
+    
+    $last_sent_views = (int) get_option( $sent_month_key, 0 );
+    if ( $total_views <= $last_sent_views ) return; 
+
+    $timestamp = time();
+    $global_salt = 'AAL_Tr@cking_Salt_2026!xY';
+    $signature = hash('sha256', $api_key . $timestamp . $global_salt);
+
+    $url = 'https://api.autoaffiliatelinks.com/viewusage.php';
+    $data = array(
+        'api_key'   => $api_key,
+        'site_url'  => home_url(),
+        'yearmonth' => $current_month,
+        'viewcount' => $total_views,
+        'timestamp' => $timestamp,
+        'signature' => $signature
+    );
+
+    // Trimitem request-ul asincron (fără să blocăm site-ul)
+    $response = wp_remote_post( $url, array(
+        'method'      => 'POST',
+        'timeout'     => 10,
+        'blocking'    => true, // E true pentru a citi status-ul
+        'body'        => $data
+    ) );
+
+  
+    if ( ! is_wp_error( $response ) ) {
+        $response_code = wp_remote_retrieve_response_code( $response );
+        if ( $response_code === 200 || $response_code === 201 ) {
+            update_option( $sent_month_key, $total_views, 'no' );
+        }
+    }
+
+    global $wpdb;
+    
+    $keep_keys = array(
+        'aal_views_' . date('Y_m'),
+        'aal_views_' . date('Y_m', strtotime('-1 month')),
+        'aal_views_' . date('Y_m', strtotime('-2 months')),
+        'aal_views_sent_' . date('Y_m'),
+        'aal_views_sent_' . date('Y_m', strtotime('-1 month')),
+        'aal_views_sent_' . date('Y_m', strtotime('-2 months')),
+    );
+    
+    $placeholders = implode(', ', array_fill(0, count($keep_keys), '%s'));
+    
+    $wpdb->query( $wpdb->prepare(
+        "DELETE FROM {$wpdb->options} 
+         WHERE option_name LIKE 'aal_views\_%%' 
+         AND option_name NOT IN ($placeholders)",
+        ...$keep_keys
+    ) );
+}
+
+
+//end cron-job for view usage
+
+//Deactivation hook
+register_deactivation_hook( __FILE__, 'aal_clear_telemetry_cron_on_deactivate' );
+
+function aal_clear_telemetry_cron_on_deactivate() {
+    wp_clear_scheduled_hook( 'aal_hourly_usage_sync' );
+}
+//End deactivation hook
 
 
 //Function that will render the administration page

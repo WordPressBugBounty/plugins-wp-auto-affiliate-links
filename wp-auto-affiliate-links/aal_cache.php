@@ -83,6 +83,22 @@ function aal_cache_get_func() {
 	check_ajax_referer( 'aalcachegetnonce', 'cachegetnonce' ); 
 	
 	
+				// =========================================================
+            // Count usage
+            // =========================================================
+            $current_month_key = 'aal_views_' . date('Y_m');
+            $current_views = get_option( $current_month_key, false );
+            
+            if ( $current_views === false ) {
+                add_option( $current_month_key, 1, '', 'no' );
+            } else {
+                update_option( $current_month_key, intval( $current_views ) + 1 );
+            }
+            // end count usage	
+	
+	
+	
+	
 	if(isset($_POST['aalpostid']) && $_POST['aalpostid'] && is_numeric(substr($_POST['aalpostid'],0, 5)) ) {
 		
 		$postidnr = substr(sanitize_text_field($_POST['aalpostid']),0, 5);
