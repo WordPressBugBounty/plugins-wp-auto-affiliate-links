@@ -140,9 +140,9 @@ function aal_display_stats($type) {
 	<tr class="<?php if($alternate % 2 == 0) echo 'alternate'; ?>" >
 		<td>
 			<?php if($type == 'link') { ?>
-			<a href="<?php echo $st->col; ?>"><?php echo $st->col; ?></a>
+			<a href="<?php echo esc_url($st->col); ?>"><?php echo esc_html($st->col); ?></a>
 			<?php } else { ?>
-				<?php echo $st->col; ?>
+				<?php echo esc_html($st->col); ?>
 			<?php } ?>
 		</td>
 		<td>
@@ -216,13 +216,13 @@ function aal_display_clicks() {
 	?>
 	<tr class="<?php if($alternate % 2 == 0) echo 'alternate'; ?>" >
 		<td>
-			<a href="<?php echo $st->link; ?>"><?php echo $st->link; ?></a>			
+			<a href="<?php echo esc_url($st->link); ?>"><?php echo esc_html($st->link); ?></a>			
 		</td>
 		<td>
-			<?php echo $st->keyword; ?>
+			<?php echo esc_html($st->keyword); ?>
 		</td>
 		<td>
-			<a href="<?php echo $st->locurl; ?>"><?php echo $st->locurl; ?></a>	
+			<a href="<?php echo esc_url($st->locurl); ?>"><?php echo esc_html($st->locurl); ?></a>	
 		</td>
 		<td>
 			<?php echo date("m/d/Y H:i:s",$st->time);   ; ?>
@@ -301,7 +301,7 @@ function aal_url_stats_save_action() {
 	$keyword = sanitize_text_field($_POST['keyword']);	
 	$tip = sanitize_text_field($_POST['tip']);	
 	$locid = sanitize_text_field($_POST['postid']);	
-	$url = sanitize_text_field($_POST['url']);	
+	$url = esc_url_raw(sanitize_text_field($_POST['url']));	
 	$time = time();
 	
 	if(get_option('aal_iscloacked'))
