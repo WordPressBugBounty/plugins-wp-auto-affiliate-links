@@ -88,7 +88,7 @@ EOD;
         
         $jsonlinks = wp_json_encode($response);
         
-        update_post_meta($postidnr, 'aal_cache_links', $jsonlinks);
+        update_post_meta($postidnr, 'aal_cache_links', wp_slash($jsonlinks));
         echo 'success';
         
     } else {

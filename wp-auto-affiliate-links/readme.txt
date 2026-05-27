@@ -3,8 +3,8 @@ Contributors: thedark
 Donate link: https://autoaffiliatelinks.com/donations/
 Tags: affiliate, posts, marketing, links, keywords
 Requires at least: 3.5
-Tested up to: 6.9.4
-Stable tag: 6.8.9.1
+Tested up to: 7.0
+Stable tag: 6.8.9.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -107,6 +107,9 @@ Microsoft Excel adds odd formatting to the file and making problems at import an
 If you can't find the options to do this, try LibreOffice, as it is a bit easier to find them there.
 
 == Changelog ==
+
+= 6.8.9.2 =
+* Secured admin-ajax calls
 
 = 6.8.9.1 =
 * Refactored api calls logic
