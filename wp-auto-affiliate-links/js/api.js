@@ -253,101 +253,48 @@
 			
 			//Add to cache
 			
-			if(!response.keywords && aalapidata.aal_postid) {
-				    $.ajax({
-				        type: "post", 
-				        url: aal_amazon_obj.ajaxurl, 
-				        data: { 
-				            action: 'aal_cache_set', 
-				            cachesetnonce: aal_amazon_obj.cachesetnonce, 
-				            aalpostid: aalapidata.aal_postid, 
-				            api_payload: response.signed_payload, 
-				            api_signature: response.signature 
-				        },
-				        success: function(html){}
-				    });
-				}
-			
-			//End add to cache
-		
-			if(response.keywords) {
-    
-		    if(aalapidata.amazonactive && aalapidata.amazonid) { 
-		        $.ajax({
-		            type: "post", 
-		            url: aal_amazon_obj.ajaxurl, 
-		            data: { 
-		                action: 'aal_amazon_get', 
-		                security: aal_amazon_obj.security, 
-		                keywords: response.keywords, 
-		                notimes: notimes
-		                
-		            },
-		            success: function(html){
-		                try {
-		                    var aresults = $.parseJSON(html);
-		                } catch (e) {
-		                    return;
-		                }
-		                
-		                var alinks = aresults.amazonlinks;
-		                var awidgets;
-		                if(aresults.amazonwidget) awidgets = aresults.amazonwidget;
-		            
-		                if(alinks) {
-		                    for(var i = alinks.length - 1; i >= 0; i--) {
-		                        if(alinks[i].key && alinks[i].url) {
-		                            parray.unshift(alinks[i]);
-		                            if(parray.length > notimes) parray.pop();
-		                        }
-		                    }   
-		                }
-		                
-		                
-		                if(insertid && (alinks[0] || awidgets[0])) {
-		                    $.ajax({
-		                        type: "POST",
-		                        url: "//api.autoaffiliatelinks.com/acache.php",
-		                        data: { apikey: aalapidata.apikey, insertid: insertid, parray: parray, amazonwidget: awidgets },
-		                        cache: false,
-		                        success: function(acacheres){
-		                            console.log(acacheres);
-		                        }
-		                    });
-		                }
-		                
-		                
-		                
-		                aal_replacement(parray, awidgets, response, aalapidata, aal_divnumber, aal_target, aal_relation, aal_linkcolor);
-		            }
-		        }); // close jQuery.ajax 
-		    } 
-		    else {
-		        
-		        if(aalapidata.aal_postid) {
-		            $.ajax({
-		                type: "post", 
-		                url: aal_amazon_obj.ajaxurl, 
-		                data: { 
-		                    action: 'aal_cache_set', 
-		                    cachesetnonce: aal_amazon_obj.cachesetnonce, 
-		                    aalpostid: aalapidata.aal_postid, 
-		                    
-		                    
-		                    api_payload: response.signed_payload, 
-		                    api_signature: response.signature 
-		                },
-		                success: function(html){}
-		            }); 
-		        }                   
-		        
-		        aal_replacement(parray, awidgets, response, aalapidata, aal_divnumber, aal_target, aal_relation, aal_linkcolor);
-		    }
-		
-		} // end if (response.keywords)
-		else {
-		    aal_replacement(parray, awidgets, response, aalapidata, aal_divnumber, aal_target, aal_relation, aal_linkcolor);
-		}
+			var willUseAmazon = response.keywords && (aalapidata.amazonactive && aalapidata.amazonid);
+
+							if (willUseAmazon) {
+							    // ---------------------------------------------------------
+							    // LOGICA AMAZON (Vizita 1)
+							    // ---------------------------------------------------------
+							    $.ajax({
+							        type: "post", 
+							        url: aal_amazon_obj.ajaxurl, 
+							        data: { 
+							            action: 'aal_amazon_get', 
+							            security: aal_amazon_obj.security, 
+							            keywords: response.keywords, 
+							            notimes: notimes
+							        },
+							        success: function(html){
+							            // ... (aici e logica de combinare și apelul către acache.php) ...
+							            aal_replacement(parray, awidgets, response, aalapidata, aal_divnumber, aal_target, aal_relation, aal_linkcolor);
+							        }
+							    });
+							
+							} else {
+							    // ---------------------------------------------------------
+							    // LOGICA DE CACHE LOCAL (Vizita 2, sau Vizita 1 fără Amazon)
+							    // ---------------------------------------------------------
+							    if(aalapidata.aal_postid) {
+							        $.ajax({
+							            type: "post", 
+							            url: aal_amazon_obj.ajaxurl, 
+							            data: { 
+							                action: 'aal_cache_set', 
+							                cachesetnonce: aal_amazon_obj.cachesetnonce, 
+							                aalpostid: aalapidata.aal_postid, 
+							                api_payload: response.signed_payload, 
+							                api_signature: response.signature 
+							            },
+							            success: function(html){}
+							        }); 
+							    }                   
+							    
+							    aal_replacement(parray, awidgets, response, aalapidata, aal_divnumber, aal_target, aal_relation, aal_linkcolor);
+							}
                  
      		}
      
