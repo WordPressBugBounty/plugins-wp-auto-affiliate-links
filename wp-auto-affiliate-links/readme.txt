@@ -4,7 +4,7 @@ Donate link: https://autoaffiliatelinks.com/donations/
 Tags: affiliate, posts, marketing, links, keywords
 Requires at least: 3.5
 Tested up to: 7.0
-Stable tag: 6.8.9.2
+Stable tag: 6.8.9.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
