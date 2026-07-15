@@ -14,7 +14,6 @@ function aal_install($network_wide) {
  				global $wpdb; 
 				$table_name = $wpdb->prefix . "automated_links";
 				
-				//TODO: Instead of deleting, check if it is already added;
 				if(!get_option('aal_target')) add_option( 'aal_target', '_blank');
 				if(!get_option('aal_notimes')) add_option( 'aal_notimes', '3');
 				if(!get_option('aal_showhome')) add_option( 'aal_showhome', 'true');
@@ -214,7 +213,7 @@ function aal_setup_new_blog($blog_id) {
 add_action('wpmu_new_blog', 'aal_setup_new_blog');
 
 
-define('AAL_NOTICE_VER', '1.6'); 
+define('AAL_NOTICE_VER', '1.7'); 
 
 function aal_admin_notice() {
     if (!current_user_can('activate_plugins')) return;
@@ -226,7 +225,7 @@ function aal_admin_notice() {
         <div class="notice notice-info is-dismissible aal-notice-pro" data-notice-ver="<?php echo AAL_NOTICE_VER; ?>">
 				<p>
                 <?php 
-                _e('<b>Sumo Days Special:</b> Get a Lifetime License of Auto Affiliate Links PRO for just $79! Plus, get an extra 10% off at checkout, available for all AppSumo products. <a href="https://autoaffiliatelinks.com/limited-time-offer-lifetime-deal/" target="_blank">Claim your Lifetime Deal on AppSumo.</a>', 'wp-auto-affiliate-links');
+                _e('Thank you for using Auto Affiliate Links. Upgrade to <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Auto Affiliate Links PRO</a> to have links from Amazon, Clickbank, Awin, CJ, Walmart, Ebay, Best Buy, Envato, extracted and added automatically to your content.  Learn more about <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Auto Affiliate Links PRO</a>.', 'wp-auto-affiliate-links');
    
                 ?>
             </p>
