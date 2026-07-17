@@ -192,7 +192,7 @@ function aalAwinActions() {
             if (!empty($slearray)) {
                 $slejson = json_encode($slearray); 
                 
-                // Note: We are sending to 'awin.php' now. You need to create this endpoint.
+                //Sending to server
                 $postcontent = "slejson=". urlencode($slejson) ."&awinid=". $awinid ."&apikey=". get_option('aal_apikey');
                 $response = aal_post($postcontent, 'http://api.autoaffiliatelinks.com/awin.php');
                 

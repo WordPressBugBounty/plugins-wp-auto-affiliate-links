@@ -27,6 +27,7 @@ function aal_api_register_settings() {
    register_setting( 'aal_api_settings', 'aal_envatoactive' );
    register_setting( 'aal_api_settings', 'aal_rakutenactive' );
    register_setting( 'aal_api_settings', 'aal_discoveryjapanactive' );
+   register_setting( 'aal_api_settings', 'aal_universalfeedactive' );
 }	
 
 
@@ -330,7 +331,7 @@ $apikey = get_option('aal_apikey');
 		<td></td>
 		<td></td>
 	</tr>	
-	<tr class="alternate">
+	<tr>
 		<td>Awin</td>
 		<td><select name="aal_awinactive">
 			<option value="0" <?php if(get_option('aal_awinactive')=='0') echo "selected"; ?> > Inactive</option>
@@ -342,6 +343,18 @@ $apikey = get_option('aal_apikey');
 		<td></td>
 		<td></td>
 	</tr>	
+	<tr class="alternate">
+		<td>Universal Feed</td>
+		<td><select name="aal_universalfeedactive">
+			<option value="0" <?php if(get_option('aal_universalfeedactive')=='0') echo "selected"; ?> > Inactive</option>
+			<option value="1" <?php if(get_option('aal_universalfeedactive')=='1') echo "selected"; ?> >Active</option>
+		</select></td>
+		<td><?php if(get_option('aal_universalfeedactive')=='1') { ?><a href="<?php echo admin_url('admin.php?page=aal_module_universalfeed'); ?>">Configure Universal DataFeed Module</a><?php } 
+		else { ?>   <a href="javascript:;" onclick="return aalActivateModule('aal_universalfeedactive');" >Activate Universal DataFeed Module</a>    <?php } ?></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>		
 	<tr>
 		<td>Commission Junction</td>
 		<td><select name="aal_cjactive">
@@ -541,6 +554,14 @@ $apikey = get_option('aal_apikey');
 		<td></td>
 		<td></td>
 	</tr>
+		<tr class="alternate">
+		<td>Universal Feed</td>
+		<td>Inactive</td>
+		<td><a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Get API Key</a></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>	
 	</table>	
 	
 	
@@ -559,6 +580,7 @@ $apikey = get_option('aal_apikey');
 	<input type="hidden" name="aal_walmartactive" value="<?php echo get_option('aal_walmartactive'); ?>" />
 	<input type="hidden" name="aal_envatoactive" value="<?php echo get_option('aal_envatoactive'); ?>" />
 	<input type="hidden" name="aal_discoveryjapanactive" value="<?php echo get_option('aal_discoveryjapanactive'); ?>" />
+	<input type="hidden" name="aal_universalfeedactive" value="<?php echo get_option('aal_universalfeedactive'); ?>" />
 	
 	<?php } ?>
 	

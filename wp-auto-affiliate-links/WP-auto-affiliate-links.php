@@ -4,7 +4,7 @@ Plugin Name: Auto Affiliate Links
 Plugin URI: https://autoaffiliatelinks.com
 Description: Auto add affiliate links to your blog content
 Author: Lucian Apostol
-Version: 6.8.9.5
+Version: 6.9
 Author URI: https://autoaffiliatelinks.com
 */
 
@@ -340,9 +340,7 @@ function wpaal_actions() {
 				
 		if($aal_link && $aal_keywords) {	
 			$aal_link = aal_add_http($aal_link);		
-			
-						
-			
+					
 			$meta = new StdClass();
 			$meta->title = $aal_title;
 			$jmeta = json_encode($meta);
@@ -668,7 +666,7 @@ function wpaal_manage_affiliates() {
 					<button type="button" <?php if(!$apikey) echo 'disabled'; ?> id="aal_get_ai_suggestions" class="button secondary" style="margin-left: 10px;">
 					    <span class="dashicons dashicons-admin-appearance" style="vertical-align: middle; margin-right: 5px;"></span>
 					    Suggest Keywords (AI)
-					</button> 
+					</button> <br /><br />
 					<?php if(!$apikey) echo 'API Key is required for keyword suggestions based on URL. Please go to our website to <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">get your API Key</a>.'; ?>
 					<span id="aal_ai_spinner" class="spinner" style="float: none; visibility: hidden;"></span>   
 					<br /><br />                

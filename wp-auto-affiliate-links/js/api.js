@@ -125,6 +125,7 @@
 		            shareasaleid:           config.shareasaleid,
 		            awinactive:       config.awinactive,
 		            awinid:           config.awinid,
+		            universalfeedactive:       config.universalfeedactive,
 		            cjactive:               config.cjactive,
 		            ebayactive:             config.ebayactive,
 		            ebayid:                 config.ebayid,

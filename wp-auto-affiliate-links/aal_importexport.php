@@ -1,6 +1,5 @@
 <?php
 
-
 function wpaal_import_export() {
 	global $wpdb;
 	$table_name = $wpdb->prefix . "automated_links";	

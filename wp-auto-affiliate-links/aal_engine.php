@@ -214,6 +214,8 @@ if ($pdate) {
 		
 		$awinid = get_option('aal_awinid');
 		$awinactive = get_option('aal_awinactive');
+		
+		$universalfeedactive = get_option('aal_universalfeedactive');
 
 		$cjactive = get_option('aal_cjactive');
 		
@@ -704,7 +706,7 @@ if ($pdate) {
 				global $aal_apirequestno;
 				if(!$aal_apirequestno) $aal_apirequestno = 0;
 				//If the manual replacement did not found enough links		
-				if($aal_apirequestno < 5 ) if($apikey && !is_feed() && ($sofar<$notimes || $amazondisplaywidget) && $querylimit!='overquota' && ($clickbankactive || $amazonactive || $shareasaleactive || $awinactive || $cjactive || $ebayactive || $bestbuyactive || $walmartactive || $envatoactive || $rakutenactive || $discoveryjapanactive)) {
+				if($aal_apirequestno < 5 ) if($apikey && !is_feed() && ($sofar<$notimes || $amazondisplaywidget) && $querylimit!='overquota' && ($clickbankactive || $amazonactive || $shareasaleactive || $awinactive || $universalfeedactive || $cjactive || $ebayactive || $bestbuyactive || $walmartactive || $envatoactive || $rakutenactive || $discoveryjapanactive)) {
 
 					$aal_apirequestno = $aal_apirequestno + 1;
 					
@@ -767,6 +769,7 @@ if ( is_null( $aal_page_globals ) ) {
 	            'shareasaleactive'      => $shareasaleactive,
 	            'awinid'          => $awinid,
 	            'awinactive'      => $awinactive,
+	            'universalfeedactive'      => $universalfeedactive,
 	            'cjactive'              => $cjactive,
 	            'ebayactive'            => $ebayactive,
 	            'ebayid'                => $ebayid,
