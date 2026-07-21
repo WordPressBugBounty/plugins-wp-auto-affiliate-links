@@ -3,8 +3,8 @@ Contributors: thedark
 Donate link: https://autoaffiliatelinks.com/donations/
 Tags: affiliate, posts, marketing, links, keywords
 Requires at least: 3.5
-Tested up to: 7.0.1
-Stable tag: 6.9
+Tested up to: 7.0.2
+Stable tag: 6.9.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -107,6 +107,9 @@ Microsoft Excel adds odd formatting to the file and making problems at import an
 If you can't find the options to do this, try LibreOffice, as it is a bit easier to find them there.
 
 == Changelog ==
+
+= 6.9.1 =
+* Added extra security check for broken URL check
 
 = 6.9 =
 * Created module to add any type of links for automated generation trough universal data feed

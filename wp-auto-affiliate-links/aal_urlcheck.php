@@ -38,13 +38,18 @@ add_action( 'wp_ajax_aal_url_check', 'aal_url_check_action' );
 
 function aal_url_check_action() {
 	//global $wpdb;
-		  check_ajax_referer( 'aalurlchecknonce', 'security' ); 
-		  if(aal_url_exists(sanitize_text_field($_POST['url']))) {
-		  		echo 'valid';
-		  }
-        else {
-        	  echo 'broken';
-        }
+		if ( ! current_user_can( 'manage_options' ) ) {
+       	echo 'no permission';
+      }
+      else {
+			  check_ajax_referer( 'aalurlchecknonce', 'security' ); 
+			  if(aal_url_exists(sanitize_text_field($_POST['url']))) {
+			  		echo 'valid';
+			  }
+	        else {
+	        	  echo 'broken';
+	        }
+	    }
 	wp_die();
 }
 
