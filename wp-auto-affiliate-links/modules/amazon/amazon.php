@@ -7,16 +7,8 @@ $aalModules[] = $aalAmazon;
 $aalAmazon->aalModuleHook('content','aalAmazonDisplay');
 
 
-//amazon ajax
-add_action( 'wp_ajax_aal_amazon_get', 'aal_amazon_ajax' );
-add_action( 'wp_ajax_nopriv_aal_amazon_get', 'aal_amazon_ajax' );
-
-
-function aal_amazon_ajax() {
-	
-	check_ajax_referer( 'aalamazonnonce', 'security' ); 
-	
-
+function aal_amazon_search_keyword( $keyword, $notimes, $nrk, $nrw ) {
+    
 		// Your AWS Access Key ID, as taken from the AWS Your Account page
 		$aws_access_key_id = trim(get_option('aal_amazonapikey'));
 		
@@ -32,7 +24,6 @@ function aal_amazon_ajax() {
 		$amazondisplaywidget = get_option('aal_amazondisplaywidget');
 		if(!$amazondisplaywidget) $amazondisplaylinks = 1;
 
-		if(!$amazonactive || !$amazonid) { exit(); die(); }
 				
 		if($amazoncat) $acategory = $amazoncat;
 		else $acategory = 'All';
@@ -62,85 +53,17 @@ function aal_amazon_ajax() {
 		if($amazonlocal == 'ae') $aalregionname = "eu-west-1";
 		if($amazonlocal == 'co.uk') $aalregionname = "eu-west-1";
 		if($amazonlocal == 'sa') $aalregionname = "eu-west-1";
-		
-		
-		
-	
-	if(isset($_POST['keywords']) && is_array($_POST['keywords'])) $keywords = array_map( 'sanitize_text_field', $_POST['keywords'] );
-	if(isset($_POST['notimes'])) $notimes = sanitize_text_field($_POST['notimes']);
-	$alinks = array();
-	$awidgets = array();
 
-	//print_r($data);
-	if(!$keywords[0]) { echo 'no keys'; die(); }
-	
+    if(!$amazonactive || !$amazonid) { return array('links'=>array(), 'widget'=>array(), 'nrk'=>$nrk, 'nrw'=>$nrw); }
+            
 
-	//Verify payload and save initial cache
-	
-	$pro_links = array();
-	$pro_widgets = array();
-	$postidnr = isset($_POST['aalpostid']) ? intval(preg_replace('/[^0-9]/', '', $_POST['aalpostid'])) : 0;
+    $amazonlinks = array();
+    $awidgetcode = array();
 
-	if ( $postidnr > 0 && isset($_POST['api_payload']) && isset($_POST['api_signature']) ) {
-		$payload_string = wp_unslash($_POST['api_payload']);
-		$signature = base64_decode(wp_unslash($_POST['api_signature']));
+    // Reconstruct the $keyword variable exactly as your old script expected it
+   // $keyword = $keyword_obj->keyword;
+   $searchstring = $keyword;
 
-		$public_key = <<<'EOD'
------BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzMt3P4hcTE/KxjVPtqVn
-wtQ4/EyPRBtpqZx/YsshRNveLqCdM9425VDLJ/SRbVp0FvtyfQ4PODWIv+PpLcfO
-zd/YQRq50JMfcS61Iyuamt0mcodzS321qfkAav0+kWca8fcv6Lulkt41QpXLSQAj
-wQc9+WBvvVNmhYB5c0q54S+uGc3JGludyu+MRZf7n+mMcI6G5Hv4DRasPNkAni6L
-iMhR4558mt5LREXTEKJCKk0rfUNOsgJkjYGx0F1qaGaMHaUwcjKgFDJyOpxmfdJC
-wpd/9NGelgAn5W/NReGSTKpJcutkGGIJwYwYtrA9Zi6Qxnz0Kt0d7wvg/UZ6WpWn
-ZwIDAQAB
------END PUBLIC KEY-----
-EOD;
-
-		// Dacă plicul de la PRO API e valid, extragem link-urile lui primitive
-		if ( openssl_verify($payload_string, $signature, $public_key, OPENSSL_ALGO_SHA256) === 1 ) {
-			$cache_data = json_decode($payload_string, true);
-			if ( isset($cache_data['links']) && is_array($cache_data['links']) ) {
-				$pro_links = $cache_data['links'];
-			}
-			if ( isset($cache_data['amazonwidget']) && is_array($cache_data['amazonwidget']) ) {
-				$pro_widgets = $cache_data['amazonwidget'];
-			}
-
-			// SALVĂM IMEDIAT UN CACHE TEMPORAR. Dacă Amazon dă eroare mai jos,
-			// articolul are deja un cache local setat și nu va mai rula la infinit!
-			$temp_cache = new stdClass();
-			$temp_cache->links = $pro_links;
-			if(!empty($pro_widgets)) {
-				$temp_cache->amazonwidget = $pro_widgets;
-			}
-			$temp_cache->updated = time();
-			update_post_meta($postidnr, 'aal_cache_links', wp_slash(wp_json_encode($temp_cache)));
-		}
-	}	
-
-//end verification
-
-
-
-
-
-
-
-
-
-
-
-	$nrk = 0;
-	$nrw = 0;
-	foreach($keywords as $keyword) {		
-	
-	
-			if($nrk>=$notimes) if(!$amazondisplaywidget || $nrk>2) break;
-			$searchstring = $keyword;
-			
-			//echo $searchstring;	
-			
 		if($amazondisplaywidget) $responsegroup = "Small,Images";
 		else $responsegroup = "Small";
 			
@@ -308,7 +231,7 @@ EOD;
 		    // echo 'Eroare WordPress HTTP: ' . $api_response->get_error_message();
 		    $nrk++; 
 		    sleep(2);
-		    continue;
+		    return array('links'=>array(), 'widget'=>array(), 'nrk'=>$nrk, 'nrw'=>$nrw);
 		}
 		
 		$response_code = wp_remote_retrieve_response_code( $api_response );
@@ -316,7 +239,7 @@ EOD;
 		    // echo 'Eroare Amazon API. Cod HTTP: ' . $response_code;
 		    $nrk++; 
 		    sleep(2);
-		    continue;
+		    return array('links'=>array(), 'widget'=>array(), 'nrk'=>$nrk, 'nrw'=>$nrw);
 		}
 		
 		// 3. Extragem corpul răspunsului (JSON-ul propriu-zis)
@@ -325,7 +248,7 @@ EOD;
 		if ( empty( $response_body ) ) {
 			$nrk++; 
 			sleep(2);
-		    continue;
+		    return array('links'=>array(), 'widget'=>array(), 'nrk'=>$nrk, 'nrw'=>$nrw);
 		}
 		
 		$jsitems = json_decode($response_body);
@@ -333,7 +256,7 @@ EOD;
 		if ( !isset($jsitems->SearchResult) || empty($jsitems->SearchResult->Items) ) { 
 		    // echo 'no links'; 
 		    sleep(3); 
-		    continue; 
+		    return array('links'=>array(), 'widget'=>array(), 'nrk'=>$nrk, 'nrw'=>$nrw);
 		}
 		
 		//End using remote post
@@ -361,7 +284,7 @@ EOD;
 			$items = $jsitems->SearchResult->Items;
 			if(!$items) { 
 			   //echo 'no links' ; 
-				sleep(3); continue; 
+				sleep(3); return array('links'=>array(), 'widget'=>array(), 'nrk'=>$nrk, 'nrw'=>$nrw);
 			}
 			
 			//print_r($items);
@@ -382,7 +305,7 @@ EOD;
 					$awidget->title = $item->ItemInfo->Title->DisplayValue;
 					$awidget->price = $item->Offers->Listings[0]->Price->DisplayAmount;
 					
-					$awidgets[] = $awidget;
+					$awidgetcode[] = $awidget;
 					$nrw++;
 									
 				
@@ -402,7 +325,7 @@ EOD;
 						$alink = new StdClass();
 						$alink->key = $searchstring;
 						$alink->url = $link;
-						$alinks[] = $alink;
+						$amazonlinks[] = $alink;
 						break;
 					}
 				
@@ -417,74 +340,13 @@ EOD;
 			
 		$nrk++;
 		sleep(2);
-			
-	}
-	
-	
-//Prepare final links and update cache
-if ( $postidnr > 0 && (!empty($alinks) || !empty($awidgets)) ) {
-		$final_links = array();
-		
-		if ( is_array($alinks) ) {
-			foreach ($alinks as $alink) {
-				$final_links[] = $alink;
-			}
-		}
-		
-		foreach ($pro_links as $plink) {
-			$final_links[] = $plink;
-		}
 
-		$limit = isset($_POST['notimes']) ? intval($_POST['notimes']) : 999;
-		if ( count($final_links) > $limit ) {
-			$final_links = array_slice($final_links, 0, $limit);
-		}
-
-		$final_widgets = !empty($awidgets) ? $awidgets : $pro_widgets;
-
-		$final_cache = new stdClass();
-		$final_cache->links = $final_links;
-		if (!empty($final_widgets)) {
-			$final_cache->amazonwidget = $final_widgets;
-		}
-		$final_cache->updated = time();
-
-		// Actualizăm cache-ul local cu varianta completă
-		update_post_meta($postidnr, 'aal_cache_links', wp_slash(wp_json_encode($final_cache)));	
-	//end prepare final links and update cache
-	
-	//Update acache.php
-	//Disabled server caching
-	/*
-		$apikey = get_option('aal_apikey');
-		$insertid = isset($_POST['insertid']) ? intval($_POST['insertid']) : 0;
-
-		if ( $apikey && $insertid > 0 ) {
-			$acache_url = 'https://api.autoaffiliatelinks.com/acache.php';
-			wp_remote_post( $acache_url, array(
-				'body' => array(
-					'apikey'       => $apikey,
-					'insertid'     => $insertid,
-					'parray'       => $final_links,
-					'amazonwidget' => $final_widgets
-				),
-				'timeout'   => 5,
-				'blocking'  => false // Trimite în fundal, nu blochează execuția paginii
-			));
-		} */
-		
-		
-		
-	}
-	
-	
-	$jsonresult = new StdClass();
-	$jsonresult->amazonlinks = $alinks;
-	$jsonresult->amazonwidget = $awidgets;
-	echo json_encode($jsonresult);
-
-
-	wp_die();
+    return array(
+        'links' => $amazonlinks,
+        'widget' => $awidgetcode,
+        'nrk' => $nrk,
+        'nrw' => $nrw
+    );
 }
 
 

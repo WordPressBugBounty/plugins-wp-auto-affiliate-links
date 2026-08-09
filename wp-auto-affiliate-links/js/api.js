@@ -261,7 +261,7 @@
 							        type: "post", 
 							        url: aal_amazon_obj.ajaxurl, 
 							        data: { 
-							            action: 'aal_amazon_get', 
+							            action: 'aal_linkgen_get', 
 							            security: aal_amazon_obj.security, 
 							            keywords: response.keywords, 
 							            notimes: notimes,
@@ -272,6 +272,7 @@
 									        api_signature: response.signature
 							        },
 							        success: function(html){
+							        	console.log(html);
 							        	
 											try {
 							                    var aresults = $.parseJSON(html);

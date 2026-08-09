@@ -1,0 +1,162 @@
+<?php
+// File: aal_linkgen.php
+
+add_action( 'wp_ajax_aal_linkgen_get', 'aal_linkgen_ajax' );
+add_action( 'wp_ajax_nopriv_aal_linkgen_get', 'aal_linkgen_ajax' );
+
+function aal_linkgen_ajax() {
+    
+    check_ajax_referer( 'aalamazonnonce', 'security' ); 
+    
+    
+		$amazonactive = get_option('aal_amazonactive');
+		$amazonid = get_option('aal_amazonid');
+		$amazoncat = get_option('aal_amazoncat');
+		$amazonlocal = get_option('aal_amazonlocal');
+		
+		$amazondisplaylinks = get_option('aal_amazondisplaylinks');
+		$amazondisplaywidget = get_option('aal_amazondisplaywidget');
+		if(!$amazondisplaywidget) $amazondisplaylinks = 1;
+
+		if(!$amazonactive || !$amazonid) { exit(); die(); }    
+    
+    
+	if(isset($_POST['keywords']) && is_array($_POST['keywords'])) $keywords = array_map( 'sanitize_text_field', $_POST['keywords'] );
+	if(isset($_POST['notimes'])) $notimes = sanitize_text_field($_POST['notimes']);
+	$alinks = array();
+	$awidgets = array();
+	
+		if(!$keywords[0]) { echo 'no keys'; die(); }
+
+	//Verify payload and save initial cache
+	
+	$pro_links = array();
+	$pro_widgets = array();
+	$postidnr = isset($_POST['aalpostid']) ? intval(preg_replace('/[^0-9]/', '', $_POST['aalpostid'])) : 0;
+
+	if ( $postidnr > 0 && isset($_POST['api_payload']) && isset($_POST['api_signature']) ) {
+		$payload_string = wp_unslash($_POST['api_payload']);
+		$signature = base64_decode(wp_unslash($_POST['api_signature']));
+
+		$public_key = <<<'EOD'
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzMt3P4hcTE/KxjVPtqVn
+wtQ4/EyPRBtpqZx/YsshRNveLqCdM9425VDLJ/SRbVp0FvtyfQ4PODWIv+PpLcfO
+zd/YQRq50JMfcS61Iyuamt0mcodzS321qfkAav0+kWca8fcv6Lulkt41QpXLSQAj
+wQc9+WBvvVNmhYB5c0q54S+uGc3JGludyu+MRZf7n+mMcI6G5Hv4DRasPNkAni6L
+iMhR4558mt5LREXTEKJCKk0rfUNOsgJkjYGx0F1qaGaMHaUwcjKgFDJyOpxmfdJC
+wpd/9NGelgAn5W/NReGSTKpJcutkGGIJwYwYtrA9Zi6Qxnz0Kt0d7wvg/UZ6WpWn
+ZwIDAQAB
+-----END PUBLIC KEY-----
+EOD;
+
+		// Dacă plicul de la PRO API e valid, extragem link-urile lui primitive
+		if ( openssl_verify($payload_string, $signature, $public_key, OPENSSL_ALGO_SHA256) === 1 ) {
+			$cache_data = json_decode($payload_string, true);
+			if ( isset($cache_data['links']) && is_array($cache_data['links']) ) {
+				$pro_links = $cache_data['links'];
+			}
+			if ( isset($cache_data['amazonwidget']) && is_array($cache_data['amazonwidget']) ) {
+				$pro_widgets = $cache_data['amazonwidget'];
+			}
+
+			// SALVĂM IMEDIAT UN CACHE TEMPORAR. Dacă Amazon dă eroare mai jos,
+			// articolul are deja un cache local setat și nu va mai rula la infinit!
+			$temp_cache = new stdClass();
+			$temp_cache->links = $pro_links;
+			if(!empty($pro_widgets)) {
+				$temp_cache->amazonwidget = $pro_widgets;
+			}
+			$temp_cache->updated = time();
+			update_post_meta($postidnr, 'aal_cache_links', wp_slash(wp_json_encode($temp_cache)));
+		}
+	}	
+
+//end verification
+
+
+
+    $is_amazon_ready = ($amazonactive && $amazonid);
+
+
+	$nrk = 0;
+	$nrw = 0;
+	
+	
+    // 3. The Master Router Loop
+    if( $keywords && is_array($keywords) ) {
+        foreach($keywords as $keyword) {    
+
+            $link_found_for_keyword = false;
+            
+
+			if($nrk>=$notimes) if(!$amazondisplaywidget || $nrk>2) break;
+			$searchstring = $keyword;            
+            
+            
+
+            // --- A. Amazon Worker ---
+            if ( $is_amazon_ready && function_exists('aal_amazon_search_keyword') ) {
+                $amazon_results = aal_amazon_search_keyword( $keyword, $notimes, $nrk, $nrw );
+
+                if ( !empty($amazon_results['links']) ) {
+                    $alinks = array_merge($alinks, $amazon_results['links']);
+                    $link_found_for_keyword = true;
+                }
+                if ( !empty($amazon_results['widget']) ) {
+                    $awidgets = array_merge($awidgets, $amazon_results['widget']);
+                }
+            }
+
+            // --- B. Future Network (Impact) ---
+            // If Amazon found nothing, and Impact is ready, we will search Impact here.
+            /*
+            if ( !$link_found_for_keyword && $is_impact_ready && function_exists('aal_impact_search_keyword') ) {
+                 // Call Impact...
+            }
+            */
+            
+        }
+    }
+
+    // --- START: Prepare final links and update cache ---
+    if ( $postidnr > 0 && (!empty($alinks) || !empty($awidgets)) ) {
+        $final_links = array();
+        
+        if ( is_array($alinks) ) {
+            foreach ($alinks as $alink) {
+                $final_links[] = $alink;
+            }
+        }
+        
+        foreach ($pro_links as $plink) {
+            $final_links[] = $plink;
+        }
+
+        $limit = isset($_POST['notimes']) ? intval($_POST['notimes']) : 999;
+        if ( count($final_links) > $limit ) {
+            $final_links = array_slice($final_links, 0, $limit);
+        }
+
+        $final_widgets = !empty($awidgets) ? $awidgets : $pro_widgets;
+
+        $final_cache = new stdClass();
+        $final_cache->links = $final_links;
+        if (!empty($final_widgets)) {
+            $final_cache->amazonwidget = $final_widgets;
+        }
+        $final_cache->updated = time();
+
+        // Actualizăm cache-ul local cu varianta completă
+        update_post_meta($postidnr, 'aal_cache_links', wp_slash(wp_json_encode($final_cache)));   
+    }
+    // --- END prepare final links and update cache ---
+
+    // 4. Send Payload Back to Javascript
+    $jsonresult = new StdClass();
+    $jsonresult->amazonlinks = $alinks;
+    $jsonresult->amazonwidget = $awidgets;
+    echo json_encode($jsonresult);
+
+    wp_die();
+}
