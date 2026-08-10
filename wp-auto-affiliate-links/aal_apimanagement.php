@@ -17,6 +17,7 @@ add_action( 'admin_init', 'aal_api_register_settings' );
 function aal_api_register_settings() { 
    register_setting( 'aal_api_settings', 'aal_apikey' );
    register_setting( 'aal_api_settings', 'aal_amazonactive' );
+   register_setting( 'aal_api_settings', 'aal_impactactive' );
    register_setting( 'aal_api_settings', 'aal_clickbankactive' );
    register_setting( 'aal_api_settings', 'aal_awinactive' );
    register_setting( 'aal_api_settings', 'aal_shareasaleactive' );
@@ -124,6 +125,7 @@ $apikey = get_option('aal_apikey');
               	<ul class=aal_admin_list>
 						<li>Links will be added <b>automatically</b> based on your content 
 						<li><b>Amazon</b> Links are automatically extracted and inserted in content
+						<li><b>Impact.com</b> Links are automatically extracted and inserted in content
 						<li><b>ClickBank</b> Links are automatically extracted and inserted
 						<li><b>Awin</b> links can be uploaded and displayed into your content   
 						<li><b>Ebay</b> auctions can be automatically linked based on your content
@@ -307,6 +309,18 @@ $apikey = get_option('aal_apikey');
 		<td></td>
 		<td></td>
 	</tr>
+	<tr class="alternate">
+		<td>Impact</td>
+		<td><select name="aal_impactactive">
+			<option value="0" <?php if(get_option('aal_impactactive')=='0') echo "selected"; ?> > Inactive</option>
+			<option value="1" <?php if(get_option('aal_impactactive')=='1') echo "selected"; ?> >Active</option>
+		</select></td>
+		<td><?php if(get_option('aal_impactactive')=='1') { ?><a href="<?php echo admin_url('admin.php?page=aal_module_impact'); ?>">Configure Impact Module</a><?php } 
+		else { ?>   <a href="javascript:;" onclick="return aalActivateModule('aal_impactactive');" >Activate Impact Module</a>    <?php } ?></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
 	<tr>
 		<td>Clickbank</td>
 		<td><select name="aal_clickbankactive">
@@ -482,6 +496,14 @@ $apikey = get_option('aal_apikey');
 		<td></td>
 		<td></td>
 	</tr>
+	<tr class="alternate">
+		<td>Impact</td>
+		<td>Inactive</td>
+		<td><a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Get API Key</a></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
 	<tr>
 		<td>Clickbank</td>
 		<td>Inactive</td>
@@ -571,6 +593,7 @@ $apikey = get_option('aal_apikey');
 	
 	
 	<input type="hidden" name="aal_amazonactive" value="<?php echo get_option('aal_amazonactive'); ?>" />
+	<input type="hidden" name="aal_impactactive" value="<?php echo get_option('aal_impactactive'); ?>" />
 	<input type="hidden" name="aal_clickbankactive" value="<?php echo get_option('aal_clickbankactive'); ?>" />
 	<input type="hidden" name="aal_shareasaleactive" value="<?php echo get_option('aal_shareasaleactive'); ?>" />
 	<input type="hidden" name="aal_awinactive" value="<?php echo get_option('aal_awinactive'); ?>" />	

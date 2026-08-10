@@ -202,6 +202,9 @@ if ($pdate) {
 		$amazoncat = get_option('aal_amazoncat');
 		$amazonactive = get_option('aal_amazonactive');
 		
+		$impactsid = get_option('aal_impactsid');
+		$impactactive = get_option('aal_impactactive');
+		
 		$amazondisplaylinks = get_option('aal_amazondisplaylinks');
 		$amazondisplaywidget = get_option('aal_amazondisplaywidget');
 		if(!$amazondisplaywidget && !$amazondisplaylinks) $amazondisplaylinks = '1';
@@ -763,6 +766,10 @@ if ( is_null( $aal_page_globals ) ) {
 	            'amazondisplaylinks'    => $amazondisplaylinks,
 	            'amazondisplaywidget'   => $amazondisplaywidget,
 	            'amazonactive'          => $amazonactive,
+	            
+	            //Impact
+	             'impactactive'              => $impactactive,
+	            'impactsid'             => $impactsid,
 	            
 	            // Other Networks
 	            'shareasaleid'          => $shareasaleid,

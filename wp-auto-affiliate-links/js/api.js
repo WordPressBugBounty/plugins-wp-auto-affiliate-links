@@ -120,6 +120,8 @@
 		            amazondisplaylinks:     config.amazondisplaylinks,
 		            amazondisplaywidget:    config.amazondisplaywidget,
 		            amazonactive:           config.amazonactive,
+		            impactactive:           config.impactactive,
+		            impactsid:           config.impactsid,
 		            clickbankactive:        config.clickbankactive,
 		            shareasaleactive:       config.shareasaleactive,
 		            shareasaleid:           config.shareasaleid,
@@ -254,7 +256,7 @@
 			
 			//Add to cache
 			
-			var willUseAmazon = response.keywords && (aalapidata.amazonactive && aalapidata.amazonid);
+			var willUseAmazon = response.keywords && ((aalapidata.amazonactive && aalapidata.amazonid) || aalapidata.impactactive && aalapidata.impactsid );
 
 							if (willUseAmazon) {						
 							    $.ajax({

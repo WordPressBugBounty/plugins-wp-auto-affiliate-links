@@ -7,7 +7,7 @@ $aalModules[] = $aalAmazon;
 $aalAmazon->aalModuleHook('content','aalAmazonDisplay');
 
 
-function aal_amazon_search_keyword( $keyword, $notimes, $nrk, $nrw ) {
+function aal_amazon_search_keyword( $keyword, $notimes, $nrk, $nrw, $alinks ) {
     
 		// Your AWS Access Key ID, as taken from the AWS Your Account page
 		$aws_access_key_id = trim(get_option('aal_amazonapikey'));

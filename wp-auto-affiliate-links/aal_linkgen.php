@@ -11,6 +11,15 @@ function aal_linkgen_ajax() {
     
 		$amazonactive = get_option('aal_amazonactive');
 		$amazonid = get_option('aal_amazonid');
+		$is_amazon_ready = ($amazonactive && $amazonid);
+		
+		$impactactive = get_option('aal_impactactive');
+		$impactsid = get_option('aal_impactsid');
+		$impacttoken = get_option('aal_impacttoken');
+		$is_impact_ready = ($impactactive && $impactsid && $impacttoken);
+		
+		if(!$is_amazon_ready && !$is_impact_ready) { exit(); die(); }
+		
 		$amazoncat = get_option('aal_amazoncat');
 		$amazonlocal = get_option('aal_amazonlocal');
 		
@@ -18,11 +27,12 @@ function aal_linkgen_ajax() {
 		$amazondisplaywidget = get_option('aal_amazondisplaywidget');
 		if(!$amazondisplaywidget) $amazondisplaylinks = 1;
 
-		if(!$amazonactive || !$amazonid) { exit(); die(); }    
+		  
     
     
 	if(isset($_POST['keywords']) && is_array($_POST['keywords'])) $keywords = array_map( 'sanitize_text_field', $_POST['keywords'] );
 	if(isset($_POST['notimes'])) $notimes = sanitize_text_field($_POST['notimes']);
+	//if($notimes>7) $notimes = 7;
 	$alinks = array();
 	$awidgets = array();
 	
@@ -97,7 +107,10 @@ EOD;
 
             // --- A. Amazon Worker ---
             if ( $is_amazon_ready && function_exists('aal_amazon_search_keyword') ) {
-                $amazon_results = aal_amazon_search_keyword( $keyword, $notimes, $nrk, $nrw );
+                $amazon_results = aal_amazon_search_keyword( $keyword, $notimes, $nrk, $nrw, $alinks );
+                
+                $nrk = $amazon_results['nrk'];
+                $nrw = $amazon_results['nrw'];
 
                 if ( !empty($amazon_results['links']) ) {
                     $alinks = array_merge($alinks, $amazon_results['links']);
@@ -108,13 +121,22 @@ EOD;
                 }
             }
 
-            // --- B. Future Network (Impact) ---
-            // If Amazon found nothing, and Impact is ready, we will search Impact here.
-            /*
+// --- B. Impact Worker ---
+            // If Amazon DID NOT find a link, and Impact is ready, we search Impact.
             if ( !$link_found_for_keyword && $is_impact_ready && function_exists('aal_impact_search_keyword') ) {
-                 // Call Impact...
+                
+                $impact_results = aal_impact_search_keyword( $keyword, $notimes, $nrk, $nrw, $alinks );
+                
+                $nrk = $impact_results['nrk'];
+                $nrw = $impact_results['nrw'];
+
+                if ( !empty($impact_results['links']) ) {
+                    // We merge Impact links directly into $alinks. 
+                    // This way, api.js receives them normally and displays them instantly.
+                    $alinks = array_merge($alinks, $impact_results['links']);
+                    $link_found_for_keyword = true;
+                }
             }
-            */
             
         }
     }
