@@ -213,7 +213,7 @@ function aal_setup_new_blog($blog_id) {
 add_action('wpmu_new_blog', 'aal_setup_new_blog');
 
 
-define('AAL_NOTICE_VER', '1.7'); 
+define('AAL_NOTICE_VER', '1.8'); 
 
 function aal_admin_notice() {
     if (!current_user_can('activate_plugins')) return;
@@ -225,7 +225,7 @@ function aal_admin_notice() {
         <div class="notice notice-info is-dismissible aal-notice-pro" data-notice-ver="<?php echo AAL_NOTICE_VER; ?>">
 				<p>
                 <?php 
-                _e('Thank you for using Auto Affiliate Links. Upgrade to <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Auto Affiliate Links PRO</a> to have links from Amazon, Clickbank, Awin, CJ, Walmart, Ebay, Best Buy, Envato, extracted and added automatically to your content.  Learn more about <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Auto Affiliate Links PRO</a>.', 'wp-auto-affiliate-links');
+                _e('Thank you for using Auto Affiliate Links. Upgrade to <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Auto Affiliate Links PRO</a> to get access to advanced linking features. <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Learn more.</a>.', 'wp-auto-affiliate-links');
    
                 ?>
             </p>
