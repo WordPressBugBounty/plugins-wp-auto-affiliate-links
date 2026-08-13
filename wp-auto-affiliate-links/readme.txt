@@ -108,6 +108,9 @@ If you can't find the options to do this, try LibreOffice, as it is a bit easier
 
 == Changelog ==
 
+= 6.9.3.2 =
+* Added database caching for links
+
 = 6.9.3.1 =
 * Added fallback for Products API endpoing for Impact links
 

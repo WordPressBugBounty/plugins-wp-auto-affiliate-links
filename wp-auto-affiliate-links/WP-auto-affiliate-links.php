@@ -4,7 +4,7 @@ Plugin Name: Auto Affiliate Links
 Plugin URI: https://autoaffiliatelinks.com
 Description: Auto add affiliate links to your blog content
 Author: Lucian Apostol
-Version: 6.9.3.1
+Version: 6.9.3.2
 Author URI: https://autoaffiliatelinks.com
 */
 
@@ -353,10 +353,12 @@ function wpaal_actions() {
 			if($check) { 
 					$wpdb->update( $table_name, array( 'keywords' => $check[0]->keywords .','. $aal_keywords), array( 'link' => $aal_link ) );
 					$aal_delete_id=$check[0]->id;
+					wp_cache_delete( 'aal_all_active_links' );
 				}
 			else {
 				$rows_affected = $wpdb->insert( $table_name, array( 'link' => $aal_link, 'keywords' => $aal_keywords, 'meta' => $jmeta, 'stats' => $stats ) );
 				$aal_delete_id=$wpdb->insert_id;
+				wp_cache_delete( 'aal_all_active_links' );
 			} 		
 		}
 
@@ -390,6 +392,7 @@ function wpaal_actions() {
 		//Update the database and redirect
 		$rows_affected = $wpdb->update( $table_name, array( 'link' => $link, 'keywords' => $keywords, 'meta' => json_encode($meta), 'stats' => $stats ), array( 'id' => $id ));
 		wp_redirect("admin.php?page=aal_topmenu");	
+		wp_cache_delete( 'aal_all_active_links' );
 	}
 	
 	//Check if multiple items are selected for deletion
@@ -402,6 +405,7 @@ function wpaal_actions() {
 			if($did && is_numeric($did)) {
 				$did = (int)$did;
 			$wpdb->query("DELETE FROM ". $table_name ." WHERE id = '". $did ."' ");	
+			wp_cache_delete( 'aal_all_active_links' );
 			}
 		}
 		wp_redirect("admin.php?page=aal_topmenu");	

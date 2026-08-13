@@ -127,7 +127,9 @@ global $wpdb;
 							$wpdb->insert( $table_name, array( 'link' => $link, 'keywords' => $keywords, 'meta' => $jmeta, 'stats' => $stats ) );
 						}
 					}
+					
 				}
+				wp_cache_delete( 'aal_all_active_links' );
 				fclose($handle);
 				if($duplicates && $duplicates > 0) $duplicatestext = $duplicates .' duplicate links found.';
 				$aal_import_error = '<div class="update-message notice inline notice-alt updated-message notice-success"><p>'. $import_count .' links imported. '. $duplicatestext .'</p></div>';		

@@ -160,7 +160,13 @@ if ($pdate) {
 		
 		//set priority
 
-		$myrows = $wpdb->get_results( "SELECT id,link,keywords,meta FROM ". $table_name ." WHERE stats <> 'disabled' OR stats IS NULL " );
+				$cache_key = 'aal_all_active_links';
+		$myrows = wp_cache_get( $cache_key );
+		
+		if ( false === $myrows ) {
+		    $myrows = $wpdb->get_results( "SELECT id,link,keywords,meta FROM ". $table_name ." WHERE stats <> 'disabled' OR stats IS NULL " );
+		    wp_cache_set( $cache_key, $myrows, '', 12 * HOUR_IN_SECONDS );
+		}
 
 		
 		if ( is_multisite() && !is_main_site() ) {

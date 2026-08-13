@@ -24,6 +24,7 @@ function aalDeleteLink(){
 		
 		//Add to database and redirect to the plugin default page
 		$wpdb->query("DELETE FROM ". $table_name ." WHERE id = '". $id ."' LIMIT 1");
+		wp_cache_delete( 'aal_all_active_links' );
                 
                 die();
             }
@@ -73,6 +74,7 @@ function aalUpdateLink(){
 		if($check) { 
 				$wpdb->update( $table_name, $linkval , array( 'id' => $id ));
 				//$aal_delete_id=$check[0]->id;
+				wp_cache_delete( 'aal_all_active_links' );
 			}
 			else {
 				echo 'something went wrong';
@@ -121,10 +123,12 @@ function aalAddLink(){
 		if($check) { 
 				$wpdb->update( $table_name, array( 'keywords' => $check[0]->keywords .','. $aal_keywords), array( 'link' => $aal_link ) );
 				$aal_delete_id=$check[0]->id;
+				wp_cache_delete( 'aal_all_active_links' );
 			}
 		else {
 			$rows_affected = $wpdb->insert( $table_name, array( 'link' => $aal_link, 'keywords' => $aal_keywords, 'meta' => $jmeta ) );
 			$aal_delete_id=$wpdb->insert_id;
+			wp_cache_delete( 'aal_all_active_links' );
 		} 
 		
         
