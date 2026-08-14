@@ -160,13 +160,23 @@ if ($pdate) {
 		
 		//set priority
 
-				$cache_key = 'aal_all_active_links';
-		$myrows = wp_cache_get( $cache_key );
 		
-		if ( false === $myrows ) {
-		    $myrows = $wpdb->get_results( "SELECT id,link,keywords,meta FROM ". $table_name ." WHERE stats <> 'disabled' OR stats IS NULL " );
-		    wp_cache_set( $cache_key, $myrows, '', 12 * HOUR_IN_SECONDS );
-		}
+		
+			// Get links from database with cache
+			
+			static $aal_cached_myrows = null;		
+			if ( $aal_cached_myrows === null ) {			    
+			    $cache_key = 'aal_all_active_links';
+			    $aal_cached_myrows = wp_cache_get( $cache_key ); 
+			    if ( false === $aal_cached_myrows ) {
+			        $aal_cached_myrows = $wpdb->get_results( "SELECT id,link,keywords,meta FROM ". $table_name ." WHERE stats <> 'disabled' OR stats IS NULL " );
+			        wp_cache_set( $cache_key, $aal_cached_myrows, '', 12 * HOUR_IN_SECONDS );
+			    }
+			}			
+			$myrows = $aal_cached_myrows;
+		
+		
+		
 
 		
 		if ( is_multisite() && !is_main_site() ) {
