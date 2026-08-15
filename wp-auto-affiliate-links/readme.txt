@@ -3,8 +3,8 @@ Contributors: thedark
 Donate link: https://autoaffiliatelinks.com/donations/
 Tags: affiliate, posts, marketing, links, keywords
 Requires at least: 3.5
-Tested up to: 7.0.3
-Stable tag: 6.9.3.3
+Tested up to: 7.0.4
+Stable tag: 6.9.3.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -108,14 +108,17 @@ If you can't find the options to do this, try LibreOffice, as it is a bit easier
 
 == Changelog ==
 
-= 6.9.9.3 =
+= 6.9.3.4 =
+* Changed the way module files are included
+
+= 6.9.3.3 =
 * Added runtime static cache for database link extraction
 
 = 6.9.3.2 =
 * Added database caching for links
 
 = 6.9.3.1 =
-* Added fallback for Products API endpoing for Impact links
+* Added fallback for Products API endpoint for Impact links
 
 = 6.9.3 =
 * Added automated link extraction from Impact

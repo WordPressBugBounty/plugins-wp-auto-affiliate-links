@@ -2,24 +2,36 @@
 
 // Classes
 
-global $aalModules; $aalModules = array();
-$moduledir = plugin_dir_path(__FILE__) . 'modules';
-$aalFiles = scandir($moduledir);
-$aalModuleFiles = array();
-foreach($aalFiles as $aalFile) {
-	 if(substr($aalFile, -4)=='.php') { 
-	 	$aalModuleFiles[] = $aalFile;  
-		 include($moduledir .'/'. $aalFile); 
-	 }
-	 elseif (is_dir($moduledir . '/' . $aalFile) && $aalFile != '.' && $aalFile != '..') {   
-	 	
-	 	$subfiles = scandir($moduledir . '/' . $aalFile);
-	 		if(file_exists($moduledir . '/' . $aalFile .'/' . $aalFile .'.php')) include($moduledir . '/' . $aalFile .'/' . $aalFile .'.php'); 
-	 		elseif(file_exists($moduledir . '/' . $aalFile .'/index.php')) include($moduledir . '/' . $aalFile .'/index.php'); 
-	 	
-	 }
- }
- 
+$aal_hardcoded_modules = array(
+    'amazon/amazon.php',
+    'impact/impact.php',
+    'awin/awin.php',
+    'bestbuy/bestbuy.php',
+    'cj/cj.php',
+    'clickbank/clickbank.php',
+    'customfeed.php',           
+    'discoveryjapan/discoveryjapan.php',
+    'ebay/ebay.php',
+    'envato/envato.php', 
+    'rakuten/rakuten.php',
+    'shareasale/shareasale.php',
+    'universalfeed/universalfeed.php',
+    'walmart/walmart.php'
+);
+
+// Define the global array before the loop
+global $aalModules; 
+$aalModules = array();
+
+$moduledir = plugin_dir_path(__FILE__) . 'modules/';
+
+//Include files for each module
+foreach ( $aal_hardcoded_modules as $module_file ) {
+    $full_path = $moduledir . $module_file;
+    if ( file_exists( $full_path ) ) {
+        include_once( $full_path );
+    }
+}
  
  
  // order modules
