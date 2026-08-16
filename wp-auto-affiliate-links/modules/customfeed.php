@@ -119,6 +119,10 @@ global $wpdb;
 							}
 						}
 						else {
+							
+							$title = '';
+							$samelink = 0;
+							$disclosureoff = 0;
 							$meta = new StdClass();
 							$meta->title = $title;
 							$meta->samelink = $samelink;

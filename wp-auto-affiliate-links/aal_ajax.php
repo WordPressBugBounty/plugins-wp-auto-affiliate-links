@@ -11,9 +11,9 @@ function aalDeleteLink(){
 	
 	
 	
-		  if ( ! wp_verify_nonce( $_POST['aal_nonce'], 'aal-ajax-nonce' ) ) {
-         die ( 'no privileges');
-     }
+if ( !isset($_POST['aal_nonce']) || !wp_verify_nonce( $_POST['aal_nonce'], 'aal-ajax-nonce' ) ) {
+    wp_die( 'no privileges' );
+}
     
             if(isset($_POST['id'])){
                 global $wpdb;
@@ -40,9 +40,9 @@ function aalUpdateLink(){
 			}
 	
 	
-	  if ( ! wp_verify_nonce( $_POST['aal_nonce'], 'aal-ajax-nonce' ) ) {
-         die ( 'no privileges');
-     }
+if ( !isset($_POST['aal_nonce']) || !wp_verify_nonce( $_POST['aal_nonce'], 'aal-ajax-nonce' ) ) {
+    wp_die( 'no privileges' );
+}
     
             if(isset($_POST['id'])){
                 global $wpdb;
@@ -96,9 +96,9 @@ function aalAddLink(){
 			}
 	
 		
-	  if ( ! wp_verify_nonce( $_POST['aal_nonce'], 'aal-ajax-nonce' ) ) {
-         die ( 'no privileges');
-     }
+if ( !isset($_POST['aal_nonce']) || !wp_verify_nonce( $_POST['aal_nonce'], 'aal-ajax-nonce' ) ) {
+    wp_die( 'no privileges' );
+}
     
             	global $wpdb;
                 $table_name = $wpdb->prefix . "automated_links";
@@ -150,10 +150,10 @@ function aalKWSuggestionAjax(){
 				wp_die();
 			}
 	
-		
-	  if ( ! wp_verify_nonce( $_POST['aal_kw_nonce'], 'aal-ajax-kw-nonce' ) ) {
-         die ( 'no privileges');
-     }
+     
+     if ( !isset($_POST['aal_kw_nonce']) || !wp_verify_nonce( $_POST['aal_kw_nonce'], 'aal-ajax-kw-nonce' ) ) {
+    wp_die( 'no privileges' );
+}
     
             	global $wpdb;
                 $table_name = $wpdb->prefix . "automated_links";

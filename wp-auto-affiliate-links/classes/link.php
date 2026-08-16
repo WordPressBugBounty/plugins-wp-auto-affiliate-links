@@ -232,25 +232,32 @@ class AalLink
 
 
 function aalGetLink($id) {
-	
-		if(!$id) return false;	
-		global $wpdb;
-		$table_name = $wpdb->prefix . "automated_links";	
-		$myrows = $wpdb->get_results( "SELECT * FROM ". $table_name ." WHERE id='". $id ."' ");
-		
-		$link = AalLink($id,$link,$keyword,$medium);
-	
-	
+    if(!$id) return false;	
+    global $wpdb;
+    $table_name = $wpdb->prefix . "automated_links";	
+    $myrows = $wpdb->get_results( "SELECT * FROM ". $table_name ." WHERE id='". $id ."' ");
+    
+    if ( !empty($myrows) ) {
+        $row = $myrows[0];
+        $link_obj = new AalLink($row->id, $row->link, $row->keywords, $row->medium, $row->meta, $row->stats);
+        return $link_obj;
+    }
+    return false;
 }
 
 function aalGetLinkByUrl($url) {
 		
-		if(!$url) return false;
-		global $wpdb;
-		$table_name = $wpdb->prefix . "automated_links";	
-		$myrows = $wpdb->get_results( "SELECT * FROM ". $table_name ." WHERE link='". $url ."' ");
-		
-		$link = AalLink($id,$link,$keyword,$medium);
+    if(!$url) return false;	
+    global $wpdb;
+    $table_name = $wpdb->prefix . "automated_links";	
+    $myrows = $wpdb->get_results( "SELECT * FROM ". $table_name ." WHERE link='". $url ."' ");
+    
+    if ( !empty($myrows) ) {
+        $row = $myrows[0];
+        $link_obj = new AalLink($row->id, $row->link, $row->keywords, $row->medium, $row->meta, $row->stats);
+        return $link_obj;
+    }
+    return false;
 	
 	
 }

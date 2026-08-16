@@ -63,10 +63,10 @@ while($sw == 0) {
 
 class aalModule
 {
-    var $shortname;
-    var $nicename;
-    var $hooks = array();
-	var $order;
+    public $shortname;
+    public $nicename;
+    public $hooks = array();
+	 public $order;
 
 	function __construct($shortname,$nicename, $order = 99) {
 		
