@@ -15,7 +15,7 @@ function wpaal_generatedlinks() {
 
 		if(isset($data)) $links = $data->links;
 		if(isset($data)) $number = $data->number;
-		$exposts = get_option('aal_exclude');
+		$exposts = (string) get_option('aal_exclude');
 		$exarray = explode(',',$exposts);
 		
 	

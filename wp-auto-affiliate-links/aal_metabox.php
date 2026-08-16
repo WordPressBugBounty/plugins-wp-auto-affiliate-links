@@ -21,7 +21,7 @@ add_action( 'add_meta_boxes', 'aal_add_meta_box' );
 
 
 function aal_check_list_value($post_id,$optionname) {
-	$value = get_option($optionname);
+	$value = (string) get_option($optionname);
 	$old = explode(',',$value);
 	$checked = '';
 	if(in_array($post_id,$old)) { $checked = 'checked'; }
@@ -119,7 +119,7 @@ function aal_save_meta_box_data( $post_id ) {
 	else $postnotimes = '';
 
 	
-	$old = get_option('aal_exclude');
+	$old = (string) get_option('aal_exclude');
 	$ids = explode(',',$old);
 	if($my_data) { if(!in_array($post_id,$ids)) { $checked = 'checked'; } $ids[] = $post_id; }
 	else { $ids = array_diff($ids, array(1 => $post_id));   }

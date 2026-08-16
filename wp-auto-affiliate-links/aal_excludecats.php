@@ -48,7 +48,7 @@ add_action('admin_init', 'aal_exclude_cats_actions');
 
 
 			if(get_option($toption)) {
-				$old = get_option($toption);
+				$old = (string) get_option($toption);
 				$olda = explode(",",$old);
 				if(($key = array_search($word, $olda)) !== false) {
    					 unset($olda[$key]);
@@ -114,7 +114,7 @@ function wpaal_exclude_terms($taxon, $tname, $toption, $tpost) {
 		//get excluded categories
 
 		
-     	$words = get_option($toption); 
+     	$words = (string) get_option($toption); 
      	if($words) {
      			$words = explode(',', $words);	
      		}

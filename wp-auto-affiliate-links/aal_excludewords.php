@@ -41,7 +41,7 @@ add_action('admin_init', 'aal_exclude_words_actions');
 			update_option('aal_settings_updated',time());
 
 			if(get_option('aal_excludewords')) {
-				$old = get_option('aal_excludewords');
+				$old = (string) get_option('aal_excludewords');
 				$olda = explode(",",$old);
 				if(($key = array_search($word, $olda)) !== false) {
    					 unset($olda[$key]);
