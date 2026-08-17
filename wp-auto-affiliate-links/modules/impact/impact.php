@@ -10,6 +10,7 @@ $aalImpact->aalModuleHook('content','aalImpactDisplay');
 
 function aal_impact_search_keyword( $keyword, $notimes, $nrk, $nrw, $alinks ) {
 	
+	
     
     $sid = trim(get_option('aal_impactsid'));
     $token = trim(get_option('aal_impacttoken'));
@@ -126,8 +127,56 @@ function aal_impact_search_keyword( $keyword, $notimes, $nrk, $nrw, $alinks ) {
                                     $alink->key = $keyword;
                                     $alink->url = $final_tracking_link;
                                     $impactlinks[] = $alink;
+                                    $found_link = true;
                                     break; 
                                 }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    // ==========================================
+    // STEP 3: Fallback to Text Ads (Local PHP Search)
+    // Runs only if Step 1 and Step 2 found nothing
+    // ==========================================
+    if ( ! $found_link ) {
+        
+        // Fetch the 100 most recent Text Link ads available to your account
+        $ads_url = "https://api.impact.com/Mediapartners/" . urlencode($sid) . "/Ads?Type=TEXT_LINK&PageSize=100";
+        $ads_response = wp_remote_get( $ads_url, $args );
+
+        if ( ! is_wp_error( $ads_response ) && wp_remote_retrieve_response_code( $ads_response ) == 200 ) {
+            $ads_body = json_decode( wp_remote_retrieve_body( $ads_response ), true );
+            
+            if ( ! empty( $ads_body['Ads'] ) ) {
+                foreach ( $ads_body['Ads'] as $ad ) {
+                    
+                    // PHP String Match: Check if keyword is in the Ad Name or Description
+                    $name_match = ( !empty($ad['Name']) && stripos( $ad['Name'], $keyword ) !== false );
+                    $desc_match = ( !empty($ad['Description']) && stripos( $ad['Description'], $keyword ) !== false );
+
+                    if ( $name_match || $desc_match ) {
+                        
+                        if ( ! empty( $ad['TrackingLink'] ) ) {
+                            $link = $ad['TrackingLink'];
+                            
+                            // Duplicate Check
+                            $found = 0;
+                            foreach($alinks as $aa) {
+                                if(isset($aa->link) && $link == $aa->link) $found = 1;
+                                if(isset($aa->url) && $link == $aa->url) $found = 1;      
+                            }
+                            
+                            if($found != 1) {
+                                $alink = new stdClass();
+                                $alink->key = $keyword;
+                                $alink->url = $link; 
+                                $impactlinks[] = $alink;
+                                $found_link = true;
+                                break; // Stop after finding the first valid Ad link
                             }
                         }
                     }
