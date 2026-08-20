@@ -92,6 +92,8 @@ EOD;
 	$nrk = 0;
 	$nrw = 0;
 	
+	 $amazon_error = '';
+	
 	
     // 3. The Master Router Loop
     if( $keywords && is_array($keywords) ) {
@@ -106,7 +108,8 @@ EOD;
             
 
             // --- A. Amazon Worker ---
-            if ( $is_amazon_ready && function_exists('aal_amazon_search_keyword') ) {
+           
+            if ( $is_amazon_ready && function_exists('aal_amazon_search_keyword') && empty($amazon_error) ) {
                 $amazon_results = aal_amazon_search_keyword( $keyword, $notimes, $nrk, $nrw, $alinks );
                 
                 $nrk = $amazon_results['nrk'];
@@ -118,6 +121,10 @@ EOD;
                 }
                 if ( !empty($amazon_results['widget']) ) {
                     $awidgets = array_merge($awidgets, $amazon_results['widget']);
+                }
+                
+                if ( isset($amazon_results['error']) && !empty($amazon_results['error']) ) {
+                    $amazon_error = $amazon_results['error'];
                 }
             }
 
@@ -178,6 +185,9 @@ EOD;
     $jsonresult = new StdClass();
     $jsonresult->amazonlinks = $alinks;
     $jsonresult->amazonwidget = $awidgets;
+    if ( !empty($amazon_error) ) {
+        $jsonresult->amazonerror = $amazon_error;
+    }
     echo json_encode($jsonresult);
 
     wp_die();

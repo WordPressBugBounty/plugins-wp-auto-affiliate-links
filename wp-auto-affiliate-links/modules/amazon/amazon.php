@@ -9,337 +9,190 @@ $aalAmazon->aalModuleHook('content','aalAmazonDisplay');
 
 function aal_amazon_search_keyword( $keyword, $notimes, $nrk, $nrw, $alinks ) {
     
-		// Your AWS Access Key ID, as taken from the AWS Your Account page
-		$aws_access_key_id = trim(get_option('aal_amazonapikey'));
-		
-		// Your AWS Secret Key corresponding to the above ID, as taken from the AWS Your Account page
-		$aws_secret_key = trim(get_option('aal_amazonsecret'));
-		
-		$amazonactive = get_option('aal_amazonactive');
-		$amazonid = get_option('aal_amazonid');
-		$amazoncat = get_option('aal_amazoncat');
-		$amazonlocal = get_option('aal_amazonlocal');
-		
-		$amazondisplaylinks = get_option('aal_amazondisplaylinks');
-		$amazondisplaywidget = get_option('aal_amazondisplaywidget');
-		if(!$amazondisplaywidget) $amazondisplaylinks = 1;
+    // Your Client ID (previously AWS Access Key)
+    $aws_access_key_id = trim(get_option('aal_amazonapikey'));
+    // Your Client Secret (previously AWS Secret Key)
+    $aws_secret_key = trim(get_option('aal_amazonsecret'));
+    
+    $amazonactive = get_option('aal_amazonactive');
+    $amazonid = get_option('aal_amazonid');
+    $amazoncat = get_option('aal_amazoncat');
+    $amazonlocal = get_option('aal_amazonlocal');
+    
+    $amazondisplaylinks = get_option('aal_amazondisplaylinks');
+    $amazondisplaywidget = get_option('aal_amazondisplaywidget');
+    if(!$amazondisplaywidget) $amazondisplaylinks = 1;
 
-				
-		if($amazoncat) $acategory = $amazoncat;
-		else $acategory = 'All';
-	
-		if($amazonlocal) $amazonlocal = $amazonlocal;
-		else $amazonlocal = 'com';	
-		
-		$aalregionname = "us-east-1";
-		if($amazonlocal == 'com.au') $aalregionname = "us-west-2";
-		if($amazonlocal == 'com.be') $aalregionname = "eu-west-1";
-		if($amazonlocal == 'com.br') $aalregionname = "us-east-1";
-		if($amazonlocal == 'ca') $aalregionname = "us-east-1";
-		if($amazonlocal == 'eg') $aalregionname = "eu-west-1";
-		if($amazonlocal == 'fr') $aalregionname = "eu-west-1";
-		if($amazonlocal == 'de') $aalregionname = "eu-west-1";
-		if($amazonlocal == 'in') $aalregionname = "eu-west-1";
-		if($amazonlocal == 'it') $aalregionname = "eu-west-1";
-		if($amazonlocal == 'co.jp') $aalregionname = "us-west-2";
-		if($amazonlocal == 'com.mx') $aalregionname = "us-east-1";
-		if($amazonlocal == 'nl') $aalregionname = "eu-west-1";
-		if($amazonlocal == 'pl') $aalregionname = "eu-west-1";
-		if($amazonlocal == 'sg') $aalregionname = "us-west-2";
-		if($amazonlocal == 'sa') $aalregionname = "eu-west-1";
-		if($amazonlocal == 'es') $aalregionname = "eu-west-1";
-		if($amazonlocal == 'se') $aalregionname = "eu-west-1";
-		if($amazonlocal == 'com.tr') $aalregionname = "eu-west-1";
-		if($amazonlocal == 'ae') $aalregionname = "eu-west-1";
-		if($amazonlocal == 'co.uk') $aalregionname = "eu-west-1";
-		if($amazonlocal == 'sa') $aalregionname = "eu-west-1";
-
-    if(!$amazonactive || !$amazonid) { return array('links'=>array(), 'widget'=>array(), 'nrk'=>$nrk, 'nrw'=>$nrw); }
+    // Check if we have the necessary credentials
+    if(!$amazonactive || !$amazonid || !$aws_access_key_id || !$aws_secret_key) { 
+        return array('links'=>array(), 'widget'=>array(), 'nrk'=>$nrk, 'nrw'=>$nrw, 'error' => 'Missing Amazon API keys, Associate ID, or Amazon module is inactive.'); 
+    }
             
+    if($amazoncat) $acategory = $amazoncat;
+    else $acategory = 'All';
 
+    if($amazonlocal) $amazonlocal = $amazonlocal;
+    else $amazonlocal = 'com';  
+    
     $amazonlinks = array();
     $awidgetcode = array();
+    $searchstring = $keyword;
 
-    // Reconstruct the $keyword variable exactly as your old script expected it
-   // $keyword = $keyword_obj->keyword;
-   $searchstring = $keyword;
+    // 1. DETERMINE OAUTH ENDPOINT BASED ON REGION
+    $token_endpoint = 'https://api.amazon.com/auth/o2/token'; // Default NA
+    $eu_regions = array('co.uk', 'de', 'fr', 'it', 'es', 'nl', 'se', 'pl', 'com.tr', 'eg', 'sa', 'ae', 'in');
+    $fe_regions = array('co.jp', 'com.au', 'sg');
+    
+    if ( in_array( $amazonlocal, $eu_regions ) ) {
+        $token_endpoint = 'https://api.amazon.co.uk/auth/o2/token';
+    } elseif ( in_array( $amazonlocal, $fe_regions ) ) {
+        $token_endpoint = 'https://api.amazon.co.jp/auth/o2/token';
+    }
 
-		if($amazondisplaywidget) $responsegroup = "Small,Images";
-		else $responsegroup = "Small";
-			
-		
-		// The region you are interested in
-		$endpoint = "webservices.amazon.". $amazonlocal ."";
-		
-		$uri = "/onca/xml";
-		
-		$params = array(
-		    "Service" => "AWSECommerceService",
-		    "Operation" => "ItemSearch",
-		    "AWSAccessKeyId" => $aws_access_key_id,
-		    "AssociateTag" => $amazonid,
-		    "SearchIndex" => $acategory,
-		    "Keywords" => $searchstring,
-		    "ResponseGroup" => $responsegroup,
-		    "ItemPage" => '1'
-		);
-		
-		// Set current timestamp if not set
-		if (!isset($params["Timestamp"])) {
-		    $params["Timestamp"] = gmdate('Y-m-d\TH:i:s\Z');
-		}
-		
-		// Sort the parameters by key
-		ksort($params);
-		
-		$pairs = array();
-		
-		foreach ($params as $key => $value) {
-		    array_push($pairs, rawurlencode($key)."=".rawurlencode($value));
-		}
-		
-		// Generate the canonical query
-		$canonical_query_string = join("&", $pairs);
-		
-		// Generate the string to be signed
-		$string_to_sign = "GET\n".$endpoint."\n".$uri."\n".$canonical_query_string;
-		
-		// Generate the signature required by the Product Advertising API
-		$signature = base64_encode(hash_hmac("sha256", $string_to_sign, $aws_secret_key, true));
-		
-		// Generate the signed URL
-		$request_url = 'http://'.$endpoint.$uri.'?'.$canonical_query_string.'&Signature='.rawurlencode($signature);
-		
-		//echo $request_url;
-		
-		
-		//$html_response = wp_remote_get($request_url);
+    // 2. FETCH OR LOAD THE OAUTH BEARER TOKEN
+    $transient_name = 'aal_amz_token_' . md5($aws_access_key_id);
+    $token = get_transient( $transient_name );
+    $token_error_debug = '';
 
+    if ( ! $token ) {
+        $token_args = array(
+            'method'  => 'POST',
+            'timeout' => 10,
+            'headers' => array( 'Content-Type' => 'application/json' ),
+            'body'    => json_encode( array(
+                'grant_type'    => 'client_credentials',
+                'client_id'     => $aws_access_key_id,
+                'client_secret' => $aws_secret_key,
+                'scope'         => 'creatorsapi::default'
+            ) )
+        );
+        
+        $token_req = wp_remote_post( $token_endpoint, $token_args );
+        
+        if ( is_wp_error( $token_req ) ) {
+            $nrk++; sleep(2);
+            return array('links'=>array(), 'widget'=>array(), 'nrk'=>$nrk, 'nrw'=>$nrw, 'error' => 'WP HTTP Error fetching token: ' . $token_req->get_error_message());
+        }
 
-// API V5		
-		
-		$searchItemRequest = new aal_SearchItemsRequest ();
-		$searchItemRequest->PartnerType = "Associates";
-		// Put your Partner tag (Store/Tracking id) in place of Partner tag
-		$searchItemRequest->PartnerTag = $amazonid;
-		$searchItemRequest->Keywords = $searchstring;
-		$searchItemRequest->SearchIndex = $acategory;
-		$searchItemRequest->Resources = ["Images.Primary.Medium","ItemInfo.Title","Offers.Listings.Price"];
-		$host = "webservices.amazon.". $amazonlocal;
-		$path = "/paapi5/searchitems";
-		$payload = json_encode ($searchItemRequest);
-		//Put your Access Key in place of <ACCESS_KEY> and Secret Key in place of <SECRET_KEY> in double quotes
-		$awsv4 = new aal_AwsV4 ("$aws_access_key_id", "$aws_secret_key");
-		$awsv4->setRegionName($aalregionname);
-		$awsv4->setServiceName("ProductAdvertisingAPI");
-		$awsv4->setPath ($path);
-		$awsv4->setPayload ($payload);
-		$awsv4->setRequestMethod ("POST");
-		$awsv4->addHeader ('content-encoding', 'amz-1.0');
-		$awsv4->addHeader ('content-type', 'application/json; charset=utf-8');
-		$awsv4->addHeader ('host', $host);
-		$awsv4->addHeader ('x-amz-target', 'com.amazon.paapi5.v1.ProductAdvertisingAPIv1.SearchItems');
-		$headers = $awsv4->getHeaders ();
-		$headerString = "";
-		foreach ( $headers as $key => $value ) {
-		    $headerString .= $key . ': ' . $value . "\r\n";
-		}
-		$params = array (
-		        'http' => array (
-		            'header' => $headerString,
-		            'method' => 'POST',
-		            'content' => $payload
-		        )
-		    );
-		    
-		    
-		  //before wp_remote_post
-		/*    
-		$stream = stream_context_create ( $params );
+        $token_code = wp_remote_retrieve_response_code( $token_req );
+        $token_body_raw = wp_remote_retrieve_body( $token_req );
+        
+        if ( $token_code === 200 ) {
+            $token_body = json_decode( $token_body_raw );
+            if ( isset( $token_body->access_token ) ) {
+                $token = $token_body->access_token;
+                set_transient( $transient_name, $token, 3500 ); 
+            } else {
+                $token_error_debug = 'Token JSON missing access_token key. Body: ' . $token_body_raw;
+            }
+        } else {
+            $token_error_debug = 'Token API returned HTTP ' . $token_code . ' | Body: ' . $token_body_raw;
+        }
+    }
 
-		$fp = @fopen ( 'https://'.$host.$path, 'rb', false, $stream );
-		
-		if (! $fp) { */
+    if ( ! $token ) {
+        $nrk++; sleep(2);
+        return array('links'=>array(), 'widget'=>array(), 'nrk'=>$nrk, 'nrw'=>$nrw, 'error' => 'Failed to retrieve Auth Token. Details: ' . $token_error_debug);
+    }
 
-		/*
-		    $error = error_get_last();
-		    echo "<strong>Failed to open stream:</strong><br>";
-		    if ($error !== null) {
-		        echo "Error type: " . $error['type'] . "<br>";
-		        echo "Error message: " . htmlspecialchars($error['message']) . "<br>";
-		        echo "Error file: " . $error['file'] . "<br>";
-		        echo "Error line: " . $error['line'] . "<br>";
-		    } else {
-		        echo "An unknown error occurred with fopen.<br>";
-		    }
-		    if (isset($http_response_header)) {
-		        echo "<br><strong>HTTP Response Headers (if available on failure):</strong><br><pre>";
-		        print_r($http_response_header);
-		        echo "</pre>";
-		
-		}
-		*/
+    // 3. CALL CREATORS API SEARCHITEMS
+    $marketplace = "www.amazon." . $amazonlocal;
+    $catalog_url = "https://creatorsapi.amazon/catalog/v1/searchItems";
+    
+    $resources = array(
+        "images.primary.medium", 
+        "itemInfo.title",
+        "offersV2.listings.price"
+    );
 
+    $payload = array(
+        "keywords"    => $searchstring,
+        "searchIndex" => $acategory,
+        "partnerTag"  => $amazonid,
+        "marketplace" => $marketplace,
+        "resources"   => $resources
+    );
+    
+    $args = array(
+        'method'      => 'POST',
+        'timeout'     => 15,
+        'redirection' => 5,
+        'httpversion' => '1.0',
+        'blocking'    => true,
+        'headers'     => array(
+            'Authorization' => 'Bearer ' . $token,
+            'Content-Type'  => 'application/json',
+            'x-marketplace' => $marketplace
+        ),
+        'body'        => json_encode( $payload ),
+    );
 
+    $api_response = wp_remote_post( $catalog_url, $args );
+    
+    if ( is_wp_error( $api_response ) ) {
+        $nrk++; sleep(2);
+        return array('links'=>array(), 'widget'=>array(), 'nrk'=>$nrk, 'nrw'=>$nrw, 'error' => 'WP HTTP Error fetching Catalog: ' . $api_response->get_error_message());
+    }
+    
+    $response_code = wp_remote_retrieve_response_code( $api_response );
+    $response_body = wp_remote_retrieve_body( $api_response );
+    
+    // Clear token if unauthorized
+    if ( $response_code === 401 ) {
+        delete_transient( $transient_name );
+    }
+    
+    // If Amazon rejects the request, catch the exact reason
+    if ( $response_code !== 200 ) {
+        $nrk++; sleep(2);
+        return array('links'=>array(), 'widget'=>array(), 'nrk'=>$nrk, 'nrw'=>$nrw, 'error' => 'Amazon API Error HTTP ' . $response_code . ' | Body: ' . $response_body);
+    }
+    
+    if ( empty( $response_body ) ) {
+        $nrk++; sleep(2);
+        return array('links'=>array(), 'widget'=>array(), 'nrk'=>$nrk, 'nrw'=>$nrw, 'error' => 'Amazon API returned an empty response body.');
+    }
+    
+    $jsitems = json_decode($response_body);
+    
+    if ( !isset($jsitems->searchResult) || empty($jsitems->searchResult->items) ) { 
+        sleep(3); 
+        return array('links'=>array(), 'widget'=>array(), 'nrk'=>$nrk, 'nrw'=>$nrw);
+    }
+    
+    $items = $jsitems->searchResult->items;
+    
+    foreach($items as $item) {
+        if($amazondisplaywidget && $nrw<=2 && isset($item->images->primary->medium->url)) {
+            $awidget = new StdClass();
+            $awidget->url = $item->detailPageUrl;
+            $awidget->id = $item->asin;
+            $awidget->image = $item->images->primary->medium->url;
+            $awidget->title = isset($item->itemInfo->title->displayValue) ? $item->itemInfo->title->displayValue : '';
+            $awidget->price = isset($item->offersV2->listings[0]->price->displayAmount) ? $item->offersV2->listings[0]->price->displayAmount : '';
+            
+            $awidgetcode[] = $awidget;
+            $nrw++;
+        }
 
-
-
-
-		   //throw new Exception ( "Exception Occured" );
-		/*   $nrk++; 
-		   sleep(2);
-		   continue;
-		}
-		$response = @stream_get_contents ( $fp ); */
-		//print_r($response);
-		
-		//ob_clean();
-		/*if ($response === false) {
-			$nrk++; 
-			sleep(2);
-		   continue;
-		   // throw new Exception ( "Exception Occured" );
-		} */
-		//echo 'alo';
-		//print_r($response);
-		
-		
-		
-		
-// End API V5	
-		
-		
-		//Using remote post
-		
-		
-		$url = 'https://' . $host . $path;
-		
-		$args = array(
-		    'method'      => 'POST',
-		    'timeout'     => 25, // Dăm 15 secunde pentru siguranță, Amazon poate fi lent
-		    'redirection' => 5,
-		    'httpversion' => '1.0',
-		    'blocking'    => true,
-		    'headers'     => $headers, // wp_remote_post acceptă direct array-ul de headere
-		    'body'        => $payload,
-		);
-
-		$api_response = wp_remote_post( $url, $args );
-		
-		// 1. Verificăm dacă WordPress a întâmpinat o eroare critică (ex: timeout, lipsă curl/fopen)
-		if ( is_wp_error( $api_response ) ) {
-		    // echo 'Eroare WordPress HTTP: ' . $api_response->get_error_message();
-		    $nrk++; 
-		    sleep(2);
-		    return array('links'=>array(), 'widget'=>array(), 'nrk'=>$nrk, 'nrw'=>$nrw);
-		}
-		
-		$response_code = wp_remote_retrieve_response_code( $api_response );
-		if ( $response_code !== 200 ) {
-		    // echo 'Eroare Amazon API. Cod HTTP: ' . $response_code;
-		    $nrk++; 
-		    sleep(2);
-		    return array('links'=>array(), 'widget'=>array(), 'nrk'=>$nrk, 'nrw'=>$nrw);
-		}
-		
-		// 3. Extragem corpul răspunsului (JSON-ul propriu-zis)
-		$response_body = wp_remote_retrieve_body( $api_response );
-
-		if ( empty( $response_body ) ) {
-			$nrk++; 
-			sleep(2);
-		    return array('links'=>array(), 'widget'=>array(), 'nrk'=>$nrk, 'nrw'=>$nrw);
-		}
-		
-		$jsitems = json_decode($response_body);
-		
-		if ( !isset($jsitems->SearchResult) || empty($jsitems->SearchResult->Items) ) { 
-		    // echo 'no links'; 
-		    sleep(3); 
-		    return array('links'=>array(), 'widget'=>array(), 'nrk'=>$nrk, 'nrw'=>$nrw);
-		}
-		
-		//End using remote post
-		
-		
-		
-		//echo "Signed URL: \"".$request_url."\"";	
-			//echo $request_url;
-			
-			
-			
-			
-		  // echo $html_response['body'];
-			//$xml = simplexml_load_string( $html_response['body'] );
-			//print_r($xml);
-			//if($xml->Error->Code) { echo $xml->Error->Code; 
-			//exit(); die(); }
-			//print_r($xml->Items);	
-			
-			
-			
-			//$items = $xml->Items->Item;
-			//$jsitems = json_decode($response);
-		//	print_r($jsitems); die();
-			$items = $jsitems->SearchResult->Items;
-			if(!$items) { 
-			   //echo 'no links' ; 
-				sleep(3); return array('links'=>array(), 'widget'=>array(), 'nrk'=>$nrk, 'nrw'=>$nrw);
-			}
-			
-			//print_r($items);
-			//$link = $items[0]->DetailPageURL;
-		
-			foreach($items as $item) {
-				
-				//print_r($item);
-				
-				
-				
-				if($amazondisplaywidget && $nrw<=2 && $item->Images->Primary->Medium->URL) {
-					
-					$awidget = new StdClass();
-					$awidget->url = $item->DetailPageURL;
-					$awidget->id = $item->ASIN;
-					$awidget->image = $item->Images->Primary->Medium->URL;
-					$awidget->title = $item->ItemInfo->Title->DisplayValue;
-					$awidget->price = $item->Offers->Listings[0]->Price->DisplayAmount;
-					
-					$awidgetcode[] = $awidget;
-					$nrw++;
-									
-				
-				
-				}
-		
-				
-				if($amazondisplaylinks) {
-					
-					$link = (string) $item->DetailPageURL;
-					
-					$found = 0;
-					foreach($alinks as $aa) {
-						if($link == $aa->link) $found = 1;		
-					}
-					if($found != 1) {
-						$alink = new StdClass();
-						$alink->key = $searchstring;
-						$alink->url = $link;
-						$amazonlinks[] = $alink;
-						break;
-					}
-				
-				}
-				
-				
-
-				
-					
-			
-			}
-			
-		$nrk++;
-		sleep(2);
+        if($amazondisplaylinks) {
+            $link = (string) $item->detailPageUrl;
+            $found = 0;
+            foreach($alinks as $aa) {
+                if($link == $aa->link) $found = 1;      
+            }
+            if($found != 1) {
+                $alink = new StdClass();
+                $alink->key = $searchstring;
+                $alink->url = $link;
+                $amazonlinks[] = $alink;
+                break;
+            }
+        }
+    }
+        
+    $nrk++;
+    sleep(2);
 
     return array(
         'links' => $amazonlinks,
@@ -350,134 +203,7 @@ function aal_amazon_search_keyword( $keyword, $notimes, $nrk, $nrw, $alinks ) {
 }
 
 
-		class aal_SearchItemsRequest {
-		    public $PartnerType;
-		    public $PartnerTag;
-		    public $Keywords;
-		    public $SearchIndex;
-		    public $Resources;
-		}		
-		
 
-class aal_AwsV4 {
-
-    private $accessKeyID = null;
-    private $secretAccessKey = null;
-    private $path = null;
-    private $regionName = null;
-    private $serviceName = null;
-    private $httpMethodName = null;
-    private $queryParametes = array ();
-    private $awsHeaders = array ();
-    private $payload = "";
-
-    private $HMACAlgorithm = "AWS4-HMAC-SHA256";
-    private $aws4Request = "aws4_request";
-    private $strSignedHeader = null;
-    private $xAmzDate = null;
-    private $currentDate = null;
-
-    public function __construct($accessKeyID, $secretAccessKey) {
-        $this->accessKeyID = $accessKeyID;
-        $this->secretAccessKey = $secretAccessKey;
-        $this->xAmzDate = $this->getTimeStamp ();
-        $this->currentDate = $this->getDate ();
-    }
-
-    function setPath($path) {
-        $this->path = $path;
-    }
-
-    function setServiceName($serviceName) {
-        $this->serviceName = $serviceName;
-    }
-
-    function setRegionName($regionName) {
-        $this->regionName = $regionName;
-    }
-
-    function setPayload($payload) {
-        $this->payload = $payload;
-    }
-
-    function setRequestMethod($method) {
-        $this->httpMethodName = $method;
-    }
-
-    function addHeader($headerName, $headerValue) {
-        $this->awsHeaders [$headerName] = $headerValue;
-    }
-
-    private function prepareCanonicalRequest() {
-        $canonicalURL = "";
-        $canonicalURL .= $this->httpMethodName . "\n";
-        $canonicalURL .= $this->path . "\n" . "\n";
-        $signedHeaders = '';
-        foreach ( $this->awsHeaders as $key => $value ) {
-            $signedHeaders .= $key . ";";
-            $canonicalURL .= $key . ":" . $value . "\n";
-        }
-        $canonicalURL .= "\n";
-        $this->strSignedHeader = substr ( $signedHeaders, 0, - 1 );
-        $canonicalURL .= $this->strSignedHeader . "\n";
-        $canonicalURL .= $this->generateHex ( $this->payload );
-        return $canonicalURL;
-    }
-
-    private function prepareStringToSign($canonicalURL) {
-        $stringToSign = '';
-        $stringToSign .= $this->HMACAlgorithm . "\n";
-        $stringToSign .= $this->xAmzDate . "\n";
-        $stringToSign .= $this->currentDate . "/" . $this->regionName . "/" . $this->serviceName . "/" . $this->aws4Request . "\n";
-        $stringToSign .= $this->generateHex ( $canonicalURL );
-        return $stringToSign;
-    }
-
-    private function calculateSignature($stringToSign) {
-        $signatureKey = $this->getSignatureKey ( $this->secretAccessKey, $this->currentDate, $this->regionName, $this->serviceName );
-        $signature = hash_hmac ( "sha256", $stringToSign, $signatureKey, true );
-        $strHexSignature = strtolower ( bin2hex ( $signature ) );
-        return $strHexSignature;
-    }
-
-    public function getHeaders() {
-        $this->awsHeaders ['x-amz-date'] = $this->xAmzDate;
-        ksort ( $this->awsHeaders );
-        $canonicalURL = $this->prepareCanonicalRequest ();
-        $stringToSign = $this->prepareStringToSign ( $canonicalURL );
-        $signature = $this->calculateSignature ( $stringToSign );
-        if ($signature) {
-            $this->awsHeaders ['Authorization'] = $this->buildAuthorizationString ( $signature );
-            return $this->awsHeaders;
-        }
-    }
-
-    private function buildAuthorizationString($strSignature) {
-        return $this->HMACAlgorithm . " " . "Credential=" . $this->accessKeyID . "/" . $this->getDate () . "/" . $this->regionName . "/" . $this->serviceName . "/" . $this->aws4Request . "," . "SignedHeaders=" . $this->strSignedHeader . "," . "Signature=" . $strSignature;
-    }
-
-    private function generateHex($data) {
-        return strtolower ( bin2hex ( hash ( "sha256", $data, true ) ) );
-    }
-
-    private function getSignatureKey($key, $date, $regionName, $serviceName) {
-        $kSecret = "AWS4" . $key;
-        $kDate = hash_hmac ( "sha256", $date, $kSecret, true );
-        $kRegion = hash_hmac ( "sha256", $regionName, $kDate, true );
-        $kService = hash_hmac ( "sha256", $serviceName, $kRegion, true );
-        $kSigning = hash_hmac ( "sha256", $this->aws4Request, $kService, true );
-
-        return $kSigning;
-    }
-
-    private function getTimeStamp() {
-        return gmdate ( "Ymd\THis\Z" );
-    }
-
-    private function getDate() {
-        return gmdate ( "Ymd" );
-    }
-}
 
 
 add_action( 'admin_init', 'aal_amazon_register_settings' );
