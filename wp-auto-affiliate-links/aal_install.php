@@ -213,7 +213,7 @@ function aal_setup_new_blog($blog_id) {
 add_action('wpmu_new_blog', 'aal_setup_new_blog');
 
 
-define('AAL_NOTICE_VER', '1.8'); 
+define('AAL_NOTICE_VER', '1.9'); 
 
 function aal_admin_notice() {
     if (!current_user_can('activate_plugins')) return;
@@ -225,7 +225,7 @@ function aal_admin_notice() {
         <div class="notice notice-info is-dismissible aal-notice-pro" data-notice-ver="<?php echo AAL_NOTICE_VER; ?>">
 				<p>
                 <?php 
-                _e('Thank you for using Auto Affiliate Links. Upgrade to <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Auto Affiliate Links PRO</a> to get access to advanced linking features. <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Learn more.</a>.', 'wp-auto-affiliate-links');
+                _e('<b>New in <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Auto Affiliate Links PRO</a>:</b> Impact.com links can now be automatically extracted and added to product references and key terms. <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Learn more.</a>', 'wp-auto-affiliate-links');
    
                 ?>
             </p>
