@@ -16,7 +16,8 @@ $aal_hardcoded_modules = array(
     'rakuten/rakuten.php',
     'shareasale/shareasale.php',
     'universalfeed/universalfeed.php',
-    'walmart/walmart.php'
+    'walmart/walmart.php',
+    'temu/temu.php'
 );
 
 // Define the global array before the loop

@@ -258,6 +258,11 @@ if ($pdate) {
 		$discoveryjapanid = get_option('aal_discoveryjapanid');
 		$discoveryjapanapikey = get_option('aal_discoveryjapanapikey'); 
 		
+		$temuactive = get_option('aal_temuactive');
+		$temunetwork = get_option('aal_temunetwork');
+		$temuid = get_option('aal_temuid');
+		$temuawinmid = get_option('temuawinmid');
+		
 		}
 		
 		
@@ -725,7 +730,7 @@ if ($pdate) {
 				global $aal_apirequestno;
 				if(!$aal_apirequestno) $aal_apirequestno = 0;
 				//If the manual replacement did not found enough links		
-				if($aal_apirequestno < 5 ) if($apikey && !is_feed() && ($sofar<$notimes || $amazondisplaywidget) && $querylimit!='overquota' && ($clickbankactive || $amazonactive || $impactactive || $shareasaleactive || $awinactive || $universalfeedactive || $cjactive || $ebayactive || $bestbuyactive || $walmartactive || $envatoactive || $rakutenactive || $discoveryjapanactive)) {
+				if($aal_apirequestno < 5 ) if($apikey && !is_feed() && ($sofar<$notimes || $amazondisplaywidget) && $querylimit!='overquota' && ($clickbankactive || $amazonactive || $impactactive || $shareasaleactive || $awinactive || $universalfeedactive || $cjactive || $ebayactive || $bestbuyactive || $walmartactive || $envatoactive || $rakutenactive || $discoveryjapanactive || $temuactive )) {
 
 					$aal_apirequestno = $aal_apirequestno + 1;
 					
@@ -740,6 +745,7 @@ if ($pdate) {
 					if(!$envatosite) { $envatosite = ''; }
 					if(!$rakutenactive) { $rakutenid = ''; }
 					if(!$discoveryjapanactive) { $discoveryjapanid = ''; }
+					if(!$temuactive) { $temuid = ''; }
 
 					
 		$aaldivnumber = rand(1,10000);			
@@ -808,6 +814,10 @@ if ( is_null( $aal_page_globals ) ) {
 	            'discoveryjapanactive'  => $discoveryjapanactive,
 	            'discoveryjapanid'      => $discoveryjapanid,
 	            'discoveryjapanapikey'  => $discoveryjapanapikey,
+	            'temuid'              => $temuid,
+	            'temunetwork'            => $temunetwork,
+	            'temuactive'          => $temuactive,
+	            'temuawinmid'          => $temuawinmid,
 	            
 	            // General Settings
 	            'excludewords'          => $excludewords,

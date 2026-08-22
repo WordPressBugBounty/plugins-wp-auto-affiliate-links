@@ -29,6 +29,7 @@ function aal_api_register_settings() {
    register_setting( 'aal_api_settings', 'aal_rakutenactive' );
    register_setting( 'aal_api_settings', 'aal_discoveryjapanactive' );
    register_setting( 'aal_api_settings', 'aal_universalfeedactive' );
+   register_setting( 'aal_api_settings', 'aal_temuactive' );
 }	
 
 
@@ -133,7 +134,8 @@ $apikey = get_option('aal_apikey');
 						<li><b>Walmart</b> links can be automatically extracted and displayed
 						<li><b>Commission Junction</b> product datafeeds can be uploaded and automatically displayed        
 						<li><b>Envato Marketplace</b> automatic links    	
-						<li><b>Discovery Japan affiliate links can be extracted and displayed automatically</b> automatic links  
+						<li><b>Discovery Japan affiliate links can be extracted and displayed automatically</b> 
+						<li><b>Temu</b>  links can be added added automatically 
               	</ul>
               	<br />
 					 More info about Auto Affiliate Links PRO features <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">here</a>.      
@@ -441,6 +443,18 @@ $apikey = get_option('aal_apikey');
 		<td></td>
 		<td></td>
 	</tr>
+		<tr>
+		<td>Temu</td>
+		<td><select name="aal_temuactive">
+			<option value="0" <?php if(get_option('aal_temuactive')=='0') echo "selected"; ?> > Inactive</option>
+			<option value="1" <?php if(get_option('aal_temuactive')=='1') echo "selected"; ?> >Active</option>
+		</select></td>
+		<td><?php if(get_option('aal_temuactive')=='1') { ?><a href="<?php echo admin_url('admin.php?page=aal_module_temu'); ?>">Configure Temu Module</a><?php }
+		else { ?>   <a href="javascript:;" onclick="return aalActivateModule('aal_temuactive');" >Activate Temu Module</a>    <?php  } ?></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
 <!--	<tr class="alternate">
 		<td>Rakuten Linkshare</td>
 		<td><select name="aal_rakutenactive">
@@ -584,6 +598,14 @@ $apikey = get_option('aal_apikey');
 		<td></td>
 		<td></td>
 	</tr>	
+		<tr>
+		<td>Temu</td>
+		<td>Inactive</td>
+		<td><a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Get API Key</a></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
 	</table>	
 	
 	
@@ -604,6 +626,7 @@ $apikey = get_option('aal_apikey');
 	<input type="hidden" name="aal_envatoactive" value="<?php echo get_option('aal_envatoactive'); ?>" />
 	<input type="hidden" name="aal_discoveryjapanactive" value="<?php echo get_option('aal_discoveryjapanactive'); ?>" />
 	<input type="hidden" name="aal_universalfeedactive" value="<?php echo get_option('aal_universalfeedactive'); ?>" />
+	<input type="hidden" name="aal_temuactive" value="<?php echo get_option('aal_temuactive'); ?>" />
 	
 	<?php } ?>
 	

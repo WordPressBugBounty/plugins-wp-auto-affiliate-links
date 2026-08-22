@@ -143,6 +143,10 @@
 		            discoveryjapanactive:   config.discoveryjapanactive,
 		            discoveryjapanid:       config.discoveryjapanid,
 		            discoveryjapanapikey:   config.discoveryjapanapikey,
+		            temuid:               config.temuid,
+		            temunetwork:             config.temunetwork,
+		            temuactive:           config.temuactive,
+		            temuawinmid:				config.temuawinmid,
 		            excludewords:           config.excludewords,
 		            geminiaion:             config.geminiaion
 		        };
