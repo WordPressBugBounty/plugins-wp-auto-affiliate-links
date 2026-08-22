@@ -260,7 +260,9 @@
 			
 			//Add to cache
 			
-			var willUseAmazon = response.keywords && ((aalapidata.amazonactive && aalapidata.amazonid) || aalapidata.impactactive && aalapidata.impactsid );
+			//console.log(aalapidata);
+			
+			var willUseAmazon = response.keywords && ((Number(aalapidata.amazonactive) && aalapidata.amazonid) || (Number(aalapidata.impactactive) && aalapidata.impactsid) );
 
 							if (willUseAmazon) {						
 							    $.ajax({
