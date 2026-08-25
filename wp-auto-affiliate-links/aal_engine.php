@@ -221,6 +221,8 @@ if ($pdate) {
 		$impactsid = get_option('aal_impactsid');
 		$impactactive = get_option('aal_impactactive');
 		
+		
+		
 		$amazondisplaylinks = get_option('aal_amazondisplaylinks');
 		$amazondisplaywidget = get_option('aal_amazondisplaywidget');
 		if(!$amazondisplaywidget && !$amazondisplaylinks) $amazondisplaylinks = '1';
@@ -262,6 +264,12 @@ if ($pdate) {
 		$temunetwork = get_option('aal_temunetwork');
 		$temuid = get_option('aal_temuid');
 		$temuawinmid = get_option('temuawinmid');
+		
+		$aliexpress_appkey = get_option('aal_aliexpress_appkey');
+		$aliexpress_appsecret = get_option('aal_aliexpress_appsecret'); 
+		$aliexpress_trackingid = get_option('aal_aliexpress_trackingid'); 
+		$aliexpress_endpoint = get_option('aal_aliexpress_endpoint');
+		$aliexpressactive = get_option('aal_aliexpressactive');
 		
 		}
 		
@@ -730,7 +738,7 @@ if ($pdate) {
 				global $aal_apirequestno;
 				if(!$aal_apirequestno) $aal_apirequestno = 0;
 				//If the manual replacement did not found enough links		
-				if($aal_apirequestno < 5 ) if($apikey && !is_feed() && ($sofar<$notimes || $amazondisplaywidget) && $querylimit!='overquota' && ($clickbankactive || $amazonactive || $impactactive || $shareasaleactive || $awinactive || $universalfeedactive || $cjactive || $ebayactive || $bestbuyactive || $walmartactive || $envatoactive || $rakutenactive || $discoveryjapanactive || $temuactive )) {
+				if($aal_apirequestno < 5 ) if($apikey && !is_feed() && ($sofar<$notimes || $amazondisplaywidget) && $querylimit!='overquota' && ($clickbankactive || $amazonactive || $impactactive || $shareasaleactive || $awinactive || $universalfeedactive || $cjactive || $ebayactive || $bestbuyactive || $walmartactive || $envatoactive || $rakutenactive || $discoveryjapanactive || $temuactive || $aliexpressactive)) {
 
 					$aal_apirequestno = $aal_apirequestno + 1;
 					
@@ -818,6 +826,13 @@ if ( is_null( $aal_page_globals ) ) {
 	            'temunetwork'            => $temunetwork,
 	            'temuactive'          => $temuactive,
 	            'temuawinmid'          => $temuawinmid,
+	            
+	            // AliExpress
+	            'aliexpress_appkey'     => $aliexpress_appkey,
+	            'aliexpress_appsecret'  => $aliexpress_appsecret,
+	            'aliexpress_trackingid' => $aliexpress_trackingid,
+	            'aliexpress_endpoint'   => $aliexpress_endpoint,
+	            'aliexpressactive'      => $aliexpressactive,
 	            
 	            // General Settings
 	            'excludewords'          => $excludewords,

@@ -147,6 +147,11 @@
 		            temunetwork:             config.temunetwork,
 		            temuactive:           config.temuactive,
 		            temuawinmid:				config.temuawinmid,
+		            aliexpress_appkey:      config.aliexpress_appkey,
+		            aliexpress_appsecret:   config.aliexpress_appsecret,
+		            aliexpress_trackingid:  config.aliexpress_trackingid,
+		            aliexpress_endpoint:    config.aliexpress_endpoint,
+		            aliexpressactive:       config.aliexpressactive,
 		            excludewords:           config.excludewords,
 		            geminiaion:             config.geminiaion
 		        };
@@ -262,7 +267,7 @@
 			
 			//console.log(aalapidata);
 			
-			var willUseAmazon = response.keywords && ((Number(aalapidata.amazonactive) && aalapidata.amazonid) || (Number(aalapidata.impactactive) && aalapidata.impactsid) );
+			var willUseAmazon = response.keywords && ((Number(aalapidata.amazonactive) && aalapidata.amazonid) || (Number(aalapidata.impactactive) && aalapidata.impactsid) || (Number(aalapidata.aliexpressactive) && aalapidata.aliexpress_appkey && aalapidata.aliexpress_appsecret) );
 
 							if (willUseAmazon) {						
 							    $.ajax({

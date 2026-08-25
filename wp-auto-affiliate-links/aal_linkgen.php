@@ -18,7 +18,13 @@ function aal_linkgen_ajax() {
 		$impacttoken = get_option('aal_impacttoken');
 		$is_impact_ready = ($impactactive && $impactsid && $impacttoken);
 		
-		if(!$is_amazon_ready && !$is_impact_ready) { exit(); die(); }
+		$aliexpressactive = get_option('aal_aliexpressactive');
+		$aliexpress_appkey = get_option('aal_aliexpress_appkey');
+		$aliexpress_appsecret = get_option('aal_aliexpress_appsecret');
+		$is_aliexpress_ready = ($aliexpressactive && !empty($aliexpress_appkey) && !empty($aliexpress_appsecret));
+
+		// If ALL local APIs are inactive or missing credentials, kill the script to save resources
+		if(!$is_amazon_ready && !$is_impact_ready && !$is_aliexpress_ready) { exit(); die(); }
 		
 		$amazoncat = get_option('aal_amazoncat');
 		$amazonlocal = get_option('aal_amazonlocal');
@@ -145,8 +151,43 @@ EOD;
                 }
             }
             
+            
+
+// --- C. AliExpress Worker ---
+            // If Amazon and Impact DID NOT find a link, and AliExpress is ready, we search AliExpress.
+            if ( !$link_found_for_keyword && $is_aliexpress_ready && function_exists('aal_aliexpress_search_keyword') ) {
+                
+                $aliexpress_results = aal_aliexpress_search_keyword( $keyword, $notimes, $nrk, $nrw, $alinks );
+                
+                $nrk = $aliexpress_results['nrk'];
+                $nrw = $aliexpress_results['nrw'];
+
+                if ( !empty($aliexpress_results['links']) ) {
+                    // We merge AliExpress links directly into $alinks.
+                    // This way, api.js receives them normally and displays them instantly.
+                    $alinks = array_merge($alinks, $aliexpress_results['links']);
+                    $link_found_for_keyword = true;
+                }
+                
+                // (Optional) If you ever decide to generate visual widgets for AliExpress, 
+                // this ensures they are safely merged just like Amazon!
+                if ( !empty($aliexpress_results['widget']) ) {
+                    $awidgets = array_merge($awidgets, $aliexpress_results['widget']);
+                }
+            }
+            
+            
+            
+                        
+            
+            
+            
+            
+            
         }
     }
+    
+
 
     // --- START: Prepare final links and update cache ---
     if ( $postidnr > 0 && (!empty($alinks) || !empty($awidgets)) ) {

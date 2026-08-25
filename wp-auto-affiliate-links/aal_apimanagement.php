@@ -30,6 +30,7 @@ function aal_api_register_settings() {
    register_setting( 'aal_api_settings', 'aal_discoveryjapanactive' );
    register_setting( 'aal_api_settings', 'aal_universalfeedactive' );
    register_setting( 'aal_api_settings', 'aal_temuactive' );
+   register_setting( 'aal_api_settings', 'aal_aliexpressactive' );
 }	
 
 
@@ -455,6 +456,18 @@ $apikey = get_option('aal_apikey');
 		<td></td>
 		<td></td>
 	</tr>
+		<tr>
+		<td>AliExpress</td>
+		<td><select name="aal_aliexpressactive">
+			<option value="0" <?php if(get_option('aal_aliexpressactive')=='0') echo "selected"; ?> > Inactive</option>
+			<option value="1" <?php if(get_option('aal_aliexpressactive')=='1') echo "selected"; ?> >Active</option>
+		</select></td>
+		<td><?php if(get_option('aal_aliexpressactive')=='1') { ?><a href="<?php echo admin_url('admin.php?page=aal_module_aliexpress'); ?>">Configure AliExpress Module</a><?php }
+		else { ?>   <a href="javascript:;" onclick="return aalActivateModule('aal_aliexpressactive');" >Activate AliExpress Module</a>    <?php  } ?></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
 <!--	<tr class="alternate">
 		<td>Rakuten Linkshare</td>
 		<td><select name="aal_rakutenactive">
@@ -606,6 +619,14 @@ $apikey = get_option('aal_apikey');
 		<td></td>
 		<td></td>
 	</tr>
+		<tr>
+		<td>AliExpress</td>
+		<td>Inactive</td>
+		<td><a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Get API Key</a></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
 	</table>	
 	
 	
@@ -627,6 +648,7 @@ $apikey = get_option('aal_apikey');
 	<input type="hidden" name="aal_discoveryjapanactive" value="<?php echo get_option('aal_discoveryjapanactive'); ?>" />
 	<input type="hidden" name="aal_universalfeedactive" value="<?php echo get_option('aal_universalfeedactive'); ?>" />
 	<input type="hidden" name="aal_temuactive" value="<?php echo get_option('aal_temuactive'); ?>" />
+	<input type="hidden" name="aal_aliexpressactive" value="<?php echo get_option('aal_aliexpressactive'); ?>" />
 	
 	<?php } ?>
 	
