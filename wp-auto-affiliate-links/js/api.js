@@ -147,6 +147,8 @@
 		            temunetwork:             config.temunetwork,
 		            temuactive:           config.temuactive,
 		            temuawinmid:				config.temuawinmid,
+		            etsyactive:               config.etsyactive,
+		            rakutenid:               config.rakutenid,
 		            aliexpress_appkey:      config.aliexpress_appkey,
 		            aliexpress_appsecret:   config.aliexpress_appsecret,
 		            aliexpress_trackingid:  config.aliexpress_trackingid,

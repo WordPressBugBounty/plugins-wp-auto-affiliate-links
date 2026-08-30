@@ -265,6 +265,9 @@ if ($pdate) {
 		$temuid = get_option('aal_temuid');
 		$temuawinmid = get_option('temuawinmid');
 		
+		$etsyactive = get_option('aal_etsyactive');
+		$rakutenid = get_option('aal_rakutenid');
+		
 		$aliexpress_appkey = get_option('aal_aliexpress_appkey');
 		$aliexpress_appsecret = get_option('aal_aliexpress_appsecret'); 
 		$aliexpress_trackingid = get_option('aal_aliexpress_trackingid'); 
@@ -738,7 +741,7 @@ if ($pdate) {
 				global $aal_apirequestno;
 				if(!$aal_apirequestno) $aal_apirequestno = 0;
 				//If the manual replacement did not found enough links		
-				if($aal_apirequestno < 5 ) if($apikey && !is_feed() && ($sofar<$notimes || $amazondisplaywidget) && $querylimit!='overquota' && ($clickbankactive || $amazonactive || $impactactive || $shareasaleactive || $awinactive || $universalfeedactive || $cjactive || $ebayactive || $bestbuyactive || $walmartactive || $envatoactive || $rakutenactive || $discoveryjapanactive || $temuactive || $aliexpressactive)) {
+				if($aal_apirequestno < 5 ) if($apikey && !is_feed() && ($sofar<$notimes || $amazondisplaywidget) && $querylimit!='overquota' && ($clickbankactive || $amazonactive || $impactactive || $shareasaleactive || $awinactive || $universalfeedactive || $cjactive || $ebayactive || $bestbuyactive || $walmartactive || $envatoactive || $rakutenactive || $discoveryjapanactive || $temuactive || $aliexpressactive || $etsyactive)) {
 
 					$aal_apirequestno = $aal_apirequestno + 1;
 					
@@ -751,7 +754,7 @@ if ($pdate) {
 					if(!$walmartactive) { $walmartid = ''; }
 					if(!$envatoactive) { $envatoid = ''; }
 					if(!$envatosite) { $envatosite = ''; }
-					if(!$rakutenactive) { $rakutenid = ''; }
+					//if(!$rakutenactive) { $rakutenid = ''; }
 					if(!$discoveryjapanactive) { $discoveryjapanid = ''; }
 					if(!$temuactive) { $temuid = ''; }
 
@@ -833,6 +836,9 @@ if ( is_null( $aal_page_globals ) ) {
 	            'aliexpress_trackingid' => $aliexpress_trackingid,
 	            'aliexpress_endpoint'   => $aliexpress_endpoint,
 	            'aliexpressactive'      => $aliexpressactive,
+	            
+	            'etsyactive'              => $etsyactive,
+	            'rakutenid'              => $rakutenid,
 	            
 	            // General Settings
 	            'excludewords'          => $excludewords,

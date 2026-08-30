@@ -18,7 +18,8 @@ $aal_hardcoded_modules = array(
     'universalfeed/universalfeed.php',
     'walmart/walmart.php',
     'temu/temu.php',
-    'aliexpress/aliexpress.php'
+    'aliexpress/aliexpress.php',
+    'etsy/etsy.php'
 );
 
 // Define the global array before the loop

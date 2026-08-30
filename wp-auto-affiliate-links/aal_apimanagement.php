@@ -31,6 +31,7 @@ function aal_api_register_settings() {
    register_setting( 'aal_api_settings', 'aal_universalfeedactive' );
    register_setting( 'aal_api_settings', 'aal_temuactive' );
    register_setting( 'aal_api_settings', 'aal_aliexpressactive' );
+   register_setting( 'aal_api_settings', 'aal_etsyactive' );
 }	
 
 
@@ -137,6 +138,8 @@ $apikey = get_option('aal_apikey');
 						<li><b>Envato Marketplace</b> automatic links    	
 						<li><b>Discovery Japan affiliate links can be extracted and displayed automatically</b> 
 						<li><b>Temu</b>  links can be added added automatically 
+						<li><b>AliExpress</b>  AliExpress product links will be automatically extracted and displayed
+						<li><b>Etsy</b>  links can be added added automatically  
               	</ul>
               	<br />
 					 More info about Auto Affiliate Links PRO features <a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">here</a>.      
@@ -468,6 +471,19 @@ $apikey = get_option('aal_apikey');
 		<td></td>
 		<td></td>
 	</tr>
+	</tr>
+		<tr>
+		<td>Etsy</td>
+		<td><select name="aal_etsyactive">
+			<option value="0" <?php if(get_option('aal_etsyactive')=='0') echo "selected"; ?> > Inactive</option>
+			<option value="1" <?php if(get_option('aal_etsyactive')=='1') echo "selected"; ?> >Active</option>
+		</select></td>
+		<td><?php if(get_option('aal_etsyactive')=='1') { ?><a href="<?php echo admin_url('admin.php?page=aal_module_etsy'); ?>">Configure Etsy Module</a><?php }
+		else { ?>   <a href="javascript:;" onclick="return aalActivateModule('aal_etsyactive');" >Activate Etsy Module</a>    <?php  } ?></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
 <!--	<tr class="alternate">
 		<td>Rakuten Linkshare</td>
 		<td><select name="aal_rakutenactive">
@@ -620,6 +636,14 @@ $apikey = get_option('aal_apikey');
 		<td></td>
 	</tr>
 		<tr>
+		<td>Etsy</td>
+		<td>Inactive</td>
+		<td><a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Get API Key</a></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+		<tr>
 		<td>AliExpress</td>
 		<td>Inactive</td>
 		<td><a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Get API Key</a></td>
@@ -649,6 +673,7 @@ $apikey = get_option('aal_apikey');
 	<input type="hidden" name="aal_universalfeedactive" value="<?php echo get_option('aal_universalfeedactive'); ?>" />
 	<input type="hidden" name="aal_temuactive" value="<?php echo get_option('aal_temuactive'); ?>" />
 	<input type="hidden" name="aal_aliexpressactive" value="<?php echo get_option('aal_aliexpressactive'); ?>" />
+	<input type="hidden" name="aal_etsyactive" value="<?php echo get_option('aal_etsyactive'); ?>" />
 	
 	<?php } ?>
 	
