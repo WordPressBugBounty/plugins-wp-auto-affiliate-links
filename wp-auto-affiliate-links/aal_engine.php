@@ -253,8 +253,12 @@ if ($pdate) {
 		$envatosite = get_option('aal_envatosite');
 		$envatoid = get_option('aal_envatoid');
 		
-		$rakutenactive = get_option('aal_rakutenactive');
-		$rakutenid = get_option('aal_rakutenid');
+$rakuten_clientid = get_option('aal_rakuten_clientid');
+$rakuten_secret = get_option('aal_rakuten_secret'); 
+$rakutensid = get_option('aal_rakutensid'); 
+$rakutenid = get_option('aal_rakutenid');
+$rakutendisplaywidget = get_option('aal_rakutendisplaywidget');
+$rakutenactive = get_option('aal_rakutenactive');
 		
 		$discoveryjapanactive = get_option('aal_discoveryjapanactive');
 		$discoveryjapanid = get_option('aal_discoveryjapanid');
@@ -741,7 +745,7 @@ if ($pdate) {
 				global $aal_apirequestno;
 				if(!$aal_apirequestno) $aal_apirequestno = 0;
 				//If the manual replacement did not found enough links		
-				if($aal_apirequestno < 5 ) if($apikey && !is_feed() && ($sofar<$notimes || $amazondisplaywidget) && $querylimit!='overquota' && ($clickbankactive || $amazonactive || $impactactive || $shareasaleactive || $awinactive || $universalfeedactive || $cjactive || $ebayactive || $bestbuyactive || $walmartactive || $envatoactive || $rakutenactive || $discoveryjapanactive || $temuactive || $aliexpressactive || $etsyactive)) {
+				if($aal_apirequestno < 5 ) if($apikey && !is_feed() && ($sofar<$notimes || $amazondisplaywidget) && $querylimit!='overquota' && ($clickbankactive || $amazonactive || $impactactive || $shareasaleactive || $awinactive || $universalfeedactive || $cjactive || $ebayactive || $bestbuyactive || $walmartactive || $envatoactive || $rakutenactive || $discoveryjapanactive || $temuactive || $aliexpressactive || $etsyactive)  ) {
 
 					$aal_apirequestno = $aal_apirequestno + 1;
 					
@@ -820,8 +824,15 @@ if ( is_null( $aal_page_globals ) ) {
 	            'envatoid'              => $envatoid,
 	            'envatosite'            => $envatosite,
 	            'envatoactive'          => $envatoactive,
-	            'rakutenactive'         => $rakutenactive,
-	            'rakutenid'             => $rakutenid,
+
+				// Rakuten
+            'rakuten_clientid'     => $rakuten_clientid,
+            'rakuten_secret'       => $rakuten_secret,
+            'rakutensid'           => $rakutensid,
+            'rakutenid'            => $rakutenid,
+            'rakutendisplaywidget' => $rakutendisplaywidget,
+            'rakutenactive'        => $rakutenactive,
+
 	            'discoveryjapanactive'  => $discoveryjapanactive,
 	            'discoveryjapanid'      => $discoveryjapanid,
 	            'discoveryjapanapikey'  => $discoveryjapanapikey,
@@ -838,7 +849,7 @@ if ( is_null( $aal_page_globals ) ) {
 	            'aliexpressactive'      => $aliexpressactive,
 	            
 	            'etsyactive'              => $etsyactive,
-	            'rakutenid'              => $rakutenid,
+	            //'rakutenid'              => $rakutenid,
 	            
 	            // General Settings
 	            'excludewords'          => $excludewords,

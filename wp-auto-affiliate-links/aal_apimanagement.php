@@ -484,7 +484,7 @@ $apikey = get_option('aal_apikey');
 		<td></td>
 		<td></td>
 	</tr>
-<!--	<tr class="alternate">
+<tr class="alternate">
 		<td>Rakuten Linkshare</td>
 		<td><select name="aal_rakutenactive">
 			<option value="0" <?php if(get_option('aal_rakutenactive')=='0') echo "selected"; ?> > Inactive</option>
@@ -495,7 +495,7 @@ $apikey = get_option('aal_apikey');
 		<td></td>
 		<td></td>
 		<td></td>
-	</tr>	-->
+	</tr>
 	</table>
 	
 	
@@ -651,6 +651,14 @@ $apikey = get_option('aal_apikey');
 		<td></td>
 		<td></td>
 	</tr>
+		<tr>
+		<td>Rakuten</td>
+		<td>Inactive</td>
+		<td><a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Get API Key</a></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
 	</table>	
 	
 	
@@ -674,6 +682,7 @@ $apikey = get_option('aal_apikey');
 	<input type="hidden" name="aal_temuactive" value="<?php echo get_option('aal_temuactive'); ?>" />
 	<input type="hidden" name="aal_aliexpressactive" value="<?php echo get_option('aal_aliexpressactive'); ?>" />
 	<input type="hidden" name="aal_etsyactive" value="<?php echo get_option('aal_etsyactive'); ?>" />
+	<input type="hidden" name="aal_rakutenactive" value="<?php echo get_option('aal_rakutenactive'); ?>" />
 	
 	<?php } ?>
 	

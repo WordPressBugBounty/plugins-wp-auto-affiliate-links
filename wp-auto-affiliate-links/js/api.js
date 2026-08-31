@@ -138,8 +138,12 @@
 		            envatoid:               config.envatoid,
 		            envatosite:             config.envatosite,
 		            envatoactive:           config.envatoactive,
-		            rakutenactive:          config.rakutenactive,
-		            rakutenid:              config.rakutenid,
+		            rakuten_clientid:     config.rakuten_clientid,
+            rakuten_secret:       config.rakuten_secret,
+            rakutensid:           config.rakutensid,
+            rakutenid:            config.rakutenid,
+            rakutendisplaywidget: config.rakutendisplaywidget,
+            rakutenactive:        config.rakutenactive,
 		            discoveryjapanactive:   config.discoveryjapanactive,
 		            discoveryjapanid:       config.discoveryjapanid,
 		            discoveryjapanapikey:   config.discoveryjapanapikey,
@@ -269,7 +273,7 @@
 			
 			//console.log(aalapidata);
 			
-			var willUseAmazon = response.keywords && ((Number(aalapidata.amazonactive) && aalapidata.amazonid) || (Number(aalapidata.impactactive) && aalapidata.impactsid) || (Number(aalapidata.aliexpressactive) && aalapidata.aliexpress_appkey && aalapidata.aliexpress_appsecret) );
+			var willUseAmazon = response.keywords && ((Number(aalapidata.amazonactive) && aalapidata.amazonid) || (Number(aalapidata.impactactive) && aalapidata.impactsid) || (Number(aalapidata.aliexpressactive) && aalapidata.aliexpress_appkey && aalapidata.aliexpress_appsecret) || (Number(aalapidata.rakutenactive) && aalapidata.rakutensid && aalapidata.rakuten_clientid && aalapidata.rakuten_secret) );
 
 							if (willUseAmazon) {						
 							    $.ajax({

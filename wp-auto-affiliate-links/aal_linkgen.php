@@ -23,8 +23,15 @@ function aal_linkgen_ajax() {
 		$aliexpress_appsecret = get_option('aal_aliexpress_appsecret');
 		$is_aliexpress_ready = ($aliexpressactive && !empty($aliexpress_appkey) && !empty($aliexpress_appsecret));
 
+// Rakuten Variables
+		$rakutenactive = get_option('aal_rakutenactive');
+		$rakuten_clientid = get_option('aal_rakuten_clientid');
+		$rakuten_secret = get_option('aal_rakuten_secret'); 
+		$rakutensid = get_option('aal_rakutensid'); 
+		$is_rakuten_ready = ($rakutenactive && !empty($rakuten_clientid) && !empty($rakuten_secret) && !empty($rakutensid));
+
 		// If ALL local APIs are inactive or missing credentials, kill the script to save resources
-		if(!$is_amazon_ready && !$is_impact_ready && !$is_aliexpress_ready) { exit(); die(); }
+		if(!$is_amazon_ready && !$is_impact_ready && !$is_aliexpress_ready && !$is_rakuten_ready) { exit(); die(); }
 		
 		$amazoncat = get_option('aal_amazoncat');
 		$amazonlocal = get_option('aal_amazonlocal');
@@ -177,7 +184,28 @@ EOD;
             }
             
             
-            
+ // --- D. Rakuten Worker ---
+            // If Amazon, Impact, and AliExpress DID NOT find a link, and Rakuten is ready, we search Rakuten.
+            if ( !$link_found_for_keyword && $is_rakuten_ready && function_exists('aal_rakuten_search_keyword') ) {
+                
+                $rakuten_results = aal_rakuten_search_keyword( $keyword, $notimes, $nrk, $nrw, $alinks );
+                
+                $nrk = $rakuten_results['nrk'];
+                $nrw = $rakuten_results['nrw'];
+
+                if ( !empty($rakuten_results['links']) ) {
+                    // We merge Rakuten links directly into $alinks.
+                    // This way, api.js receives them normally and displays them instantly.
+                    $alinks = array_merge($alinks, $rakuten_results['links']);
+                    $link_found_for_keyword = true;
+                }
+                
+                // If you ever decide to generate visual widgets for Rakuten, 
+                // this ensures they are safely merged just like Amazon!
+                if ( !empty($rakuten_results['widget']) ) {
+                    $awidgets = array_merge($awidgets, $rakuten_results['widget']);
+                }
+            }           
                         
             
             
