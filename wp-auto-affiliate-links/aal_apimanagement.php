@@ -32,6 +32,7 @@ function aal_api_register_settings() {
    register_setting( 'aal_api_settings', 'aal_temuactive' );
    register_setting( 'aal_api_settings', 'aal_aliexpressactive' );
    register_setting( 'aal_api_settings', 'aal_etsyactive' );
+   register_setting( 'aal_api_settings', 'aal_profitshareactive' );
 }	
 
 
@@ -496,6 +497,18 @@ $apikey = get_option('aal_apikey');
 		<td></td>
 		<td></td>
 	</tr>
+	<tr class="alternate">
+		<td>Profitshare</td>
+		<td><select name="aal_profitshare_active">
+			<option value="0" <?php if(get_option('aal_profitshare_active')=='0') echo "selected"; ?> > Inactive</option>
+			<option value="1" <?php if(get_option('aal_profitshare_active')=='1') echo "selected"; ?> >Active</option>
+		</select></td>
+		<td><?php if(get_option('aal_profitshare_active')=='1') { ?><a href="<?php echo admin_url('admin.php?page=aal_module_profitshare'); ?>">Configure Profitshare Module</a><?php } 
+		else { ?>   <a href="javascript:;" onclick="return aalActivateModule('aal_profitshare_active');" >Activate Profitshare Module</a>    <?php } ?></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
 	</table>
 	
 	
@@ -659,6 +672,14 @@ $apikey = get_option('aal_apikey');
 		<td></td>
 		<td></td>
 	</tr>
+		<tr>
+		<td>Profitshare</td>
+		<td>Inactive</td>
+		<td><a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Get API Key</a></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
 	</table>	
 	
 	
@@ -683,6 +704,7 @@ $apikey = get_option('aal_apikey');
 	<input type="hidden" name="aal_aliexpressactive" value="<?php echo get_option('aal_aliexpressactive'); ?>" />
 	<input type="hidden" name="aal_etsyactive" value="<?php echo get_option('aal_etsyactive'); ?>" />
 	<input type="hidden" name="aal_rakutenactive" value="<?php echo get_option('aal_rakutenactive'); ?>" />
+	<input type="hidden" name="aal_profitshareactive" value="<?php echo get_option('aal_profitshareactive'); ?>" />
 	
 	<?php } ?>
 	

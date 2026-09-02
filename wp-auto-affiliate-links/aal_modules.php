@@ -19,7 +19,8 @@ $aal_hardcoded_modules = array(
     'walmart/walmart.php',
     'temu/temu.php',
     'aliexpress/aliexpress.php',
-    'etsy/etsy.php'
+    'etsy/etsy.php',
+    'profitshare/profitshare.php',
 );
 
 // Define the global array before the loop

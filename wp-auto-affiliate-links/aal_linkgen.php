@@ -30,8 +30,14 @@ function aal_linkgen_ajax() {
 		$rakutensid = get_option('aal_rakutensid'); 
 		$is_rakuten_ready = ($rakutenactive && !empty($rakuten_clientid) && !empty($rakuten_secret) && !empty($rakutensid));
 
+// Profitshare Variables
+		$profitshareactive = get_option('aal_profitshare_active');
+		$profitshare_user = get_option('aal_profitshare_user');
+		$profitshare_key = get_option('aal_profitshare_key');
+		$is_profitshare_ready = ($profitshareactive && !empty($profitshare_user) && !empty($profitshare_key));
+
 		// If ALL local APIs are inactive or missing credentials, kill the script to save resources
-		if(!$is_amazon_ready && !$is_impact_ready && !$is_aliexpress_ready && !$is_rakuten_ready) { exit(); die(); }
+		if(!$is_amazon_ready && !$is_impact_ready && !$is_aliexpress_ready && !$is_rakuten_ready && !$is_profitshare_ready) { exit(); die(); }
 		
 		$amazoncat = get_option('aal_amazoncat');
 		$amazonlocal = get_option('aal_amazonlocal');
@@ -208,7 +214,24 @@ EOD;
             }           
                         
             
+  // --- E. Profitshare Worker ---
+            // If previous networks DID NOT find a link, and Profitshare is ready, we search Profitshare.
+            if ( !$link_found_for_keyword && $is_profitshare_ready && function_exists('aal_profitshare_search_keyword') ) {
+                
+                $profitshare_results = aal_profitshare_search_keyword( $keyword, $notimes, $nrk, $nrw, $alinks );
+                
+                $nrk = $profitshare_results['nrk'];
+                $nrw = $profitshare_results['nrw'];
+
+                if ( !empty($profitshare_results['links']) ) {
+                    // We merge Profitshare links directly into $alinks.
+                    $alinks = array_merge($alinks, $profitshare_results['links']);
+                    $link_found_for_keyword = true;
+                }
+            }
             
+            
+                      
             
             
             

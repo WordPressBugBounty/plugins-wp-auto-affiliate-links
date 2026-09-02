@@ -158,6 +158,10 @@
 		            aliexpress_trackingid:  config.aliexpress_trackingid,
 		            aliexpress_endpoint:    config.aliexpress_endpoint,
 		            aliexpressactive:       config.aliexpressactive,
+		      profitshareactive:         config.profitshareactive,
+            profitshare_user:          config.profitshare_user,
+            profitshare_key:           config.profitshare_key,
+            profitshare_advertiser_id: config.profitshare_advertiser_id,
 		            excludewords:           config.excludewords,
 		            geminiaion:             config.geminiaion
 		        };
@@ -273,7 +277,7 @@
 			
 			//console.log(aalapidata);
 			
-			var willUseAmazon = response.keywords && ((Number(aalapidata.amazonactive) && aalapidata.amazonid) || (Number(aalapidata.impactactive) && aalapidata.impactsid) || (Number(aalapidata.aliexpressactive) && aalapidata.aliexpress_appkey && aalapidata.aliexpress_appsecret) || (Number(aalapidata.rakutenactive) && aalapidata.rakutensid && aalapidata.rakuten_clientid && aalapidata.rakuten_secret) );
+			var willUseAmazon = response.keywords && ((Number(aalapidata.amazonactive) && aalapidata.amazonid) || (Number(aalapidata.impactactive) && aalapidata.impactsid) || (Number(aalapidata.aliexpressactive) && aalapidata.aliexpress_appkey && aalapidata.aliexpress_appsecret) || (Number(aalapidata.rakutenactive) && aalapidata.rakutensid && aalapidata.rakuten_clientid && aalapidata.rakuten_secret) || (Number(aalapidata.profitshareactive) && aalapidata.profitshare_user && aalapidata.profitshare_key) );
 
 							if (willUseAmazon) {						
 							    $.ajax({

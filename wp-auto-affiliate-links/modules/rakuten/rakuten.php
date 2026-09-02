@@ -70,6 +70,8 @@ function aal_rakuten_search_keyword( $keyword, $notimes, $nrk, $nrw, $alinks ) {
 
     $api_response = wp_remote_get( $api_url, $args );
     
+   // print_r($api_response); die();
+    
     if ( is_wp_error( $api_response ) ) {
         $nrk++; sleep(2);
         return array('links'=>array(), 'widget'=>array(), 'nrk'=>$nrk, 'nrw'=>$nrw);

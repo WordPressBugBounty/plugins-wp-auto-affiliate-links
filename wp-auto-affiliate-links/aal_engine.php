@@ -278,6 +278,12 @@ $rakutenactive = get_option('aal_rakutenactive');
 		$aliexpress_endpoint = get_option('aal_aliexpress_endpoint');
 		$aliexpressactive = get_option('aal_aliexpressactive');
 		
+		
+$profitshareactive = get_option('aal_profitshare_active');
+	$profitshare_user = get_option('aal_profitshare_user'); 
+	$profitshare_key = get_option('aal_profitshare_key'); 
+	$profitshare_advertiser_id = get_option('aal_profitshare_advertiser_id');
+		
 		}
 		
 		
@@ -745,7 +751,7 @@ $rakutenactive = get_option('aal_rakutenactive');
 				global $aal_apirequestno;
 				if(!$aal_apirequestno) $aal_apirequestno = 0;
 				//If the manual replacement did not found enough links		
-				if($aal_apirequestno < 5 ) if($apikey && !is_feed() && ($sofar<$notimes || $amazondisplaywidget) && $querylimit!='overquota' && ($clickbankactive || $amazonactive || $impactactive || $shareasaleactive || $awinactive || $universalfeedactive || $cjactive || $ebayactive || $bestbuyactive || $walmartactive || $envatoactive || $rakutenactive || $discoveryjapanactive || $temuactive || $aliexpressactive || $etsyactive)  ) {
+				if($aal_apirequestno < 5 ) if($apikey && !is_feed() && ($sofar<$notimes || $amazondisplaywidget) && $querylimit!='overquota' && ($clickbankactive || $amazonactive || $impactactive || $shareasaleactive || $awinactive || $universalfeedactive || $cjactive || $ebayactive || $bestbuyactive || $walmartactive || $envatoactive || $rakutenactive || $discoveryjapanactive || $temuactive || $aliexpressactive || $etsyactive || $profitshareactive)  ) {
 
 					$aal_apirequestno = $aal_apirequestno + 1;
 					
@@ -858,7 +864,19 @@ if ( is_null( $aal_page_globals ) ) {
 	            'cssclass'              => $cssclass,     
 	            'disclosure'            => $disclosure, 
 	            'showfigcaption'        => $showfigcaption,     
-	            'linkdistribution'      => $linkdistribution
+	            'linkdistribution'      => $linkdistribution, 
+	            
+	            
+				// Profitshare
+            'profitshareactive'         => $profitshareactive,
+            'profitshare_user'          => $profitshare_user,
+            'profitshare_key'           => $profitshare_key,
+            'profitshare_advertiser_id' => $profitshare_advertiser_id,	            
+	            
+	            
+	            
+	            
+	            
 	        );
         }
 		
