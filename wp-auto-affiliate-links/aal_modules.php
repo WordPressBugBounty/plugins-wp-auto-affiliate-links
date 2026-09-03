@@ -21,6 +21,7 @@ $aal_hardcoded_modules = array(
     'aliexpress/aliexpress.php',
     'etsy/etsy.php',
     'profitshare/profitshare.php',
+    'twoperformant/twoperformant.php',
 );
 
 // Define the global array before the loop

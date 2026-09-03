@@ -283,6 +283,12 @@ $profitshareactive = get_option('aal_profitshare_active');
 	$profitshare_user = get_option('aal_profitshare_user'); 
 	$profitshare_key = get_option('aal_profitshare_key'); 
 	$profitshare_advertiser_id = get_option('aal_profitshare_advertiser_id');
+	
+	
+	$twoperformant_active = get_option('aal_twoperformant_active');
+    $twoperformant_aff_code = get_option('aal_twoperformant_aff_code');
+    $twoperformant_merchant_id = get_option('aal_twoperformant_merchant_id');
+    $twoperformant_search_url = get_option('aal_twoperformant_search_url');
 		
 		}
 		
@@ -751,7 +757,7 @@ $profitshareactive = get_option('aal_profitshare_active');
 				global $aal_apirequestno;
 				if(!$aal_apirequestno) $aal_apirequestno = 0;
 				//If the manual replacement did not found enough links		
-				if($aal_apirequestno < 5 ) if($apikey && !is_feed() && ($sofar<$notimes || $amazondisplaywidget) && $querylimit!='overquota' && ($clickbankactive || $amazonactive || $impactactive || $shareasaleactive || $awinactive || $universalfeedactive || $cjactive || $ebayactive || $bestbuyactive || $walmartactive || $envatoactive || $rakutenactive || $discoveryjapanactive || $temuactive || $aliexpressactive || $etsyactive || $profitshareactive)  ) {
+				if($aal_apirequestno < 5 ) if($apikey && !is_feed() && ($sofar<$notimes || $amazondisplaywidget) && $querylimit!='overquota' && ($clickbankactive || $amazonactive || $impactactive || $shareasaleactive || $awinactive || $universalfeedactive || $cjactive || $ebayactive || $bestbuyactive || $walmartactive || $envatoactive || $rakutenactive || $discoveryjapanactive || $temuactive || $aliexpressactive || $etsyactive || $profitshareactive || $twoperformant_active)  ) {
 
 					$aal_apirequestno = $aal_apirequestno + 1;
 					
@@ -873,7 +879,12 @@ if ( is_null( $aal_page_globals ) ) {
             'profitshare_key'           => $profitshare_key,
             'profitshare_advertiser_id' => $profitshare_advertiser_id,	            
 	            
-	            
+	           //2Performant
+	           
+	           'twoperformantactive'       => $twoperformant_active,
+    'twoperformant_aff_code'    => $twoperformant_aff_code,
+    'twoperformant_merchant_id' => $twoperformant_merchant_id,
+    'twoperformant_search_url' => $twoperformant_search_url,
 	            
 	            
 	            
