@@ -129,6 +129,7 @@ $apikey = get_option('aal_apikey');
               	<br />
               	<ul class=aal_admin_list>
 						<li>Links will be added <b>automatically</b> based on your content 
+					<li><b>Datafeed upload</b> You can upload datafeed with links/products from any network and the plugin will display the links in the content, based on selected keywords
 						<li><b>Amazon</b> Links are automatically extracted and inserted in content
 						<li><b>Impact.com</b> Links are automatically extracted and inserted in content
 						<li><b>ClickBank</b> Links are automatically extracted and inserted
@@ -366,7 +367,7 @@ $apikey = get_option('aal_apikey');
 		<td></td>
 	</tr>	
 	<tr class="alternate">
-		<td>Universal Feed</td>
+		<td>Datafeed upload (Any network/program)</td>
 		<td><select name="aal_universalfeedactive">
 			<option value="0" <?php if(get_option('aal_universalfeedactive')=='0') echo "selected"; ?> > Inactive</option>
 			<option value="1" <?php if(get_option('aal_universalfeedactive')=='1') echo "selected"; ?> >Active</option>
@@ -646,7 +647,7 @@ $apikey = get_option('aal_apikey');
 		<td></td>
 	</tr>
 		<tr class="alternate">
-		<td>Universal Feed</td>
+		<td>Datafeed upload (Any network/program)</td>
 		<td>Inactive</td>
 		<td><a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Get API Key</a></td>
 		<td></td>

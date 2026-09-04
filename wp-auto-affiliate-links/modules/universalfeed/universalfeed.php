@@ -11,7 +11,7 @@ function aalUniversalFeedDisplay() {
     ?>
     <div class="wrap">  
         <div class="icon32" id="icon-options-general"></div>  
-        <h2>Universal Datafeed</h2>
+        <h2>Universal Datafeed (Any network)</h2>
         <br />
         <p>Upload any CSV datafeed and map your columns to our system. This processor runs in your browser, meaning it is highly secure and can handle large files by sending data in batches.</p>
         <br />
