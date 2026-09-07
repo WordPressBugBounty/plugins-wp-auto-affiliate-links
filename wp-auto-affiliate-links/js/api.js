@@ -122,6 +122,10 @@
 		            amazonactive:           config.amazonactive,
 		            impactactive:           config.impactactive,
 		            impactsid:           config.impactsid,
+		            admitadactive:         config.admitadactive,
+		            admitad_client_id:     config.admitad_client_id,
+		            admitad_client_secret: config.admitad_client_secret,
+		            admitad_adspace_id:    config.admitad_adspace_id,
 		            clickbankactive:        config.clickbankactive,
 		            shareasaleactive:       config.shareasaleactive,
 		            shareasaleid:           config.shareasaleid,
@@ -281,7 +285,7 @@
 			
 			//console.log(aalapidata);
 			
-			var willUseAmazon = response.keywords && ((Number(aalapidata.amazonactive) && aalapidata.amazonid) || (Number(aalapidata.impactactive) && aalapidata.impactsid) || (Number(aalapidata.aliexpressactive) && aalapidata.aliexpress_appkey && aalapidata.aliexpress_appsecret) || (Number(aalapidata.rakutenactive) && aalapidata.rakutensid && aalapidata.rakuten_clientid && aalapidata.rakuten_secret) || (Number(aalapidata.profitshareactive) && aalapidata.profitshare_user && aalapidata.profitshare_key)  );
+			var willUseAmazon = response.keywords && ((Number(aalapidata.amazonactive) && aalapidata.amazonid) || (Number(aalapidata.impactactive) && aalapidata.impactsid) || (Number(aalapidata.aliexpressactive) && aalapidata.aliexpress_appkey && aalapidata.aliexpress_appsecret) || (Number(aalapidata.rakutenactive) && aalapidata.rakutensid && aalapidata.rakuten_clientid && aalapidata.rakuten_secret) || (Number(aalapidata.profitshareactive) && aalapidata.profitshare_user && aalapidata.profitshare_key) || (Number(aalapidata.admitadactive) && aalapidata.admitad_client_id && aalapidata.admitad_client_secret && aalapidata.admitad_adspace_id) );
 
 							if (willUseAmazon) {						
 							    $.ajax({

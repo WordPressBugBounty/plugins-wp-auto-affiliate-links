@@ -18,6 +18,14 @@ function aal_linkgen_ajax() {
 		$impacttoken = get_option('aal_impacttoken');
 		$is_impact_ready = ($impactactive && $impactsid && $impacttoken);
 		
+		
+		$admitadactive = get_option('aal_admitadactive');
+		$admitad_client_id = trim(get_option('aal_admitad_client_id'));
+		$admitad_client_secret = trim(get_option('aal_admitad_client_secret'));
+		$admitad_adspace_id = trim(get_option('aal_admitad_adspace_id'));
+		
+		$is_admitad_ready = ($admitadactive && !empty($admitad_client_id) && !empty($admitad_client_secret) && !empty($admitad_adspace_id));
+		
 		$aliexpressactive = get_option('aal_aliexpressactive');
 		$aliexpress_appkey = get_option('aal_aliexpress_appkey');
 		$aliexpress_appsecret = get_option('aal_aliexpress_appsecret');
@@ -36,8 +44,8 @@ function aal_linkgen_ajax() {
 		$profitshare_key = get_option('aal_profitshare_key');
 		$is_profitshare_ready = ($profitshareactive && !empty($profitshare_user) && !empty($profitshare_key));
 
-		// If ALL local APIs are inactive or missing credentials, kill the script to save resources
-		if(!$is_amazon_ready && !$is_impact_ready && !$is_aliexpress_ready && !$is_rakuten_ready && !$is_profitshare_ready) { exit(); die(); }
+// If ALL local APIs are inactive or missing credentials, kill the script to save resources
+		if(!$is_amazon_ready && !$is_impact_ready && !$is_aliexpress_ready && !$is_rakuten_ready && !$is_profitshare_ready && !$is_admitad_ready) { exit(); die(); }
 		
 		$amazoncat = get_option('aal_amazoncat');
 		$amazonlocal = get_option('aal_amazonlocal');
@@ -230,7 +238,26 @@ EOD;
                 }
             }
             
+  // --- Admitad Worker ---
+            // If previous networks DID NOT find a link, and Admitad is ready, we search Admitad.
+            if ( !$link_found_for_keyword && $is_admitad_ready && function_exists('aal_admitad_search_keyword') ) {
+                
+                $admitad_results = aal_admitad_search_keyword( $keyword, $notimes, $nrk, $nrw, $alinks );
+                
+                $nrk = $admitad_results['nrk'];
+                $nrw = $admitad_results['nrw'];
+
+                if ( !empty($admitad_results['links']) ) {
+                    // We merge Admitad links directly into $alinks. 
+                    // This way, api.js receives them normally and displays them instantly.
+                    $alinks = array_merge($alinks, $admitad_results['links']);
+                    $link_found_for_keyword = true;
+                }
+            }
             
+            
+            
+                      
                       
             
             

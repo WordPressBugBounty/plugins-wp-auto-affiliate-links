@@ -221,7 +221,10 @@ if ($pdate) {
 		$impactsid = get_option('aal_impactsid');
 		$impactactive = get_option('aal_impactactive');
 		
-		
+		$admitadactive = get_option('aal_admitadactive');
+		$admitad_client_id = get_option('aal_admitad_client_id');
+		$admitad_client_secret = get_option('aal_admitad_client_secret');
+		$admitad_adspace_id = get_option('aal_admitad_adspace_id');
 		
 		$amazondisplaylinks = get_option('aal_amazondisplaylinks');
 		$amazondisplaywidget = get_option('aal_amazondisplaywidget');
@@ -757,7 +760,7 @@ $profitshareactive = get_option('aal_profitshare_active');
 				global $aal_apirequestno;
 				if(!$aal_apirequestno) $aal_apirequestno = 0;
 				//If the manual replacement did not found enough links		
-				if($aal_apirequestno < 5 ) if($apikey && !is_feed() && ($sofar<$notimes || $amazondisplaywidget) && $querylimit!='overquota' && ($clickbankactive || $amazonactive || $impactactive || $shareasaleactive || $awinactive || $universalfeedactive || $cjactive || $ebayactive || $bestbuyactive || $walmartactive || $envatoactive || $rakutenactive || $discoveryjapanactive || $temuactive || $aliexpressactive || $etsyactive || $profitshareactive || $twoperformant_active)  ) {
+				if($aal_apirequestno < 5 ) if($apikey && !is_feed() && ($sofar<$notimes || $amazondisplaywidget) && $querylimit!='overquota' && ($clickbankactive || $amazonactive || $impactactive || $shareasaleactive || $awinactive || $universalfeedactive || $cjactive || $ebayactive || $bestbuyactive || $walmartactive || $envatoactive || $rakutenactive || $discoveryjapanactive || $temuactive || $aliexpressactive || $etsyactive || $profitshareactive || $twoperformant_active || $admitadactive)  ) {
 
 					$aal_apirequestno = $aal_apirequestno + 1;
 					
@@ -819,6 +822,12 @@ if ( is_null( $aal_page_globals ) ) {
 	            //Impact
 	             'impactactive'              => $impactactive,
 	            'impactsid'             => $impactsid,
+	            
+	            // Add to your localized array:
+		'admitadactive'         => $admitadactive,
+		'admitad_client_id'     => $admitad_client_id,
+		'admitad_client_secret' => $admitad_client_secret,
+		'admitad_adspace_id'    => $admitad_adspace_id,
 	            
 	            // Other Networks
 	            'shareasaleid'          => $shareasaleid,

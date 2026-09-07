@@ -5,6 +5,7 @@
 $aal_hardcoded_modules = array(
     'amazon/amazon.php',
     'impact/impact.php',
+    'admitad/admitad.php',
     'awin/awin.php',
     'bestbuy/bestbuy.php',
     'cj/cj.php',
