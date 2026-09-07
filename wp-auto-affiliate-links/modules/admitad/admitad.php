@@ -218,24 +218,36 @@ function aal_admitad_search_keyword( $keyword, $notimes, $nrk, $nrw, $alinks ) {
                 
                 if ( $name_match ) {
                     
-                    // Admitad returns the default tracking link as 'gotolink'
-                    if ( ! empty( $camp['gotolink'] ) ) {
-                        $link = $camp['gotolink'];
-                        
-                        // Duplicate Check
-                        $found = 0;
-                        foreach($alinks as $aa) {
-                            if(isset($aa->link) && $link == $aa->link) $found = 1;
-                            if(isset($aa->url) && $link == $aa->url) $found = 1;      
-                        }
-                        
-                        if($found != 1) {
-                            $alink = new stdClass();
-                            $alink->key = $keyword;
-                            $alink->url = $link; 
-                            $admitadlinks[] = $alink;
-                            $found_link = true;
-                            break; 
+                    // We found a matching brand! Now we generate its tracking link.
+                    $target_url = isset($camp['site_url']) ? $camp['site_url'] : '';
+                    
+                    if ( ! empty( $target_url ) ) {
+                        // Call Admitad's Deeplink API to generate the monetized link
+                        $deeplink_url = "https://api.admitad.com/deeplink/" . urlencode($adspace_id) . "/advcampaign/" . urlencode($campaign_id) . "/?ulp=" . urlencode($target_url);
+                        $dl_response = wp_remote_get( $deeplink_url, $args );
+
+                        if ( ! is_wp_error( $dl_response ) && wp_remote_retrieve_response_code( $dl_response ) == 200 ) {
+                            $dl_body = json_decode( wp_remote_retrieve_body( $dl_response ), true );
+
+                            if ( ! empty( $dl_body['deeplink'] ) ) {
+                                $link = $dl_body['deeplink'];
+                                
+                                // Duplicate Check
+                                $found = 0;
+                                foreach($alinks as $aa) {
+                                    if(isset($aa->link) && $link == $aa->link) $found = 1;
+                                    if(isset($aa->url) && $link == $aa->url) $found = 1;      
+                                }
+                                
+                                if($found != 1) {
+                                    $alink = new stdClass();
+                                    $alink->key = $keyword;
+                                    $alink->url = $link; 
+                                    $admitadlinks[] = $alink;
+                                    $found_link = true;
+                                    break; // Stop after finding the first valid match
+                                }
+                            }
                         }
                     }
                 }
