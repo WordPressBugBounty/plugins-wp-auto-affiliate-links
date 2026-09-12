@@ -132,7 +132,8 @@
 		            awinactive:       config.awinactive,
 		            awinid:           config.awinid,
 		            universalfeedactive:       config.universalfeedactive,
-		            cjactive:               config.cjactive,
+		            cjactive: config.cjactive,
+		            cj_cid:   config.cj_cid,
 		            ebayactive:             config.ebayactive,
 		            ebayid:                 config.ebayid,
 		            bestbuyactive:          config.bestbuyactive,
@@ -285,7 +286,7 @@
 			
 			//console.log(aalapidata);
 			
-			var willUseAmazon = response.keywords && ((Number(aalapidata.amazonactive) && aalapidata.amazonid) || (Number(aalapidata.impactactive) && aalapidata.impactsid) || (Number(aalapidata.aliexpressactive) && aalapidata.aliexpress_appkey && aalapidata.aliexpress_appsecret) || (Number(aalapidata.rakutenactive) && aalapidata.rakutensid && aalapidata.rakuten_clientid && aalapidata.rakuten_secret) || (Number(aalapidata.profitshareactive) && aalapidata.profitshare_user && aalapidata.profitshare_key) || (Number(aalapidata.admitadactive) && aalapidata.admitad_client_id && aalapidata.admitad_client_secret && aalapidata.admitad_adspace_id) );
+			var willUseAmazon = response.keywords && ((Number(aalapidata.amazonactive) && aalapidata.amazonid) || (Number(aalapidata.impactactive) && aalapidata.impactsid) || (Number(aalapidata.aliexpressactive) && aalapidata.aliexpress_appkey && aalapidata.aliexpress_appsecret) || (Number(aalapidata.rakutenactive) && aalapidata.rakutensid && aalapidata.rakuten_clientid && aalapidata.rakuten_secret) || (Number(aalapidata.profitshareactive) && aalapidata.profitshare_user && aalapidata.profitshare_key) || (Number(aalapidata.admitadactive) && aalapidata.admitad_client_id && aalapidata.admitad_client_secret && aalapidata.admitad_adspace_id) || (Number(aalapidata.cjactive) && aalapidata.cj_cid) );
 
 							if (willUseAmazon) {						
 							    $.ajax({

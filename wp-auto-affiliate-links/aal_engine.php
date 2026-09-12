@@ -242,6 +242,8 @@ if ($pdate) {
 		$universalfeedactive = get_option('aal_universalfeedactive');
 
 		$cjactive = get_option('aal_cjactive');
+		$cj_cid = get_option('aal_cj_cid');
+		
 		
 		$ebayactive = get_option('aal_ebayactive');
 		$ebayid = get_option('aal_ebayid');
@@ -835,7 +837,8 @@ if ( is_null( $aal_page_globals ) ) {
 	            'awinid'          => $awinid,
 	            'awinactive'      => $awinactive,
 	            'universalfeedactive'      => $universalfeedactive,
-	            'cjactive'              => $cjactive,
+	            'cjactive' => $cjactive,
+		'cj_cid'   => $cj_cid,
 	            'ebayactive'            => $ebayactive,
 	            'ebayid'                => $ebayid,
 	            'bestbuyactive'         => $bestbuyactive,

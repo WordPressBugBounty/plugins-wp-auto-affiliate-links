@@ -4,7 +4,7 @@ Donate link: https://autoaffiliatelinks.com/donations/
 Tags: affiliate, posts, marketing, links, keywords
 Requires at least: 3.5
 Tested up to: 7.1
-Stable tag: 6.9.8.7
+Stable tag: 6.9.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -108,8 +108,11 @@ If you can't find the options to do this, try LibreOffice, as it is a bit easier
 
 == Changelog ==
 
+= 6.9.9 =
+* Changed the way CJ module is working, now works better trough API
+
 = 6.9.8.7 =
-* Fixed Admidat link display
+* Fixed Admitad link display
 
 = 6.9.8.6 =
 * Added support for Admitad links generation and display

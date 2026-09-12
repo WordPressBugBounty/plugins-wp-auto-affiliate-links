@@ -43,9 +43,16 @@ function aal_linkgen_ajax() {
 		$profitshare_user = get_option('aal_profitshare_user');
 		$profitshare_key = get_option('aal_profitshare_key');
 		$is_profitshare_ready = ($profitshareactive && !empty($profitshare_user) && !empty($profitshare_key));
+		
+		// CJ Variables
+		$cjactive = get_option('aal_cjactive');
+		$cj_pat = get_option('aal_cj_pat');
+		$cj_cid = get_option('aal_cj_cid');
+		$cj_pid = get_option('aal_cj_pid');
+		$is_cj_ready = ($cjactive && !empty($cj_pat) && !empty($cj_cid) && !empty($cj_pid));
 
 // If ALL local APIs are inactive or missing credentials, kill the script to save resources
-		if(!$is_amazon_ready && !$is_impact_ready && !$is_aliexpress_ready && !$is_rakuten_ready && !$is_profitshare_ready && !$is_admitad_ready) { exit(); die(); }
+		if(!$is_amazon_ready && !$is_impact_ready && !$is_aliexpress_ready && !$is_rakuten_ready && !$is_profitshare_ready && !$is_admitad_ready && !$is_cj_ready) { exit(); die(); }
 		
 		$amazoncat = get_option('aal_amazoncat');
 		$amazonlocal = get_option('aal_amazonlocal');
@@ -257,7 +264,22 @@ EOD;
             
             
             
-                      
+          // --- E. Commission Junction Worker ---
+            // If previous networks DID NOT find a link, and CJ is ready, we search CJ.
+            if ( !$link_found_for_keyword && $is_cj_ready && function_exists('aal_cj_search_keyword') ) {
+                
+                $cj_results = aal_cj_search_keyword( $keyword, $notimes, $nrk, $nrw, $alinks );
+                
+                $nrk = $cj_results['nrk'];
+                $nrw = $cj_results['nrw'];
+
+                if ( !empty($cj_results['links']) ) {
+                    // We merge CJ links directly into $alinks. 
+                    // This way, api.js receives them normally and displays them instantly.
+                    $alinks = array_merge($alinks, $cj_results['links']);
+                    $link_found_for_keyword = true;
+                }
+            }            
                       
             
             

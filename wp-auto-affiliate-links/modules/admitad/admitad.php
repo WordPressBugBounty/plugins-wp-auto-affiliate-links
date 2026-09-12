@@ -200,6 +200,8 @@ function aal_admitad_search_keyword( $keyword, $notimes, $nrk, $nrw, $alinks ) {
     $campaigns_url = "https://api.admitad.com/advcampaigns/?website=" . urlencode($adspace_id) . "&connection_status=active&limit=500";
     $camp_response = wp_remote_get( $campaigns_url, $args );
     
+  //  print_r($camp_response); die();
+    
 
     if ( ! is_wp_error( $camp_response ) && wp_remote_retrieve_response_code( $camp_response ) == 200 ) {
         $camp_body = json_decode( wp_remote_retrieve_body( $camp_response ), true );

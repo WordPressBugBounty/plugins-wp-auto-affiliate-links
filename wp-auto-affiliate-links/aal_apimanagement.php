@@ -19,6 +19,7 @@ function aal_api_register_settings() {
    register_setting( 'aal_api_settings', 'aal_amazonactive' );
    register_setting( 'aal_api_settings', 'aal_impactactive' );
    register_setting( 'aal_api_settings', 'aal_admitadactive' );
+   register_setting( 'aal_api_settings', 'aal_tradedoubleractive' );
    register_setting( 'aal_api_settings', 'aal_clickbankactive' );
    register_setting( 'aal_api_settings', 'aal_awinactive' );
    register_setting( 'aal_api_settings', 'aal_shareasaleactive' );
@@ -339,6 +340,18 @@ $apikey = get_option('aal_apikey');
 		</select></td>
 		<td><?php if(get_option('aal_admitadactive')=='1') { ?><a href="<?php echo admin_url('admin.php?page=aal_module_admitad'); ?>">Configure Admitad Module</a><?php } 
 		else { ?>   <a href="javascript:;" onclick="return aalActivateModule('aal_admitadactive');" >Activate Admitad Module</a>    <?php } ?></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+		<tr class="alternate">
+		<td>TradeDoubler</td>
+		<td><select name="aal_tradedoubleractive">
+			<option value="0" <?php if(get_option('aal_tradedoubleractive')=='0') echo "selected"; ?> > Inactive</option>
+			<option value="1" <?php if(get_option('aal_tradedoubleractive')=='1') echo "selected"; ?> >Active</option>
+		</select></td>
+		<td><?php if(get_option('aal_tradedoubleractive')=='1') { ?><a href="<?php echo admin_url('admin.php?page=aal_module_tradedoubler'); ?>">Configure TradeDoubler Module</a><?php } 
+		else { ?>   <a href="javascript:;" onclick="return aalActivateModule('aal_tradedoubleractive');" >Activate TradeDoubler Module</a>    <?php } ?></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -723,6 +736,14 @@ $apikey = get_option('aal_apikey');
 		<td></td>
 		<td></td>
 	</tr>
+			<tr>
+		<td>TradeDoubler</td>
+		<td>Inactive</td>
+		<td><a href="https://autoaffiliatelinks.com/wp-auto-affiliate-links-pro/">Get API Key</a></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
 	</table>	
 	
 	
@@ -732,8 +753,9 @@ $apikey = get_option('aal_apikey');
 	
 	
 	<input type="hidden" name="aal_amazonactive" value="<?php echo get_option('aal_amazonactive'); ?>" />
-	<input type="hidden" name="aal_impactactive" value="<?php echo get_option('aal_admitadactive'); ?>" />
+	<input type="hidden" name="aal_impactactive" value="<?php echo get_option('aal_impactactive'); ?>" />
 <input type="hidden" name="aal_admitadactive" value="<?php echo get_option('aal_admitadactive'); ?>" />
+<input type="hidden" name="aal_tradedoubleractive" value="<?php echo get_option('aal_tradedoubleractive'); ?>" />
 	<input type="hidden" name="aal_clickbankactive" value="<?php echo get_option('aal_clickbankactive'); ?>" />
 	<input type="hidden" name="aal_shareasaleactive" value="<?php echo get_option('aal_shareasaleactive'); ?>" />
 	<input type="hidden" name="aal_awinactive" value="<?php echo get_option('aal_awinactive'); ?>" />	
