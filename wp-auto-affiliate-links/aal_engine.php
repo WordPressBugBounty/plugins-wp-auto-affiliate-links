@@ -302,7 +302,12 @@ $profitshareactive = get_option('aal_profitshare_active');
 		elseif($relationo == 'sponsored') $relo = ' rel="sponsored" ';
 		else $relo = '';
 		
+		
+		
+		
 		//regular expression setup
+		//old way reg
+		/*
 		$reg_post		=	 '/(?!(?:[^<\[]+[>\]]|[^>\]]+<\/a>))($name)/ims'. $langsupport .'U';		
 		if('true' == get_option('aal_showhtags') || true == get_option('aal_showhtags')) { $reghtags = ''; }  else { $reghtags = '+<\/h.>|[^>]+><\/h.>|[^>]'; }
 		if('true' == get_option('aal_showspan') || true == get_option('aal_showspan')) { $regspan = ''; }  else { $regspan = '+<\/span>|[^>]+><\/span>|[^>]'; }
@@ -310,6 +315,53 @@ $profitshareactive = get_option('aal_profitshare_active');
 			// reghtags = '+<\/h.>|[^>\]]+><\/h.>|[^>\]]';
 		if(true == $casesensitive) $csi = ""; else $csi = 'i';
 		$reg			=	 '/(?!(?:[^<]+[>]|[^\[]+[\]]|[^>]+<\/[^>]+><\/a>|[^>]+<\/a>|[^>]'. $regspan . $reghtags . $regfigcaption .'+<\/script*>|[^>]+<\/code*>))'. $wrse .'($name)'. $wrse .'/'. $csi .'ms'. $langsupport .'U';
+		
+		*/
+		
+		//new way reg
+		
+					// --- NEW REGULAR EXPRESSION SETUP ---
+					if (true == $casesensitive) $csi = ""; else $csi = 'i';
+					
+					$skip_tags = array('a', 'script', 'code', 'style');
+					
+	
+					if ('true' != get_option('aal_showhtags') && true != get_option('aal_showhtags')) { 
+					    $skip_tags[] = 'h[1-6]'; 
+					}
+					if ('true' != get_option('aal_showspan') && true != get_option('aal_showspan')) { 
+					    $skip_tags[] = 'span'; 
+					}
+					if ('true' != get_option('aal_showfigcaption') && true != get_option('aal_showfigcaption')) { 
+					    $skip_tags[] = 'figcaption'; 
+					}
+					
+
+					
+						$skip_patterns = array();
+						foreach ($skip_tags as $tag) {
+						    // \s* allows for optional spaces anywhere inside the closing tag
+						    $skip_patterns[] = '<' . $tag . '\b[^>]*>.*?<\s*\/\s*' . $tag . '\s*>';
+						}
+					
+
+					$skip_patterns[] = '<[^>]+>';
+					$skip_patterns[] = '\[[^\]]+\]';
+					
+
+					$skip_regex = implode('|', $skip_patterns);
+					
+
+					$reg = '/(?:' . $skip_regex . ')(*SKIP)(*FAIL)|' . $wrse . '($name)' . $wrse . '/' . $csi . 'ms' . $langsupport;
+					// -------------------------------------
+
+
+		
+		//end new way reg		
+		
+		
+		
+		
 		//$reg			=	 '/(?!(?:[^<\[]+[>\]]|[^>]+<\/[^>]+><\/a>|[^>\]]+<\/a>|[^>\]]'. $reghtags .'+<\/script*>|[^>\]]+<\/code*>))'. $wrse .'($name)'. $wrse .'/'. $csi .'ms'. $langsupport .'U';
 		//else $reg	=	 '/(?!(?:[^<\[]+[>\]]|[^>]+<\/[^>]+><\/a>|[^>\]]+<\/a>|[^>\]]'. $reghtags .'+<\/script*>|[^>\]]+<\/code*>))\b($name)\b/ims'. $langsupport .'U';
 		$strpos_fnc		=	 'strpos';		
